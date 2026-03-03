@@ -183,6 +183,15 @@ class Strumline extends FlxGroup
         });
     }
 
+    public function load(notes:Array<SongNoteData>, speed:Float)
+    {
+        // Notes NEED to be sorted
+        notes.sort((a:SongNoteData, b:SongNoteData) -> return SortUtil.byTime(FlxSort.ASCENDING, a, b));
+
+        this.data = notes;
+        this.speed = speed;
+    }
+
     public function hitNote(note:NoteSprite)
     {
         playConfirm(note.direction);

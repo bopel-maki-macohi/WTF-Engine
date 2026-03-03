@@ -5,7 +5,6 @@ import flixel.FlxObject;
 import flixel.FlxSubState;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxSort;
 import funkin.audio.FunkinSound;
 import funkin.data.song.SongData.SongNoteData;
 import funkin.data.stage.StageRegistry;
@@ -20,7 +19,6 @@ import funkin.play.song.Voices;
 import funkin.ui.FunkinState;
 import funkin.util.MathUtil;
 import funkin.util.RhythmUtil;
-import funkin.util.SortUtil;
 
 /**
  * A state where the gameplay occurs. Kinda like a "play" state. Hah! I said the thing!
@@ -230,28 +228,18 @@ class PlayState extends FunkinState
 
 	function loadSong()
 	{
-		conductor.reset(song.bpm);
-		conductor.time = -conductor.crotchet * 4;
-
-		playerStrumline.speed = song.getSpeed(difficulty);
-		opponentStrumline.speed = playerStrumline.speed;
-
 		var notes:Array<SongNoteData> = song.getNotes(difficulty);
+		var speed:Float = song.getSpeed(difficulty);
 
-		// Sorts the notes to prevent any problems with note generation
-		notes.sort((a, b) -> SortUtil.byTime(FlxSort.ASCENDING, a, b));
-		
-		for (noteData in notes)
-		{
-			if (NoteDirection.isPlayer(noteData.d))
-				playerStrumline.data.push(noteData);
-			else
-				opponentStrumline.data.push(noteData);
-		}
+		opponentStrumline.load(notes.filter(note -> return !NoteDirection.isPlayer(note.d)), speed);
+		playerStrumline.load(notes.filter(note -> return NoteDirection.isPlayer(note.d)), speed);
 
 		// Loads the actual song
 		FunkinSound.playMusic(Paths.inst(song.id), 1, false, false);
 		voices = new Voices(song.id);
+
+		conductor.reset(song.bpm);
+		conductor.time = -conductor.crotchet * 4;
 
 		songLoaded = true;
 	}
