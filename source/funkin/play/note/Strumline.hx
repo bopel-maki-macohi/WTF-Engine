@@ -95,22 +95,22 @@ class Strumline extends FlxGroup
 
                 holdNote.time = time;
                 holdNote.direction = direction;
-                holdNote.speed = speed;
-                holdNote.fullLength = length;
                 holdNote.length = length;
+                holdNote.fullLength = length;
 
                 holdNote.flipY = Preferences.downscroll;
                 holdNote.data = noteData;
+                holdNote.speed = speed;
 
                 note.holdNote = holdNote;
             }
-
-            data.shift();
 
             // Sorts the notes
             // Not doing this will mess up the input
             notes.sort((i, a, b) -> return SortUtil.byTime(FlxSort.ASCENDING, a.data, b.data));
             holdNotes.sort((i, a, b) -> return SortUtil.byTime(FlxSort.ASCENDING, a.data, b.data));
+
+            data.shift();
         }
 
         // Note processing
