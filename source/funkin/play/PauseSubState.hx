@@ -13,10 +13,11 @@ import funkin.ui.freeplay.FreeplayState;
  */
 class PauseSubState extends FunkinSubState
 {
-    final ogItems:Array<String> = ['resume', 'restart', 'difficulty', 'exit to menu'];
+    final ogItems:Array<String> = ['resume', 'restart', 'exit to menu'];
 
     var song(get, never):Song;
     var difficulty(get, never):String;
+    var deaths(get, never):Int;
 
     var changingDiff:Bool = false;
     var justOpened:Bool;
@@ -51,21 +52,32 @@ class PauseSubState extends FunkinSubState
         items.itemSelected.add(itemSelected);
         add(items);
 
-        if (song.difficulties.length < 2) items.removeItem('difficulty');
-
-        // Updates the song text
-        songText.text = song.name;
-        songText.text += '\ndifficulty: ${difficulty}';
-        songText.text += '\nartist: ${song.artist}';
-        songText.x = FlxG.width - songText.width - 20;
+        // Adds some extra items
+        if (song.difficulties.length > 1)
+            items.insertItem(2, 'difficulty');
+        #if debug
+        items.insertItem(3, 'botplay');
+        #end
     }
 
     override public function update(elapsed:Float)
     {
         super.update(elapsed);
 
+        // Updates the song text
+        // Gotta display some good info
+        songText.text = song.name;
+        songText.text += '\ndifficulty: $difficulty';
+        songText.text += '\nartist: ${song.artist}';
+        songText.text += '\n$deaths blue ball';
+
+        if (deaths != 1) songText.text += 's';
+        if (Preferences.botplay) songText.text += '\nbotplay';
+
+        songText.x = FlxG.width - songText.width - 20;
+
         // Gotta do this as tweens cannot be used here :(
-        music.volume = Math.min(1, music.volume += elapsed / 8);
+        music.volume = Math.min(1, music.volume += elapsed / 2);
         bg.alpha = Math.min(0.8, bg.alpha += elapsed * 5);
     }
 
@@ -110,6 +122,8 @@ class PauseSubState extends FunkinSubState
                     items.setItems(song.difficulties.copy());
                     items.removeItem(difficulty);
                     items.addItem('back');
+                case 'botplay':
+                    Preferences.botplay = !Preferences.botplay;
             }
         }
     }
@@ -128,4 +142,7 @@ class PauseSubState extends FunkinSubState
 
     inline function get_difficulty():String
         return PlayState.difficulty;
+
+    inline function get_deaths():Int
+        return PlayState.instance.deaths;
 }

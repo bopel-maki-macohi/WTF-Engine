@@ -72,6 +72,12 @@ class MenuList extends FlxTypedGroup<FunkinText>
         refreshItems();
     }
 
+    public function insertItem(pos:Int, text:String)
+    {
+        items.insert(pos, text);
+        refreshItems();
+    }
+
     public function removeItem(text:String)
     {
         items.remove(text);

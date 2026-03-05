@@ -23,6 +23,9 @@ class GameOverSubState extends FunkinSubState
     {
         super.create();
 
+        // Increments the death counter
+        PlayState.instance.deaths++;
+
         _parentState.persistentDraw = false;
 
         music = FunkinSound.load('play/music/gameover');

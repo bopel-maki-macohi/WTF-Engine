@@ -29,6 +29,8 @@ class PlayState extends FunkinState
 	public static var difficulty:String;
 	public static var song:Song;
 
+	public var deaths:Int = 0;
+	
 	public var camFollow:FlxObject;
 	public var stage:Stage;
 
