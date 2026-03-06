@@ -12,17 +12,20 @@ import funkin.util.MathUtil;
  */
 class MenuList extends FlxTypedGroup<FunkinText>
 {
+    public var entries(default, set):Array<String>;
     public var selected:Int = 0;
-    public var itemSelected(default, null) = new FlxTypedSignal<String->Void>();
+
+    public var onSelected(default, null) = new FlxTypedSignal<String->Void>();
+
+    public var size(get, never):Int;
 
     var controls(get, never):Controls;
-    var items:Array<String>;
 
-    public function new(items:Array<String>)
+    public function new(entries:Array<String>)
     {
         super();
 
-        setItems(items);
+        this.entries = entries;
     }
 
     override public function update(elapsed:Float)
@@ -30,9 +33,9 @@ class MenuList extends FlxTypedGroup<FunkinText>
         super.update(elapsed);
 
         if (controls.UI_UP_P || controls.UI_DOWN_P)
-            changeItem(controls.UI_UP_P ? -1 : 1);
-
-        if (controls.ACCEPT) selectItem();
+            change(controls.UI_UP_P ? -1 : 1);
+        if (controls.ACCEPT)
+            onSelected.dispatch(entries[selected]);
 
         // Updates the items to be in the correct position
         forEachAlive(item -> {
@@ -42,59 +45,36 @@ class MenuList extends FlxTypedGroup<FunkinText>
         });
     }
 
-    public function changeItem(change:Int)
+    public function change(change:Int)
     {
         FunkinSound.playOnce('ui/sounds/scroll');
 
         selected += change;
 
-        if (selected < 0) selected = items.length - 1;
-        if (selected >= items.length) selected = 0;
+        if (selected < 0) selected = size - 1;
+        if (selected >= size) selected = 0;
     }
 
-    public function selectItem()
+    inline function getItemX(item:FunkinText):Float
     {
-        // Safety check to ensure that the selected item exists
-        if (items[selected] == null) return;
-
-        itemSelected.dispatch(items[selected]);
+        return 80 + (item.ID - selected) * 20;
     }
 
-    public function setItems(items:Array<String>)
+    inline function getItemY(item:FunkinText):Float
     {
-        this.items = items;
-        refreshItems();
+        return FlxG.height / 2 + (item.ID - selected - 0.5) * (item.height + 50);
     }
 
-    public function addItem(text:String)
+    function set_entries(entries:Array<String>):Array<String>
     {
-        items.push(text);
-        refreshItems();
-    }
+        if (this.entries == entries) return entries;
+        this.entries = entries;
 
-    public function insertItem(pos:Int, text:String)
-    {
-        items.insert(pos, text);
-        refreshItems();
-    }
-
-    public function removeItem(text:String)
-    {
-        items.remove(text);
-        refreshItems();
-    }
-
-    public function count():Int
-        return items.length;
-
-    function refreshItems()
-    {
         selected = 0;
 
-        // Generates the items
         killMembers();
         
-        for (i => item in items)
+        for (i => item in entries)
         {
             var text:FunkinText = recycle(FunkinText);
             text.text = item;
@@ -102,17 +82,12 @@ class MenuList extends FlxTypedGroup<FunkinText>
             text.ID = i;
             text.setPosition(getItemX(text) - 500, getItemY(text));
         }
+
+        return entries;
     }
 
-    function getItemX(item:FunkinText):Float
-    {
-        return 80 + (item.ID - selected) * 20;
-    }
-
-    function getItemY(item:FunkinText):Float
-    {
-        return FlxG.height / 2 + (item.ID - selected - 0.5) * (item.height + 50);
-    }
+    inline function get_size():Int
+        return countLiving();
 
     inline function get_controls():Controls
         return Controls.instance;

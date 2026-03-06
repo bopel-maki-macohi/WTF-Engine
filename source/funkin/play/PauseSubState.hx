@@ -13,26 +13,30 @@ import funkin.ui.freeplay.FreeplayState;
  */
 class PauseSubState extends FunkinSubState
 {
-    final ogItems:Array<String> = ['resume', 'restart', 'exit to menu'];
+    final DEFAULT_ENTRIES:Array<String> = ['resume', 'restart', 'exit to menu'];
 
     var song(get, never):Song;
     var difficulty(get, never):String;
     var deaths(get, never):Int;
 
+    var justOpened:Bool = true;
     var changingDiff:Bool = false;
-    var justOpened:Bool;
 
     var music:FunkinSound;
 
     var bg:FunkinSprite;
     var songText:FunkinText;
-    var items:MenuList;
+    var menuList:MenuList;
 
     override public function create()
     {
         super.create();
 
-        justOpened = controls.ACCEPT;
+        if (song.difficulties.length > 1)
+            DEFAULT_ENTRIES.insert(2, 'difficulty');
+        #if debug
+        DEFAULT_ENTRIES.insert(3, 'botplay');
+        #end
 
         music = FunkinSound.load('play/music/pause', 0);
         music.play();
@@ -48,23 +52,26 @@ class PauseSubState extends FunkinSubState
         songText.alignment = RIGHT;
         add(songText);
 
-        items = new MenuList(ogItems);
-        items.itemSelected.add(itemSelected);
-        add(items);
+        menuList = new MenuList(DEFAULT_ENTRIES);
+        menuList.onSelected.add(select);
+        add(menuList);
 
-        // Adds some extra items
-        if (song.difficulties.length > 1)
-            items.insertItem(2, 'difficulty');
-        #if debug
-        items.insertItem(3, 'botplay');
-        #end
+        updateSongText();
     }
 
     override public function update(elapsed:Float)
     {
         super.update(elapsed);
 
-        // Updates the song text
+        justOpened = false;
+
+        // Gotta do this as tweens cannot be used here :(
+        music.volume = Math.min(1, music.volume += elapsed / 5);
+        bg.alpha = Math.min(0.8, bg.alpha += elapsed * 5);
+    }
+
+    function updateSongText()
+    {
         // Gotta display some good info
         songText.text = song.name;
         songText.text += '\ndifficulty: $difficulty';
@@ -75,28 +82,19 @@ class PauseSubState extends FunkinSubState
         if (Preferences.botplay) songText.text += '\nbotplay';
 
         songText.x = FlxG.width - songText.width - 20;
-
-        // Gotta do this as tweens cannot be used here :(
-        music.volume = Math.min(1, music.volume += elapsed / 2);
-        bg.alpha = Math.min(0.8, bg.alpha += elapsed * 5);
     }
 
-    function itemSelected(item:String)
+    function select(item:String)
     {
-        // Input is so dumb lol
-        if (justOpened)
-        {
-            justOpened = false;
-            return;
-        }
+        if (justOpened) return;
 
         if (changingDiff)
         {
             // Checks if back was pressed
             // I mean, you never know if someone makes a BACK difficulty
-            if (items.selected == items.count() - 1)
+            if (menuList.selected == menuList.size - 1)
             {
-                items.setItems(ogItems);
+                menuList.entries = DEFAULT_ENTRIES;
                 changingDiff = false;
             }
             else
@@ -110,20 +108,24 @@ class PauseSubState extends FunkinSubState
         {
             switch (item)
             {
-                case 'resume' | 'restart':
-                    if (item == 'restart')
-                        PlayState.instance.resetSong();
+                case 'resume': 
+                    close();
+                case 'restart':
+                    PlayState.instance.resetSong();
                     close();
                 case 'exit to menu':
                     FlxG.switchState(() -> new FreeplayState());
                 case 'difficulty':
-                    changingDiff = true;
+                    var entries:Array<String> = song.difficulties.copy();
 
-                    items.setItems(song.difficulties.copy());
-                    items.removeItem(difficulty);
-                    items.addItem('back');
+                    entries.remove(difficulty);
+                    entries.push('back');
+
+                    menuList.entries = entries;
+                    changingDiff = true;
                 case 'botplay':
                     Preferences.botplay = !Preferences.botplay;
+                    updateSongText();
             }
         }
     }
