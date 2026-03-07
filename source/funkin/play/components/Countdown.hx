@@ -1,4 +1,4 @@
-package funkin.play;
+package funkin.play.components;
 
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;

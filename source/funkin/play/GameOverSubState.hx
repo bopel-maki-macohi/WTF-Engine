@@ -4,6 +4,7 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
 import funkin.audio.FunkinSound;
 import funkin.data.character.CharacterRegistry;
+import funkin.play.components.Character;
 import funkin.ui.FunkinSubState;
 import funkin.ui.freeplay.FreeplayState;
 

@@ -1,6 +1,6 @@
 package funkin.data.character;
 
-import funkin.play.Character;
+import funkin.play.components.Character;
 import funkin.util.FileUtil;
 import json2object.JsonParser;
 

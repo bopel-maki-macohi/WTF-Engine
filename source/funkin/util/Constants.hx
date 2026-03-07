@@ -1,5 +1,7 @@
 package funkin.util;
 
+import flixel.util.FlxColor;
+
 /**
  * A class used as a store for constant variables that are used globally.
  */
@@ -29,7 +31,6 @@ class Constants
     public static final DEFAULT_SONG_ARTIST:String = 'Unknown';
     public static final DEFAULT_SPEED:Float = 1;
     public static final DEFAULT_CAMERA_ZOOM:Float = 1;
-    public static final DEFAULT_HEALTH:Float = 1;
 
     public static final RESYNC_THRESHOLD:Float = 40;
 
@@ -46,6 +47,9 @@ class Constants
     public static final MISS_SCORE:Int = -100;
     public static final GHOST_MISS_SCORE:Int = -50;
 
+    public static final STARTING_HEALTH:Float = 1;
+    public static final HEALTH_FILL_COLOR:FlxColor = 0xFF00FF00;
+    public static final HEALTH_EMPTY_COLOR:FlxColor = 0xFFFF0000;
     public static final HOLD_HEALTH_PER_SEC:Float = 0.08;
     public static final NOTE_HEALTH:Float = 0.06;
     public static final MISS_HEALTH:Float = -0.04;

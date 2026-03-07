@@ -11,7 +11,10 @@ import funkin.data.song.SongData.SongNoteData;
 import funkin.data.stage.StageRegistry;
 import funkin.graphics.FunkinBar;
 import funkin.graphics.FunkinText;
-import funkin.play.Popups;
+import funkin.play.components.Character;
+import funkin.play.components.Countdown;
+import funkin.play.components.Popups;
+import funkin.play.components.Stage;
 import funkin.play.note.HoldNoteSprite;
 import funkin.play.note.NoteDirection;
 import funkin.play.note.NoteSprite;
@@ -32,7 +35,7 @@ class PlayState extends FunkinState
 	public static var song:Song;
 
 	public var score:Float;
-	public var combo:Int;
+	public var tallies:Tallies;
 	public var deaths:Int = 0;
 	
 	public var camFollow:FlxObject;
@@ -63,6 +66,10 @@ class PlayState extends FunkinState
 	{
 		instance = this;
 
+		//
+		// CAMERAS
+		//
+
 		camGame = new FlxCamera();
 		FlxG.cameras.reset(camGame);
 
@@ -79,25 +86,9 @@ class PlayState extends FunkinState
 
 		camGame.follow(camFollow, LOCKON, 0.03);
 
-		healthBar = new FunkinBar(0, 0, 500, 15, 0, 2, true);
-		healthBar.setColors(0xFFFF0000, 0xFF00FF00);
-		healthBar.screenCenter(X);
-		healthBar.y = FlxG.height - healthBar.height - 60;
-		healthBar.camera = camHUD;
-		add(healthBar);
-
-		scoreText = new FunkinText(0, 0, '123456');
-		scoreText.y = FlxG.height - scoreText.height - 20;
-		scoreText.alignment = CENTER;
-		scoreText.camera = camHUD;
-		scoreText.size = 20;
-		add(scoreText);
-
-		if (Preferences.downscroll)
-		{
-			healthBar.y = 60;
-			scoreText.y = 20;
-		}
+		//
+		// HUD
+		//
 
 		opponentStrumline = new Strumline();
 		opponentStrumline.x = 325;
@@ -115,21 +106,45 @@ class PlayState extends FunkinState
 		playerStrumline.holdNoteDrop.add(playerHoldNoteDrop);
 		add(playerStrumline);
 
-		stage = StageRegistry.instance.fetchStage(song.stage);
-		add(stage);
+		healthBar = new FunkinBar(0, 0, 500, 15, 0, 2, true);
+		healthBar.setColors(Constants.HEALTH_EMPTY_COLOR, Constants.HEALTH_FILL_COLOR);
+		healthBar.screenCenter(X);
+		healthBar.y = FlxG.height - healthBar.height - 60;
+		healthBar.camera = camHUD;
+		add(healthBar);
+
+		if (Preferences.downscroll) healthBar.y = 60;
+
+		scoreText = new FunkinText(0, 0, '123456');
+		scoreText.size = 18;
+		scoreText.alignment = CENTER;
+		scoreText.camera = camHUD;
+		scoreText.y = healthBar.y + healthBar.height + 5;
+		add(scoreText);
 
 		countdown = new Countdown();
 		countdown.camera = camHUD;
 		add(countdown);
 
+		stage = StageRegistry.instance.fetchStage(song.stage);
+		add(stage);
+
 		popups = new Popups();
 		add(popups);
+
+		//
+		// SETUP
+		//
+
+		tallies = new Tallies();
 
 		loadSong();
 		loadCharacters();
 
 		resetCameraTarget();
 		resetSong();
+
+		healthLerp = health;
 
 		super.create();
 	}
@@ -159,7 +174,7 @@ class PlayState extends FunkinState
 		healthLerp = MathUtil.lerp(healthLerp, health, 0.15);
 		healthBar.value = healthLerp;
 
-		scoreText.text = Std.string(Std.int(score));
+		scoreText.text = 'score: ${Std.int(score)} | misses: ${tallies.misses} | combo: ${tallies.combo}';
 		scoreText.screenCenter(X);
 		
 		camGame.zoom = MathUtil.lerp(camGame.zoom, stage.zoom, 0.03);
@@ -213,11 +228,9 @@ class PlayState extends FunkinState
 		songEnded = false;
 
 		score = 0;
-		combo = 0;
+		health = Constants.STARTING_HEALTH;
+		tallies.reset();
 
-		health = Constants.DEFAULT_HEALTH;
-		healthLerp = health;
-		
 		camGame.zoom = stage.zoom;
 
 		// Loads the strumline
@@ -368,23 +381,35 @@ class PlayState extends FunkinState
 		var judgement:Judgement = RhythmUtil.judgeNote(note);
 
 		score += judgement.score;
-		combo++;
-
 		health += Constants.NOTE_HEALTH;
 
-		// Only play the note splash if the player got a Sick!
-		if (judgement == SICK) playerStrumline.playSplash(note.direction);
+		tallies.hits++;
+		tallies.combo++;
+
+		switch (judgement)
+		{
+			case SICK:
+				playerStrumline.playSplash(note.direction);
+				tallies.sicks++;
+			case GOOD:
+				tallies.goods++;
+			case BAD:
+				tallies.bads++;
+			case SHIT:
+				tallies.shits++;
+		}
 
 		stage.player?.sing(note.direction);
 		voices.playerVolume = 1;
 
 		popups.popupJudgement(judgement);
-		popups.popupCombo(combo);
+		popups.popupCombo(tallies.combo);
 	}
 
 	function playerHoldNoteHit(holdNote:HoldNoteSprite)
 	{
 		score += Constants.HOLD_SCORE_PER_SEC * FlxG.elapsed;
+
 		health += Constants.HOLD_HEALTH_PER_SEC * FlxG.elapsed;
 
 		stage.player?.resetSingTimer();
@@ -399,7 +424,9 @@ class PlayState extends FunkinState
 			missScore *= (note.holdNote.length / 500);
 
 		score += missScore;
-		combo = 0;
+
+		tallies.misses++;
+		tallies.combo = 0;
 
 		health += Constants.MISS_HEALTH;
 
