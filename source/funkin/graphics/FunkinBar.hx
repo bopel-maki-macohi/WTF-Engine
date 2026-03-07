@@ -1,11 +1,10 @@
 package funkin.graphics;
 
 import flixel.group.FlxSpriteGroup;
+import flixel.util.FlxColor;
 
 /**
  * A better version of Flixel's `FlxBar` class because `FlxBar` is dumb and stupid.
- * 
- * TODO: Allow the colors to be changed.
  */
 class FunkinBar extends FlxSpriteGroup
 {
@@ -14,6 +13,7 @@ class FunkinBar extends FlxSpriteGroup
     public var left:Bool;
 
     public var value(default, set):Float;
+    public var percent(get, never):Float;
 
     var empty:FunkinSprite;
     var fill:FunkinSprite;
@@ -27,17 +27,24 @@ class FunkinBar extends FlxSpriteGroup
         this.left = left;
 
         empty = new FunkinSprite();
-        empty.makeGraphic(width, height, 0xFFFF0000);
+        empty.makeSolidColor(width, height, 0xFFFFFFFF);
         empty.active = false;
         add(empty);
 
         fill = new FunkinSprite();
-        fill.makeGraphic(width, height, 0xFF00FF00);
+        fill.makeSolidColor(width, height, 0xFFFFFFFF);
         fill.active = false;
-        fill.origin.x = left ? fill.width : 0;
+        fill.offset.x = left ? -width : 0;
+        fill.origin.x = left ? 1 : 0;
         add(fill);
 
-        value = min;
+        value = max;
+    }
+
+    public function setColors(emptyColor:FlxColor, fillColor:FlxColor)
+    {
+        empty.color = emptyColor;
+        fill.color = fillColor;
     }
 
     function set_value(value:Float):Float
@@ -45,8 +52,11 @@ class FunkinBar extends FlxSpriteGroup
         if (this.value == value) return value;
         this.value = value;
 
-        fill.scale.x = value / max;
+        fill.scale.x = percent * (fill.width + 1);
 
         return value;
     }
+
+    inline function get_percent():Float
+        return value / max;
 }

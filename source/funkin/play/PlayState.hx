@@ -79,6 +79,7 @@ class PlayState extends FunkinState
 		camGame.follow(camFollow, LOCKON, 0.03);
 
 		healthBar = new FunkinBar(0, 0, 500, 15, 0, 2, true);
+		healthBar.setColors(0xFFFF0000, 0xFF00FF00);
 		healthBar.screenCenter(X);
 		healthBar.y = FlxG.height - healthBar.height - 60;
 		healthBar.camera = camHUD;

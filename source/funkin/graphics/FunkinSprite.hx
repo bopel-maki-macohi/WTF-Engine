@@ -1,6 +1,7 @@
 package funkin.graphics;
 
 import flixel.FlxSprite;
+import flixel.util.FlxColor;
 
 /**
  * The base class for all of the engine's sprites.
@@ -11,6 +12,16 @@ class FunkinSprite extends FlxSprite
     {
         loadGraphic(Paths.image(id), frameWidth > 0 || frameHeight > 0, frameWidth, frameHeight);
         setGraphicSize(Std.int(width * Constants.ZOOM * scale));
+        updateHitbox();
+
+        return this;
+    }
+
+    public function makeSolidColor(width:Int, height:Int, color:FlxColor):FunkinSprite
+    {
+        makeGraphic(1, 1, color);
+
+        scale.set(width, height);
         updateHitbox();
 
         return this;
