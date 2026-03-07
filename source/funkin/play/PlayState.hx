@@ -11,11 +11,11 @@ import funkin.data.song.SongData.SongNoteData;
 import funkin.data.stage.StageRegistry;
 import funkin.graphics.FunkinBar;
 import funkin.graphics.FunkinText;
+import funkin.play.Popups;
 import funkin.play.note.HoldNoteSprite;
 import funkin.play.note.NoteDirection;
 import funkin.play.note.NoteSprite;
 import funkin.play.note.Strumline;
-import funkin.play.popup.Popups;
 import funkin.play.song.Song;
 import funkin.play.song.Voices;
 import funkin.ui.FunkinState;
@@ -31,6 +31,8 @@ class PlayState extends FunkinState
 	public static var difficulty:String;
 	public static var song:Song;
 
+	public var score:Float;
+	public var combo:Int;
 	public var deaths:Int = 0;
 	
 	public var camFollow:FlxObject;
@@ -40,7 +42,6 @@ class PlayState extends FunkinState
 	var songStarted:Bool;
 	var songEnded:Bool;
 
-	var score:Float;
 	var health:Float;
 	var healthLerp:Float;
 
@@ -212,6 +213,8 @@ class PlayState extends FunkinState
 		songEnded = false;
 
 		score = 0;
+		combo = 0;
+
 		health = Constants.DEFAULT_HEALTH;
 		healthLerp = health;
 		
@@ -363,16 +366,20 @@ class PlayState extends FunkinState
 	function playerNoteHit(note:NoteSprite)
 	{
 		var judgement:Judgement = RhythmUtil.judgeNote(note);
-		popups.playJudgement(judgement);
+
+		score += judgement.score;
+		combo++;
+
+		health += Constants.NOTE_HEALTH;
 
 		// Only play the note splash if the player got a Sick!
 		if (judgement == SICK) playerStrumline.playSplash(note.direction);
 
-		score += judgement.score;
-		health += Constants.NOTE_HEALTH;
-
 		stage.player?.sing(note.direction);
 		voices.playerVolume = 1;
+
+		popups.popupJudgement(judgement);
+		popups.popupCombo(combo);
 	}
 
 	function playerHoldNoteHit(holdNote:HoldNoteSprite)
@@ -387,9 +394,13 @@ class PlayState extends FunkinState
 	function playerNoteMiss(note:NoteSprite)
 	{
 		var missScore:Float = Constants.MISS_SCORE;
-		if (note.holdNote != null) missScore *= (note.holdNote.length / 500);
+		
+		if (note.holdNote != null)
+			missScore *= (note.holdNote.length / 500);
 
 		score += missScore;
+		combo = 0;
+
 		health += Constants.MISS_HEALTH;
 
 		stage.player?.miss(note.direction);
