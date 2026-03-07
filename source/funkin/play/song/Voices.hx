@@ -3,7 +3,7 @@ package funkin.play.song;
 import funkin.audio.FunkinSound;
 
 /**
- * A class for handling the vocals for a song.
+ * The game's vocal group, containing both the opponent and player's voices.
  */
 class Voices
 {
@@ -15,8 +15,8 @@ class Voices
 
     public function new(id:String)
     {
-        opponent = FunkinSound.load(Paths.voices(id, 'opponent'), 1, false);
-        player = FunkinSound.load(Paths.voices(id, 'player'), 1, false);
+        opponent = FunkinSound.load(Paths.voices(id, 'opponent'), 1, false, false, false);
+        player = FunkinSound.load(Paths.voices(id, 'player'), 1, false, false, false);
     }
 
     public function play()
@@ -40,7 +40,7 @@ class Voices
     public function checkResync(time:Float)
     {
         // Opponent vocals resync
-        if (Math.abs(time - opponent.time) > Constants.RESYNC_THRESHOLD)
+        if (Math.abs(time - opponent.time) > Constants.RESYNC_THRESHOLD && opponent.playing)
         {
             opponent.pause();
             opponent.time = time;
@@ -48,7 +48,7 @@ class Voices
         }
 
         // Player vocals resync
-        if (Math.abs(time - player.time) > Constants.RESYNC_THRESHOLD)
+        if (Math.abs(time - player.time) > Constants.RESYNC_THRESHOLD && player.playing)
         {
             player.pause();
             player.time = time;
@@ -56,7 +56,7 @@ class Voices
         }
     }
 
-    function set_opponentVolume(opponentVolume:Float):Float
+    function set_opponentVolume(volume:Float):Float
     {
         opponent.volume = opponentVolume;
         return opponentVolume;

@@ -39,7 +39,6 @@ class PauseSubState extends FunkinSubState
         #end
 
         music = FunkinSound.load('play/music/pause', 0);
-        music.play();
 
         bg = new FunkinSprite();
         bg.makeGraphic(FlxG.width, FlxG.height, 0xFF000000);

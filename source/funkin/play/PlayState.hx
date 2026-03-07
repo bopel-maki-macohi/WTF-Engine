@@ -3,11 +3,13 @@ package funkin.play;
 import flixel.FlxCamera;
 import flixel.FlxObject;
 import flixel.FlxSubState;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import funkin.audio.FunkinSound;
 import funkin.data.song.SongData.SongNoteData;
 import funkin.data.stage.StageRegistry;
+import funkin.graphics.FunkinBar;
 import funkin.graphics.FunkinText;
 import funkin.play.note.HoldNoteSprite;
 import funkin.play.note.NoteDirection;
@@ -40,25 +42,28 @@ class PlayState extends FunkinState
 
 	var score:Float;
 	var health:Float;
+	var healthLerp:Float;
 
-	var voices:Voices;
-
+	var camGame:FlxCamera;
 	var camHUD:FlxCamera;
 	var camPause:FlxCamera;
 
 	var camTarget:Int;
-	var camZoom:Float;
+	var voices:Voices;
 
 	var opponentStrumline:Strumline;
 	var playerStrumline:Strumline;
+	var healthBar:FunkinBar;
 	var scoreText:FunkinText;
-
 	var countdown:Countdown;
 	var popups:Popups;
 
 	override public function create()
 	{
 		instance = this;
+
+		camGame = new FlxCamera();
+		FlxG.cameras.reset(camGame);
 
 		camHUD = new FlxCamera();
 		camHUD.bgColor = 0x0;
@@ -70,7 +75,27 @@ class PlayState extends FunkinState
 
 		camFollow = new FlxObject();
 		camFollow.active = false;
-		FlxG.camera.follow(camFollow, LOCKON, 0.03);
+
+		camGame.follow(camFollow, LOCKON, 0.03);
+
+		healthBar = new FunkinBar(0, 0, 500, 15, 0, 2, true);
+		healthBar.screenCenter(X);
+		healthBar.y = FlxG.height - healthBar.height - 60;
+		healthBar.camera = camHUD;
+		add(healthBar);
+
+		scoreText = new FunkinText(0, 0, '123456');
+		scoreText.y = FlxG.height - scoreText.height - 20;
+		scoreText.alignment = CENTER;
+		scoreText.camera = camHUD;
+		scoreText.size = 20;
+		add(scoreText);
+
+		if (Preferences.downscroll)
+		{
+			healthBar.y = 60;
+			scoreText.y = 20;
+		}
 
 		opponentStrumline = new Strumline();
 		opponentStrumline.x = 325;
@@ -88,14 +113,7 @@ class PlayState extends FunkinState
 		playerStrumline.holdNoteDrop.add(playerHoldNoteDrop);
 		add(playerStrumline);
 
-		scoreText = new FunkinText();
-		scoreText.alignment = CENTER;
-		scoreText.camera = camHUD;
-		scoreText.size = 24;
-		add(scoreText);
-
 		stage = StageRegistry.instance.fetchStage(song.stage);
-		camZoom = stage.zoom;
 		add(stage);
 
 		countdown = new Countdown();
@@ -105,6 +123,7 @@ class PlayState extends FunkinState
 		popups = new Popups();
 		add(popups);
 
+		loadSong();
 		loadCharacters();
 
 		resetCameraTarget();
@@ -134,20 +153,23 @@ class PlayState extends FunkinState
 		processInput();
 
 		// HUD
+		health = FlxMath.bound(health, healthBar.min, healthBar.max);
+		healthLerp = MathUtil.lerp(healthLerp, health, 0.15);
+		healthBar.value = healthLerp;
+
 		scoreText.text = Std.string(Std.int(score));
 		scoreText.screenCenter(X);
-		scoreText.y = FlxG.height - scoreText.height - 50;
-		if (Preferences.downscroll) scoreText.y = 50;
 		
-		FlxG.camera.zoom = MathUtil.lerp(FlxG.camera.zoom, camZoom, 0.03);
+		camGame.zoom = MathUtil.lerp(camGame.zoom, stage.zoom, 0.03);
 		camHUD.zoom = MathUtil.lerp(camHUD.zoom, 1, 0.03);
 
-		// Keybinds
-		if (controls.PAUSE) pauseGame();
-		if (controls.RESET) health = 0;
+		if (controls.PAUSE)
+			pauseGame();
+		if (controls.RESET)
+			health = 0;
 
-		// Death if health is below or equal to zero
-		if (health <= 0) openSubState(new GameOverSubState());
+		// Death :(
+		if (health <= healthBar.min) openSubState(new GameOverSubState());
 	}
 
 	override function beatHit(beat:Int)
@@ -159,7 +181,7 @@ class PlayState extends FunkinState
 		// Camera bopping
 		if (beat % 2 == 0)
 		{
-			FlxG.camera.zoom = camZoom + 0.05;
+			camGame.zoom = stage.zoom + 0.05;
 			camHUD.zoom = 1.02;
 		}
 
@@ -169,7 +191,6 @@ class PlayState extends FunkinState
 		stage.gf?.dance();
 
 		// Advances the countdown by a step
-		// Only if the countdown had started though
 		countdown.advance();
 	}
 
@@ -186,22 +207,35 @@ class PlayState extends FunkinState
 
 	public function resetSong()
 	{
-		songLoaded = false;
 		songStarted = false;
 		songEnded = false;
 
 		score = 0;
-		health = 0.5;
+		health = Constants.DEFAULT_HEALTH;
+		healthLerp = health;
+		
+		camGame.zoom = stage.zoom;
 
-		FunkinSound.stopAllSounds(true);
-		FlxG.camera.zoom = camZoom;
+		// Loads the strumline
+		var notes:Array<SongNoteData> = song.getNotes(difficulty);
+		var speed:Float = song.getSpeed(difficulty);
 
 		opponentStrumline.clean();
 		playerStrumline.clean();
+
+		opponentStrumline.load(notes.filter(note -> return note.d >= Constants.NOTE_COUNT), speed);
+		playerStrumline.load(notes.filter(note -> return note.d < Constants.NOTE_COUNT), speed);
+
+		// Resets the conductor
+		conductor.reset(song.bpm);
+		conductor.time = -conductor.crotchet * 4;
+
+		// Starts the countdown
 		countdown.start();
 
+		FunkinSound.stopAllSounds(true);
+
 		resetCameraTarget();
-		loadSong();
 	}
 
 	public function setCameraTarget(target:Int, instant:Bool = false)
@@ -216,9 +250,10 @@ class PlayState extends FunkinState
 		var camPos:FlxPoint = character.getGraphicMidpoint();
 		camPos.x += character.isPlayer ? -100 : 100;
 		camPos.y -= 100;
+		
 		camFollow.setPosition(camPos.x, camPos.y);
 
-		if (instant) FlxG.camera.snapToTarget();
+		if (instant) camGame.snapToTarget();
 	}
 
 	function loadCharacters()
@@ -230,20 +265,10 @@ class PlayState extends FunkinState
 
 	function loadSong()
 	{
-		var notes:Array<SongNoteData> = song.getNotes(difficulty);
-		var speed:Float = song.getSpeed(difficulty);
+		songLoaded = true;
 
-		opponentStrumline.load(notes.filter(note -> return !NoteDirection.isPlayer(note.d)), speed);
-		playerStrumline.load(notes.filter(note -> return NoteDirection.isPlayer(note.d)), speed);
-
-		// Loads the actual song
 		FunkinSound.playMusic(Paths.inst(song.id), 1, false, false);
 		voices = new Voices(song.id);
-
-		conductor.reset(song.bpm);
-		conductor.time = -conductor.crotchet * 4;
-
-		songLoaded = true;
 	}
 
 	function startSong()
@@ -258,26 +283,24 @@ class PlayState extends FunkinState
 	{
 		songEnded = true;
 
-		// Stops the music
-		// Remove this line if you want to hear something loud
-		FunkinSound.music.stop();
-		voices.stop();
+		FunkinSound.stopAllSounds(true);
 
 		// TODO: Add song end logic
 	}
 
 	function checkSongTime()
 	{
-		if (!songStarted || songEnded) return;
-
-		// End the song of the time has come...
+		// End the song if the time has come...
+		// Doing this normally has a problem unfortunately :(
 		if (conductor.time >= FunkinSound.music.length)
 		{
 			endSong();
 			return;
 		}
 
-		// Instrumental resync
+		// Don't resync if the song isn't playing
+		if (!FunkinSound.music.playing) return;
+
 		if (Math.abs(conductor.time - FunkinSound.music.time) > Constants.RESYNC_THRESHOLD)
 		{
 			FunkinSound.music.pause();
@@ -287,8 +310,6 @@ class PlayState extends FunkinState
 			trace('Resynced instrumental.');
 		}
 
-		// Vocals resync
-		// Because the vocals are two sounds, it needs special treatment
 		voices.checkResync(conductor.time);
 	}
 
@@ -347,16 +368,18 @@ class PlayState extends FunkinState
 		if (judgement == SICK) playerStrumline.playSplash(note.direction);
 
 		score += judgement.score;
-		stage.player?.sing(note.direction);
+		health += Constants.NOTE_HEALTH;
 
+		stage.player?.sing(note.direction);
 		voices.playerVolume = 1;
 	}
 
 	function playerHoldNoteHit(holdNote:HoldNoteSprite)
 	{
 		score += Constants.HOLD_SCORE_PER_SEC * FlxG.elapsed;
-		stage.player?.resetSingTimer();
+		health += Constants.HOLD_HEALTH_PER_SEC * FlxG.elapsed;
 
+		stage.player?.resetSingTimer();
 		voices.playerVolume = 1;
 	}
 
@@ -366,16 +389,18 @@ class PlayState extends FunkinState
 		if (note.holdNote != null) missScore *= (note.holdNote.length / 500);
 
 		score += missScore;
-		stage.player?.miss(note.direction);
+		health += Constants.MISS_HEALTH;
 
+		stage.player?.miss(note.direction);
 		voices.playerVolume = 0;
 	}
 
 	function playerGhostMiss(direction:NoteDirection)
 	{
-		score += Constants.GHOST_TAP_SCORE;
-		stage.player?.miss(direction);
+		score += Constants.GHOST_MISS_SCORE;
+		health += Constants.GHOST_MISS_HEALTH;
 
+		stage.player?.miss(direction);
 		voices.playerVolume = 0;
 	}
 
@@ -383,8 +408,9 @@ class PlayState extends FunkinState
 	{
 		// Takes away score based on how long the hold note is
 		score += Constants.MISS_SCORE * (holdNote.length / 500);
-		stage.player?.miss(holdNote.direction);
+		health += Constants.MISS_HEALTH;
 
+		stage.player?.miss(holdNote.direction);
 		voices.playerVolume = 0;
 	}
 
@@ -407,7 +433,8 @@ class PlayState extends FunkinState
 
 		FlxTween.globalManager.active = false;
 		FlxG.sound.defaultSoundGroup.pause();
-		FlxG.camera.active = false;
+
+		camGame.active = false;
 	}
 
 	override public function closeSubState()
@@ -422,7 +449,8 @@ class PlayState extends FunkinState
 
 		FlxTween.globalManager.active = true;
 		FlxG.sound.defaultSoundGroup.resume();
-		FlxG.camera.active = true;
+
+		camGame.active = true;
 	}
 
 	override public function destroy()

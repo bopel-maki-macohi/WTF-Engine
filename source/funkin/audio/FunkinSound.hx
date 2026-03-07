@@ -9,26 +9,24 @@ class FunkinSound extends FlxSound
 {
     public static var music:FunkinSound;
 
-    public static function load(id:String, volume:Float = 1, looped:Bool = true):FunkinSound
+    public static function load(id:String, volume:Float = 1, looped:Bool = true, autoDestroy:Bool = true, autoPlay:Bool = true):FunkinSound
     {
         var sound:FunkinSound = cast FlxG.sound.list.recycle(FunkinSound);
-        sound.loadEmbedded(Paths.sound(id), looped, true);
-
+        
+        sound.loadEmbedded(Paths.sound(id), looped, autoDestroy);
         sound.persist = false;
         sound.volume = volume;
 
         FlxG.sound.list.add(sound);
         FlxG.sound.defaultSoundGroup.add(sound);
 
+        if (autoPlay) sound.play();
+
         return sound;
     }
 
     public static function playOnce(id:String, volume:Float = 1):FunkinSound
-    {
-        var sound:FunkinSound = load(id, volume, false);
-        sound.play();
-        return sound;
-    }
+        return load(id, volume, false);
 
     public static function playMusic(id:String, volume:Float = 1, looped:Bool = true, autoPlay:Bool = true)
     {

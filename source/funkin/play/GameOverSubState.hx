@@ -28,11 +28,10 @@ class GameOverSubState extends FunkinSubState
 
         _parentState.persistentDraw = false;
 
-        music = FunkinSound.load('play/music/gameover');
+        music = FunkinSound.load('play/music/gameover', 1, true, true, false);
 
         startSound = FunkinSound.load('play/sounds/gameover/start', 1, false);
-        startSound.onComplete = startLoop;
-        startSound.play();
+        startSound.onComplete = () -> music.play();
 
         buildCharacter();
 
@@ -43,6 +42,8 @@ class GameOverSubState extends FunkinSubState
             PlayState.instance.camFollow.setPosition(followPos.x, followPos.y);
             FlxG.camera.active = true;
         }
+
+        conductor.reset(100);
     }
 
     function buildCharacter()
@@ -66,20 +67,14 @@ class GameOverSubState extends FunkinSubState
     {
         super.update(elapsed);
 
-        if (music != null)
-        {
-            conductor.time = music.time;
-            conductor.update();
-        }
+        // Updates the conductor
+        conductor.time = music?.time;
+        conductor.update();
 
-        if (controls.ACCEPT) skip();
-        if (controls.BACK) back();
-    }
-
-    function startLoop()
-    {
-        conductor.reset(100);
-        music.play();
+        if (controls.ACCEPT)
+            skip();
+        if (controls.BACK)
+            FlxG.switchState(() -> new FreeplayState());
     }
 
     function skip()
@@ -91,16 +86,13 @@ class GameOverSubState extends FunkinSubState
 
         music.destroy();
         startSound.destroy();
-        
+
+        // Gotta reset this!
+        // Or else the character keeps bopping
         conductor.reset();
 
         FunkinSound.playOnce('play/sounds/gameover/end');
         FlxTimer.wait(1, () -> FlxG.camera.fade(0xFF000000, 2, false, close));
-    }
-
-    function back()
-    {
-        FlxG.switchState(() -> new FreeplayState());
     }
 
     override function beatHit(beat:Int)
@@ -116,7 +108,7 @@ class GameOverSubState extends FunkinSubState
 
         _parentState.persistentDraw = true;
 
-        PlayState.instance.resetSong();
         FlxG.camera.fade(0xFF000000, 1, true);
+        PlayState.instance.resetSong();
     }
 }
