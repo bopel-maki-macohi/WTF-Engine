@@ -7,7 +7,7 @@ import funkin.play.PlayState;
 import funkin.util.SortUtil;
 
 /**
- * The game's freeplay state, where the player is able to select a song.
+ * The engine's freeplay state, where the player is able to select a song.
  * 
  * TODO: Make this a proper freeplay menu.
  */
