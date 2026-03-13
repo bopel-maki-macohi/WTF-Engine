@@ -4,6 +4,7 @@
     "frameHeight": 315,
     "globalOffset": [0, -460],
     "cameraOffset": [250, 110],
+    "icon": {},
     "animations": [
         {
             "name": "idle",

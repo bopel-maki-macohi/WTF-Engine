@@ -18,9 +18,7 @@ typedef StageData = {
  * A structure object used for stage character data.
  */
 typedef StageCharacterData = {
-    @:optional
     var position:Array<Float>;
-    @:optional
     var scroll:Array<Float>;
     @:optional
     var zIndex:Int;
@@ -31,9 +29,7 @@ typedef StageCharacterData = {
  */
 typedef StagePropData = {
     var id:String;
-    @:optional
     var position:Array<Float>;
-    @:optional
     var scroll:Array<Float>;
     @:default(1)
     var scale:Float;

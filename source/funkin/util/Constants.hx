@@ -46,11 +46,11 @@ class Constants
     public static final MISS_SCORE:Int = -100;
     public static final GHOST_MISS_SCORE:Int = -50;
 
-    public static final STARTING_HEALTH:Float = 1;
+    public static final STARTING_HEALTH:Float = 0.5;
     public static final HEALTH_FILL_COLOR:FlxColor = 0xFF00FF00;
     public static final HEALTH_EMPTY_COLOR:FlxColor = 0xFFFF0000;
-    public static final HOLD_HEALTH_PER_SEC:Float = 0.1;
-    public static final NOTE_HEALTH:Float = 0.08;
-    public static final MISS_HEALTH:Float = -0.065;
-    public static final GHOST_MISS_HEALTH:Float = -0.05;
+    public static final HOLD_HEALTH_PER_SEC:Float = 0.04;
+    public static final NOTE_HEALTH:Float = 0.035;
+    public static final MISS_HEALTH:Float = -0.03;
+    public static final GHOST_MISS_HEALTH:Float = -0.025;
 }

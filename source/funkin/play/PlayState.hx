@@ -13,6 +13,7 @@ import funkin.graphics.FunkinBar;
 import funkin.graphics.FunkinText;
 import funkin.play.components.Character;
 import funkin.play.components.Countdown;
+import funkin.play.components.HealthIcon;
 import funkin.play.components.Popups;
 import funkin.play.components.Stage;
 import funkin.play.note.HoldNoteSprite;
@@ -58,6 +59,8 @@ class PlayState extends FunkinState
 	var opponentStrumline:Strumline;
 	var playerStrumline:Strumline;
 	var healthBar:FunkinBar;
+	var opponentIcon:HealthIcon;
+	var playerIcon:HealthIcon;
 	var scoreText:FunkinText;
 	var countdown:Countdown;
 	var popups:Popups;
@@ -108,7 +111,7 @@ class PlayState extends FunkinState
 		playerStrumline.holdNoteDrop.add(playerHoldNoteDrop);
 		add(playerStrumline);
 
-		healthBar = new FunkinBar(0, 0, 500, 15, 0, 2, true);
+		healthBar = new FunkinBar(0, 0, 500, 15, 0, 1, true);
 		healthBar.setColors(Constants.HEALTH_EMPTY_COLOR, Constants.HEALTH_FILL_COLOR);
 		healthBar.screenCenter(X);
 		healthBar.y = FlxG.height - healthBar.height - 60;
@@ -121,7 +124,8 @@ class PlayState extends FunkinState
 		scoreText.size = 15;
 		scoreText.alignment = CENTER;
 		scoreText.camera = camHUD;
-		scoreText.y = healthBar.y + healthBar.height + 10;
+		scoreText.y = healthBar.y + healthBar.height + 25;
+		scoreText.zIndex = 1;
 		add(scoreText);
 
 		countdown = new Countdown();
@@ -153,10 +157,7 @@ class PlayState extends FunkinState
 	{
 		super.update(elapsed);
 
-		//
-		// SONG
-		//
-		
+		// Updates the conductor
 		if (songLoaded)
 		{
 			conductor.time += elapsed * Constants.MS_PER_SEC;
@@ -178,7 +179,20 @@ class PlayState extends FunkinState
 
 		health = FlxMath.bound(health, healthBar.min, healthBar.max);
 		healthLerp = MathUtil.lerp(healthLerp, health, 0.15);
+
 		healthBar.value = healthLerp;
+		
+		if (opponentIcon != null)
+		{
+			opponentIcon.x = healthBar.fillPosition - opponentIcon.width + 15;
+			opponentIcon.isDead = health > 0.8;
+		}
+
+		if (playerIcon != null)
+		{
+			playerIcon.x = healthBar.fillPosition - 15;
+			playerIcon.isDead = health < 0.2;
+		}
 
 		scoreText.text = 'score: ${Std.int(score)} | misses: ${tallies.misses}';
 		scoreText.screenCenter(X);
@@ -205,20 +219,23 @@ class PlayState extends FunkinState
 
 		if (subState != null) return;
 
-		// Camera bopping
+		stage.opponent?.dance();
+		stage.player?.dance();
+		stage.gf?.dance();
+
+		countdown.advance();
+
+		// Don't bop all this stuff until the song starts
+		if (!songStarted) return;
+
+		opponentIcon?.bop();
+		playerIcon?.bop();
+
 		if (beat % 2 == 0)
 		{
 			camGame.zoom = stage.zoom + 0.05;
 			camHUD.zoom = 1.02;
 		}
-
-		// Character bopping
-		stage.opponent?.dance();
-		stage.player?.dance();
-		stage.gf?.dance();
-
-		// Advances the countdown by a step
-		countdown.advance();
 	}
 
 	override function sectionHit(section:Int)
@@ -287,6 +304,26 @@ class PlayState extends FunkinState
 		stage.setPlayer(song.player);
 		stage.setOpponent(song.opponent);
 		stage.setGF(song.gf);
+
+		// Sets up character health icons
+		opponentIcon = stage.opponent?.buildHealthIcon();
+		playerIcon = stage.player?.buildHealthIcon();
+
+		if (opponentIcon != null)
+		{
+			opponentIcon.camera = camHUD;
+			opponentIcon.y = healthBar.y - opponentIcon.height / 2;
+			add(opponentIcon);
+		}
+
+		if (playerIcon != null)
+		{
+			playerIcon.camera = camHUD;
+			playerIcon.y = healthBar.y - playerIcon.height / 2;
+			add(playerIcon);
+		}
+
+		refresh();
 	}
 
 	function loadSong()

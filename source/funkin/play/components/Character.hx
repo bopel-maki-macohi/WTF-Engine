@@ -66,6 +66,15 @@ class Character extends FunkinSprite
     public function resetSingTimer()
         singTimer = 0;
 
+    public function buildHealthIcon():HealthIcon
+    {
+        // Return null if icon data is lacking
+        // The god damn errors this would give >:(
+        if (meta.icon == null)
+            return null;
+        return new HealthIcon(id, meta.icon, isPlayer);
+    }
+
     override function set_x(x:Float):Float
         return super.set_x(x + meta?.globalOffset[0] ?? 0);
 

@@ -9,6 +9,7 @@ typedef CharacterData = {
     var image:String;
     var frameWidth:Int;
     var frameHeight:Int;
+    var icon:CharacterIconData;
     var globalOffset:Array<Float>;
     var cameraOffset:Array<Float>;
     @:default(1)
@@ -32,4 +33,17 @@ typedef CharacterAnimData = {
     @:default(10)
     var framerate:Int;
     var looped:Bool;
+}
+
+/**
+ * A structure object used for the health icon data of characters.
+ */
+typedef CharacterIconData = {
+    var image:String;
+    @:default(1)
+    var scale:Float;
+    var flipX:Bool;
+    var flipY:Bool;
+    @:default(1)
+    var bopEvery:Int;
 }

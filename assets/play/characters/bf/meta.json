@@ -4,6 +4,9 @@
     "frameHeight": 248,
     "globalOffset": [0, -350],
     "cameraOffset": [100, 50],
+    "icon": {
+        "flipX": true
+    },
     "flipX": true,
     "animations": [
         {

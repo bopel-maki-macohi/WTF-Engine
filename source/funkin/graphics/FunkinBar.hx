@@ -10,21 +10,23 @@ class FunkinBar extends FlxSpriteGroup
 {
     public var min:Float;
     public var max:Float;
-    public var left:Bool;
+    public var isLeft:Bool;
 
     public var value(default, set):Float;
     public var percent(get, never):Float;
 
+    public var fillPosition(get, never):Float;
+
     var empty:FunkinSprite;
     var fill:FunkinSprite;
 
-    public function new(x:Float, y:Float, width:Int, height:Int, min:Float = 0, max:Float = 100, left:Bool = false)
+    public function new(x:Float, y:Float, width:Int, height:Int, min:Float = 0, max:Float = 100, isLeft:Bool = false)
     {
         super(x, y);
 
         this.min = min;
         this.max = max;
-        this.left = left;
+        this.isLeft = isLeft;
 
         empty = new FunkinSprite();
         empty.makeSolidColor(width, height, 0xFFFFFFFF);
@@ -34,8 +36,8 @@ class FunkinBar extends FlxSpriteGroup
         fill = new FunkinSprite();
         fill.makeSolidColor(width, height, 0xFFFFFFFF);
         fill.active = false;
-        fill.offset.x = left ? -width + 1 : 0;
-        fill.origin.x = left ? 1 : 0;
+        fill.offset.x = isLeft ? -width + 1 : 0;
+        fill.origin.x = isLeft ? 1 : 0;
         add(fill);
 
         value = max;
@@ -59,4 +61,12 @@ class FunkinBar extends FlxSpriteGroup
 
     inline function get_percent():Float
         return value / max;
+
+    inline function get_fillPosition():Float
+    {
+        var pos:Float = percent * fill.width;
+        if (isLeft)
+            pos = fill.width - pos;
+        return x + pos;
+    }
 }
