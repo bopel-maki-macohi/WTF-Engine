@@ -1,16 +1,20 @@
 package funkin.ui.freeplay.components;
 
+import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.util.FlxTimer;
 import funkin.audio.FunkinSound;
+import funkin.graphics.FunkinSprite;
 import funkin.graphics.FunkinText;
 import funkin.input.Controls;
 
 /**
  * Text that displays the current difficulty in the freeplay menu.
  */
-class DifficultyText extends FunkinText
+class DifficultyText extends FlxSpriteGroup
 {
+    final ARROW_SPACING:Float = 10;
+    
     public var selected:Int;
     public var difficulties:Array<String>;
     public var difficulty(get, never):String;
@@ -19,6 +23,10 @@ class DifficultyText extends FunkinText
 
     public var onSelected(default, null) = new FlxTypedSignal<Int->Void>();
 
+    var diffText:FunkinText;
+    var arrowLeft:FunkinSprite;
+    var arrowRight:FunkinSprite;
+    
     var selectTimer:FlxTimer;
 
     public function new(selected:Int = 0, difficulties:Array<String>)
@@ -28,11 +36,21 @@ class DifficultyText extends FunkinText
         this.selected = selected;
         this.difficulties = difficulties;
 
-        // Not doing this will cause problems lol
-        autoBounds = false;
-        active = true;
+        diffText = new FunkinText();
+        diffText.size = 48;
+        add(diffText);
 
-        size = 48;
+        arrowLeft = FunkinSprite.create(0, 0, 'ui/freeplay/arrow');
+        arrowLeft.active = false;
+        add(arrowLeft);
+
+        arrowRight = new FunkinSprite();
+        arrowRight.loadGraphicFromSprite(arrowLeft);
+        arrowRight.setGraphicSize(arrowLeft.width, arrowLeft.height);
+        arrowRight.updateHitbox();
+        arrowRight.flipX = true;
+        arrowRight.active = false;
+        add(arrowRight);
 
         select();
     }
@@ -61,20 +79,21 @@ class DifficultyText extends FunkinText
         else if (selected >= difficulties.length)
             selected = 0;
 
-        text = difficulty;
+        diffText.text = difficulty;
+        diffText.x = arrowLeft.x + arrowLeft.width + ARROW_SPACING;
         
-        updateHitbox();
-
-        offset.y = 0;
+        arrowRight.x = diffText.x + diffText.width + ARROW_SPACING;
+        arrowLeft.y = diffText.y + (diffText.height - arrowLeft.height) / 2;
+        arrowRight.y = arrowLeft.y;
 
         if (lastSelected != selected && change != 0)
         {
             FunkinSound.playOnce('ui/sounds/scroll');
 
-            offset.y = 5;
+            diffText.y -= 5;
 
             selectTimer?.cancel();
-            selectTimer = FlxTimer.wait(0.05, () -> offset.y = 0);
+            selectTimer = FlxTimer.wait(0.05, () -> diffText.y += 5);
 
             onSelected.dispatch(selected);
         }

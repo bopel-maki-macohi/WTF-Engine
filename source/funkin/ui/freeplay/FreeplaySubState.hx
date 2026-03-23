@@ -102,18 +102,18 @@ class FreeplaySubState extends FunkinSubState
         ostText.zIndex = blackbar.zIndex;
         add(ostText);
 
-        scoreText = new FunkinText(0, blackbar.height + 30);
+        scoreText = new FunkinText(0, blackbar.height + 40);
         scoreText.alignment = RIGHT;
         add(scoreText);
 
         diffText = new DifficultyText(selectedDiff, SongRegistry.instance.getDifficulties());
-        diffText.y = blackbar.height + 30;
+        diffText.y = scoreText.y;
         diffText.onSelected.add(selectDifficulty);
         add(diffText);
 
         sortText = new SortText(selectedSort);
         sortText.screenCenter(X);
-        sortText.y = blackbar.height + 20;
+        sortText.y = blackbar.height + 30;
         sortText.onSelected.add(selectSort);
         add(sortText);
 
@@ -177,6 +177,7 @@ class FreeplaySubState extends FunkinSubState
 
     function selectDifficulty(selected:Int)
     {
+        busy = true;
         selectedDiff = selected;
 
         var songs:Array<String> = SongRegistry.instance.listWithDifficulty(difficulty);
@@ -189,6 +190,8 @@ class FreeplaySubState extends FunkinSubState
         capsules.forEachAlive(capsule -> exitMovers.add(capsule, FlxG.width + capsule.x));
 
         diffText.x = (440 - diffText.width) / 2;
+
+        FlxTimer.wait(0.1, () -> busy = false);
     }
 
     function selectSort(selected:Int)
