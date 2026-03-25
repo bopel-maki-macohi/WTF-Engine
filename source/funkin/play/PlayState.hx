@@ -78,6 +78,9 @@ class PlayState extends FunkinState
 
 		instance = this;
 
+		// Clear the cache because it's good
+		FunkinMemory.clearCache();
+
 		//
 		// CAMERAS
 		//
@@ -588,5 +591,8 @@ class PlayState extends FunkinState
 		// Gonna want to reactivate this when the state is destroyed
 		// There are problems if this isn't done
 		FlxTween.globalManager.active = true;
+
+		// Clear the cache because it's good
+		FunkinMemory.clearCache();
 	}
 }
