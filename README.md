@@ -1,28 +1,12 @@
 # Friday Night Funkin' WTF Engine
 
-Ever wanted to know what FNF would be like if it was good?
+WTF Engine is the best worst Friday Night Funkin' engine out there. What this engine does differently is the art. Rather than using FNF's premade and visually pleasing graphics, this engine uses the shittiest possible art.
 
-How about if FNF was bad?
-
-Well you came to probably the right place I think.
-
-WTF Engine is an FNF engine built from the ground up and uses shitty art. Probably enough to make you go like "what the fuck".
-
-## Features (So far)
-
-### What it has:
-- Notes
-- Input system
-- Chud
-
-### What it doesn't have:
-- Everything from FNF besides the stuff listed above
-- Human trafficking
-- Money laundering
+Why should you even use this engine? The engine pretty much exists as a joke. The content made using this engine should be done for the fun of it.
 
 ## Compiling
 
-To compile WTF Engine, please check out [COMPILING.md](docs/COMPILING.md).
+To compile the engine, please check out [COMPILING.md](docs/COMPILING.md).
 
 ## Credits
 
