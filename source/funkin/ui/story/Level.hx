@@ -1,5 +1,6 @@
 package funkin.ui.story;
 
+import flixel.util.FlxColor;
 import funkin.data.song.SongRegistry;
 import funkin.data.story.LevelData;
 import funkin.play.song.Song;
@@ -18,6 +19,8 @@ class Level
     public var opponent(get, never):String;
     public var player(get, never):String;
     public var gf(get, never):String;
+
+    public var color(get, never):String;
 
     var songs:Array<String>;
     var songNames:Array<String>;
@@ -89,4 +92,7 @@ class Level
 
     inline function get_gf():String
         return meta.gf;
+
+    inline function get_color():String
+        return meta.color;
 }

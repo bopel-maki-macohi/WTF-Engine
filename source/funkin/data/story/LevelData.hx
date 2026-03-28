@@ -12,4 +12,6 @@ typedef LevelData = {
     var opponent:String;
     var player:String;
     var gf:String;
+    @:default('#FFCB2F')
+    var color:String;
 }

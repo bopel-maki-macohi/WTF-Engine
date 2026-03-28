@@ -1,6 +1,9 @@
 package funkin.ui.story;
 
 import flixel.FlxCamera;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import funkin.audio.FunkinSound;
 import funkin.data.song.SongRegistry;
@@ -35,7 +38,7 @@ class StoryMenuSubState extends FunkinSubState
 
     var blackTop:FunkinSprite;
     var blackBottom:FunkinSprite;
-    var yellowBG:FunkinSprite;
+    var bg:FunkinSprite;
     var scoreText:FunkinText;
     var levelText:FunkinText;
     var titleGroup:TitleGroup;
@@ -78,12 +81,12 @@ class StoryMenuSubState extends FunkinSubState
         blackBottom.active = false;
         add(blackBottom);
 
-        yellowBG = new FunkinSprite();
-        yellowBG.makeSolidColor(FlxG.width, Std.int(FlxG.height - blackBottom.height - blackTop.height), 0xFFFFCB2F);
-        yellowBG.y = blackTop.height;
-        yellowBG.active = false;
-        yellowBG.zIndex = 1;
-        add(yellowBG);
+        bg = new FunkinSprite();
+        bg.makeSolidColor(FlxG.width, Std.int(FlxG.height - blackBottom.height - blackTop.height), 0xFFFFFFFF);
+        bg.y = blackTop.height;
+        bg.active = false;
+        bg.zIndex = 1;
+        add(bg);
 
         scoreText = new FunkinText(10);
         scoreText.alpha = 0.6;
@@ -119,7 +122,7 @@ class StoryMenuSubState extends FunkinSubState
         add(diffText);
 
         opponent = new StoryCharacter();
-        opponent.zIndex = yellowBG.zIndex;
+        opponent.zIndex = bg.zIndex;
         add(opponent);
 
         player = new StoryCharacter();
@@ -132,7 +135,7 @@ class StoryMenuSubState extends FunkinSubState
 
         exitMovers.add(blackTop, null, -blackTop.height);
         exitMovers.add(blackBottom, FlxG.width);
-        exitMovers.add(yellowBG, -yellowBG.width);
+        exitMovers.add(bg, -bg.width);
         exitMovers.add(scoreText, null, -scoreText.height);
         exitMovers.add(levelText, null, -levelText.height);
         exitMovers.add(diffText, FlxG.width);
@@ -144,6 +147,10 @@ class StoryMenuSubState extends FunkinSubState
 
         changeLevel(selectedLevel);
         refresh();
+
+        // Complete the bg color tween
+        // because the color white is ugly
+        FlxTween.completeTweensOf(bg);
 
         if (!skipIntro)
             intro();
@@ -163,6 +170,7 @@ class StoryMenuSubState extends FunkinSubState
         diffText.busy = !stateMachine.canInteract();
 
         lerpScore = MathUtil.lerp(lerpScore, levelScore, 0.45);
+
         scoreText.text = Std.string(Math.round(lerpScore)).leadingZeros(10);
 
         if (controls.ACCEPT)
@@ -184,19 +192,19 @@ class StoryMenuSubState extends FunkinSubState
     {
         selectedLevel = selected;
 
-        // Updates the level name
+        // Level
+        FlxTween.cancelTweensOf(bg);
+        FlxTween.color(bg, 0.75, bg.color, FlxColor.fromString(level.color), { ease: FlxEase.quintOut });
+
         levelText.text = level.name;
         levelText.x = FlxG.width - levelText.width - 10;
 
-        // Updates the track list
         songsText.text = 'tracks\n';
-        
         for (song in level.getSongNames())
             songsText.text += '\n$song';
-
         songsText.x = 200 - songsText.width / 2;
 
-        // Updates the characters
+        // Characters
         opponent.load(level.opponent);
         opponent.x = 250 - opponent.width / 2;
         opponent.y = blackBottom.y - opponent.height - 10;
@@ -209,7 +217,7 @@ class StoryMenuSubState extends FunkinSubState
         gf.x = FlxG.width - gf.width / 2 - 250;
         gf.y = blackBottom.y - gf.height - 10;
 
-        // Reapplies exit movers
+        // Applies exit movers
         exitMovers.add(songsText, -songsText.width);
         exitMovers.add(opponent, -opponent.width);
         exitMovers.add(player, null, FlxG.height);
