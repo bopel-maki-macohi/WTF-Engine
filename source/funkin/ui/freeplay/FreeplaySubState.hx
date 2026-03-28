@@ -4,6 +4,7 @@ import flixel.FlxCamera;
 import flixel.util.FlxTimer;
 import funkin.audio.FunkinSound;
 import funkin.data.song.SongRegistry;
+import funkin.data.story.LevelRegistry;
 import funkin.graphics.FunkinSprite;
 import funkin.graphics.FunkinText;
 import funkin.graphics.shader.TextureSwap;
@@ -253,11 +254,11 @@ class FreeplaySubState extends FunkinSubState
 
     function favorite(capsule:CapsuleSprite)
     {
-        if (!stateMachine.canInteract()) return;
-        stateMachine.transition(Interacting);
-
         var capsule:CapsuleSprite = capsules.capsule;
         var song:Song = capsule.song;
+
+        if (!stateMachine.canInteract() || song == null) return;
+        stateMachine.transition(Interacting);
 
         if (song != null)
             capsule.favorited = !Save.instance.isSongFavorited(song.id);
@@ -269,9 +270,12 @@ class FreeplaySubState extends FunkinSubState
     {
         var songs:Array<String> = SongRegistry.instance.listWithDifficulty(difficulty);
 
-        // Only view favorited songs if selectedSort is 1
+        // Song sorting
+        // Either sort by favorites, or sort by levels
         if (selectedSort == 1)
             songs = songs.filter(song -> return Save.instance.isSongFavorited(song));
+        else if (selectedSort > 1)
+            songs = songs.filter(song -> return sortText.level.hasSong(song));
 
         capsules.load(songs, difficulty);
         capsules.forEachAlive(capsule -> exitMovers.add(capsule, FlxG.width + capsule.x));

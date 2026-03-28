@@ -1,14 +1,17 @@
 package funkin.ui.freeplay.components;
 
+import funkin.data.story.LevelRegistry;
 import funkin.input.Controls;
 import funkin.ui.selector.SelectorText;
+import funkin.ui.story.Level;
 
 /**
  * Text that displays how freeplay songs are currently being sorted.
  */
 class SortText extends SelectorText
 {
-    final MAX_SORTS:Int = 2;
+    public var count(get, never):Int;
+    public var level(get, never):Level;
 
     public function new(selected:Int = 0)
     {
@@ -29,21 +32,34 @@ class SortText extends SelectorText
     override function updateSelected()
     {
         if (selected < 0)
-            selected = MAX_SORTS - 1;
-        else if (selected >= MAX_SORTS)
+            selected = count - 1;
+        else if (selected >= count)
             selected = 0;
     }
 
     override function updateText()
     {
-        switch (selected)
-        {
-            case 1:
-                text.text = 'favorites';
-            default:
-                text.text = 'all';
-        }
+        var sortText:String = 'all';
+
+        if (selected == 1)
+            sortText = 'favorites';
+        else if (selected > 1)
+            sortText = level.title;
+
+        text.text = sortText;
 
         super.updateText();
+    }
+
+    inline function get_count():Int
+        return 2 + LevelRegistry.instance.list().length;
+
+    inline function get_level():Level
+    {
+        // Gets the level id
+        // Holy moly :O
+        final id:String = LevelRegistry.instance.listSorted()[selected - 2];
+
+        return LevelRegistry.instance.fetch(id);
     }
 }

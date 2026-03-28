@@ -67,6 +67,9 @@ class Level
         return songNames;
     }
 
+    public function hasSong(id:String):Bool
+        return getSongs().contains(id);
+
     inline function get_name():String
     {
         var name:Null<String> = meta.name;
