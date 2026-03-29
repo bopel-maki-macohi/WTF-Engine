@@ -24,16 +24,31 @@ class TitleGroup extends FlxTypedGroup<TitleText>
 
     public var title(get, never):TitleText;
     public var level(get, never):Level;
-    public var size(get, never):Int;
 
     public var onChanged(default, null) = new FlxTypedSignal<Int->Void>();
 
-    public function new(selected:Int = 0, y:Float)
+    public function new(selected:Int = 0, y:Float, levels:Array<String>)
     {
         super();
 
         this.selected = selected;
         this.y = y;
+        this.levels = levels;
+
+        // Loads the level titles
+        for (i => level in levels)
+        {
+            var level:Level = LevelRegistry.instance.fetch(level);
+            var text:TitleText = new TitleText(0, 0, level.title);
+
+            text.ID = i;
+
+            text.size = 64;
+            text.screenCenter(X);
+            text.y = getIntendedY(text);
+
+            add(text);
+        }
     }
 
     override public function update(elapsed:Float)
@@ -46,9 +61,9 @@ class TitleGroup extends FlxTypedGroup<TitleText>
         if ((up || down) && !busy)
             change(up ? -1 : 1);
 
-        forEachAlive(text -> {
+        forEach(text -> {
             if (lerp)
-                text.y = MathUtil.lerp(text.y, getIntendedY(text), 0.2);
+                text.y = MathUtil.lerp(text.y, getIntendedY(text), 0.15);
             text.alpha = text.ID == selected ? 1 : 0.6;
         });
     }
@@ -60,8 +75,8 @@ class TitleGroup extends FlxTypedGroup<TitleText>
         selected += change;
 
         if (selected < 0)
-            selected = size - 1;
-        else if (selected >= size)
+            selected = length - 1;
+        else if (selected >= length)
             selected = 0;
 
         if (lastSelected != selected && change != 0)
@@ -69,26 +84,6 @@ class TitleGroup extends FlxTypedGroup<TitleText>
             FunkinSound.playOnce('ui/sounds/scroll');
 
             onChanged.dispatch(selected);
-        }
-    }
-
-    public function load(levels:Array<String>)
-    {
-        this.levels = levels;
-
-        killMembers();
-
-        for (i => level in levels)
-        {
-            var level:Level = LevelRegistry.instance.fetch(level);
-            var text:TitleText = recycle(TitleText);
-
-            text.ID = i;
-
-            text.text = level.title;
-            text.size = 64;
-            text.screenCenter(X);
-            text.y = getIntendedY(text);
         }
     }
 
@@ -102,7 +97,4 @@ class TitleGroup extends FlxTypedGroup<TitleText>
 
     inline function get_level():Level
         return LevelRegistry.instance.fetch(levels[selected]);
-
-    inline function get_size():Int
-        return countLiving();
 }

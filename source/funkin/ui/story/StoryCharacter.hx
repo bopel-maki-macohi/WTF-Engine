@@ -29,11 +29,13 @@ class StoryCharacter extends FunkinSprite
         if (!Paths.exists(metaPath))
         {
             visible = false;
+            active = false;
             return;
         }
 
         meta = parser.fromJson(FileUtil.getText(metaPath));
         visible = true;
+        active = true;
 
         // Loads the sprite and animations
         // Story characters use gameplay character stuff

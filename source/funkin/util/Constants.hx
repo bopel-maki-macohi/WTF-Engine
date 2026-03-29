@@ -1,12 +1,16 @@
 package funkin.util;
 
 import flixel.util.FlxColor;
+import lime.app.Application;
 
 /**
  * A class used as a store for constant variables that are used globally.
  */
 class Constants
 {
+    public static final TITLE:String = 'WTF Engine';
+    public static var VERSION(get, never):String;
+
     public static final IMAGE_EXT:String = 'png';
     public static final SOUND_EXT:String = 'ogg';
     public static final JSON_EXT:String = 'json';
@@ -55,4 +59,7 @@ class Constants
     public static final NOTE_HEALTH:Float = 0.035;
     public static final MISS_HEALTH:Float = -0.03;
     public static final GHOST_MISS_HEALTH:Float = -0.025;
+
+    inline static function get_VERSION():String
+        return 'v${Application.current.meta.get('version')}';
 }

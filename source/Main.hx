@@ -12,7 +12,7 @@ import funkin.data.stage.StageRegistry;
 import funkin.data.story.LevelRegistry;
 import funkin.input.Controls;
 import funkin.save.Save;
-import funkin.ui.freeplay.FreeplaySubState;
+import funkin.ui.menu.MainMenuState;
 import openfl.display.FPS;
 
 /**
@@ -28,7 +28,7 @@ class Main extends FlxGame
 	{
 		final width:Int = 0;
 		final height:Int = 0;
-		final state:InitialState = InitialState.fromMaker(() -> FreeplaySubState.build());
+		final state:InitialState = MainMenuState;
 		final framerate:Int = 180;
 		final skipSplash:Bool = true;
 		final startFullscreen:Bool = false;

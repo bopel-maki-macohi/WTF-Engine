@@ -102,8 +102,7 @@ class StoryMenuSubState extends FunkinSubState
         levelText.zIndex = scoreText.zIndex;
         add(levelText);
 
-        titleGroup = new TitleGroup(selectedLevel, blackBottom.y + 30);
-        titleGroup.load(LevelRegistry.instance.listSorted());
+        titleGroup = new TitleGroup(selectedLevel, blackBottom.y + 30, LevelRegistry.instance.listSorted());
         titleGroup.onChanged.add(changeLevel);
         add(titleGroup);
 
@@ -138,9 +137,10 @@ class StoryMenuSubState extends FunkinSubState
         exitMovers.add(bg, -bg.width);
         exitMovers.add(scoreText, null, -scoreText.height);
         exitMovers.add(levelText, null, -levelText.height);
+        exitMovers.add(songsText, FlxG.width);
         exitMovers.add(diffText, FlxG.width);
 
-        titleGroup.forEachAlive(title -> exitMovers.add(title, null, FlxG.height));
+        titleGroup.forEach(title -> exitMovers.add(title, FlxG.width, FlxG.height));
 
         if (!skipIntro)
             stateMachine.transition(Transitioning);
@@ -218,10 +218,9 @@ class StoryMenuSubState extends FunkinSubState
         gf.y = blackBottom.y - gf.height - 10;
 
         // Applies exit movers
-        exitMovers.add(songsText, -songsText.width);
         exitMovers.add(opponent, -opponent.width);
-        exitMovers.add(player, null, FlxG.height);
-        exitMovers.add(gf, FlxG.width);
+        exitMovers.add(player, -player.width);
+        exitMovers.add(gf, -gf.width);
 
         changeDiff(selectedDiff);
     }
@@ -276,9 +275,7 @@ class StoryMenuSubState extends FunkinSubState
         stateMachine.transition(Transitioning);
 
         exitMovers.intro();
-        exitMovers.onIntroDone = () -> {
-            stateMachine.reset();
-        }
+        exitMovers.onIntroDone = stateMachine.reset;
     }
 
     function exit()

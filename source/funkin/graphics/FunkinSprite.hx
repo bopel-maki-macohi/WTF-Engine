@@ -67,6 +67,8 @@ class FunkinSprite extends FlxSprite
         sprite.visible = visible;
         sprite.active = active;
 
+        sprite.zIndex = zIndex;
+
         return sprite;
     }
 }
