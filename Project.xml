@@ -21,6 +21,8 @@
 	<!-- __________________________ WTF Engine Defines _________________________  -->
 
 	<haxedef name="HAS_FPS_COUNTER" />
+	<haxedef name="HAS_MODDING" />
+	<haxedef name="HAS_SCREENSHOTS" if="debug" />
 
 	<!-- ____________________________ WTF Engine Flags __________________________ -->
 
@@ -41,16 +43,27 @@
 
 	<haxelib name="flixel" />
 	<haxelib name="json2object" />
+	<haxelib name="polymod" />
+	<haxelib name="thx.core" />
+	<haxelib name="thx.semver" />
+	<haxelib name="jsonpath" />
+	<haxelib name="jsonpatch" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
 	<haxedef name="FLX_NO_HEALTH" />
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
-
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
+
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
 	<haxedef name="message.reporting" value="pretty" />
+
+	<haxedef name="POLYMOD_MOD_METADATA_FILE" value="meta.json" />
+	<haxedef name="POLYMOD_MOD_ICON_FILE" value="icon.png" />
+
+	<!-- Do NOT remove this. This prevents a very dumb error! -->
+	<haxedef name="hscriptPos" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 

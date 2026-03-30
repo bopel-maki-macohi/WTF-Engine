@@ -1,5 +1,6 @@
 package funkin.data.story;
 
+import funkin.modding.ScriptBases.ScriptedLevel;
 import funkin.ui.story.Level;
 import funkin.util.FileUtil;
 import funkin.util.SortUtil;
@@ -23,6 +24,10 @@ class LevelRegistry extends BaseRegistry<Level>
     {
         super.load();
 
+        //
+        // VANILLA
+        //
+
         for (id in FileUtil.listFolders(path))
         {
             final metaPath:String = Paths.json('$path/$id/meta');
@@ -30,10 +35,33 @@ class LevelRegistry extends BaseRegistry<Level>
             // Skip the level if it doesn't have a metadata file
             if (!Paths.exists(metaPath)) continue;
 
-            var meta:LevelData = parser.fromJson(FileUtil.getText(metaPath));
-            var level:Level = new Level(id, meta);
+            var level:Level = new Level(id);
+            
+            level.meta = parser.fromJson(FileUtil.getText(metaPath));
 
             register(id, level);
+        }
+
+        //
+        // SCRIPTED
+        //
+
+        var scripts:Array<String> = ScriptedLevel.listScriptClasses();
+
+        trace('Loading ${scripts.length} scripted level(s)...');
+
+        for (script in scripts)
+        {
+            try {
+                var level:Level = ScriptedLevel.scriptInit(script, '');
+                var ogLevel:Level = fetch(level.id);
+
+                level.meta = ogLevel.meta;
+
+                entries.set(level.id, level);
+            }
+            catch (e)
+                trace('Failed to load script $script.');
         }
     }
 

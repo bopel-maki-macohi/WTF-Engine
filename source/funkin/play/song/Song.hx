@@ -31,11 +31,9 @@ class Song
 
     var path(get, never):String;
 
-    public function new(id:String, meta:SongMetadata, chart:SongChartData)
+    public function new(id:String)
     {
         this.id = id;
-        this.meta = meta;
-        this.chart = chart;
     }
 
     public function getRating(diff:String):Int
@@ -47,7 +45,7 @@ class Song
     public function getSpeed(diff:String):Float
         return chart.speed?.get(diff) ?? Constants.DEFAULT_SPEED;
 
-    inline function get_name():String
+    function get_name():String
     {
         var name:Null<String> = meta.name;
         if (name.isEmpty())
@@ -55,10 +53,10 @@ class Song
         return name;
     }
 
-    inline function get_bpm():Float
+    function get_bpm():Float
         return meta.bpm;
 
-    inline function get_artist():String
+    function get_artist():String
     {
         var artist:Null<String> = meta.artist;
         if (artist == null || artist.trim() == '')
@@ -66,22 +64,22 @@ class Song
         return artist;
     }
 
-    inline function get_difficulties():Array<String>
+    function get_difficulties():Array<String>
         return meta.difficulties;
 
-    inline function get_stage():String
+    function get_stage():String
         return meta.stage;
 
-    inline function get_opponent():String
+    function get_opponent():String
         return meta.opponent;
 
-    inline function get_player():String
+    function get_player():String
         return meta.player;
 
-    inline function get_gf():String
+    function get_gf():String
         return meta.gf;
 
-    inline function get_events():Array<EventData>
+    function get_events():Array<EventData>
         return chart.events;
 
     inline function get_instPath():String
@@ -95,4 +93,7 @@ class Song
 
     inline function get_path():String
         return 'play/songs/$id';
+
+    public function toString():String
+        return name;
 }

@@ -1,7 +1,9 @@
 package funkin.data.character;
 
+import funkin.modding.ScriptBases.ScriptedCharacter;
 import funkin.play.character.Character;
 import funkin.util.FileUtil;
+import haxe.ds.StringMap;
 import json2object.JsonParser;
 
 /**
@@ -13,6 +15,8 @@ class CharacterRegistry extends BaseRegistry<CharacterData>
 
     var parser(default, null) = new JsonParser<CharacterData>();
 
+    var scripted:StringMap<String> = new StringMap<String>();
+
     public function new()
     {
         super('characters', 'play/characters');
@@ -22,7 +26,10 @@ class CharacterRegistry extends BaseRegistry<CharacterData>
     {
         super.load();
 
-        // Loads the entries
+        //
+        // VANILLA
+        //
+
         for (id in FileUtil.listFolders(path))
         {
             final metaPath:String = Paths.json('$path/$id/meta');
@@ -32,12 +39,41 @@ class CharacterRegistry extends BaseRegistry<CharacterData>
 
             register(id, parser.fromJson(FileUtil.getText(metaPath)));
         }
+
+        //
+        // SCRIPTED
+        //
+
+        var scripts:Array<String> = ScriptedCharacter.listScriptClasses();
+
+        trace('Loading ${scripts.length} scripted character(s)...');
+
+        for (script in scripts)
+        {
+            try {
+                var character:Character = ScriptedCharacter.scriptInit(script, '');
+                scripted.set(character.id, script);
+            }
+            catch (e)
+                trace('Failed to load script $script.');
+        }
     }
 
     public function fetchCharacter(id:String, isPlayer:Bool = false):Character
     {
-        // Return null if the character doesn't exist
         if (!exists(id)) return null;
-        return new Character(id, fetch(id), isPlayer);
+        
+        var character:Character = null;
+
+        if (scripted.exists(id))
+            character = ScriptedCharacter.scriptInit(scripted.get(id), id);
+        else
+            character = new Character(id);
+
+        character.meta = fetch(id);
+        character.isPlayer = isPlayer;
+        character.buildSprite();
+
+        return character;
     }
 }

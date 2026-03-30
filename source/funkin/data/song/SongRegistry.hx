@@ -1,12 +1,11 @@
 package funkin.data.song;
 
 import funkin.data.song.SongData;
-import funkin.data.story.LevelData;
 import funkin.data.story.LevelRegistry;
+import funkin.modding.ScriptBases.ScriptedSong;
 import funkin.play.song.Song;
 import funkin.ui.story.Level;
 import funkin.util.FileUtil;
-import funkin.util.SortUtil;
 import json2object.JsonParser;
 
 /**
@@ -30,7 +29,10 @@ class SongRegistry extends BaseRegistry<Song>
     {
         super.load();
 
-        // Loads the entries
+        //
+        // VANILLA
+        //
+
         for (id in FileUtil.listFolders(path))
         {
             final metaPath:String = Paths.json('$path/$id/meta');
@@ -39,11 +41,35 @@ class SongRegistry extends BaseRegistry<Song>
             // Skip the song if it doesn't have a chart or metadata file
             if (!Paths.exists(metaPath) || !Paths.exists(chartPath)) continue;
 
-            var meta:SongMetadata = metaParser.fromJson(FileUtil.getText(metaPath));
-            var chart:SongChartData = chartParser.fromJson(FileUtil.getText(chartPath));
-            var song:Song = new Song(id, meta, chart);
+            var song:Song = new Song(id);
+            
+            song.meta = metaParser.fromJson(FileUtil.getText(metaPath));
+            song.chart = chartParser.fromJson(FileUtil.getText(chartPath));
 
             register(id, song);
+        }
+
+        //
+        // SCRIPTED
+        //
+
+        var scripts:Array<String> = ScriptedSong.listScriptClasses();
+
+        trace('Loading ${scripts.length} scripted song(s)...');
+
+        for (script in scripts)
+        {
+            try {
+                var song:Song = ScriptedSong.scriptInit(script, '');
+                var ogSong:Song = fetch(song.id);
+
+                song.meta = ogSong.meta;
+                song.chart = ogSong.chart;
+
+                entries.set(song.id, song);
+            }
+            catch (e)
+                trace('Failed to load script $script.');
         }
     }
 

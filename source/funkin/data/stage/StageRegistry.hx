@@ -1,7 +1,9 @@
 package funkin.data.stage;
 
+import funkin.modding.ScriptBases.ScriptedStage;
 import funkin.play.components.Stage;
 import funkin.util.FileUtil;
+import haxe.ds.StringMap;
 import json2object.JsonParser;
 
 /**
@@ -13,6 +15,8 @@ class StageRegistry extends BaseRegistry<StageData>
 
     var parser(default, null) = new JsonParser<StageData>();
 
+    var scripted:StringMap<String> = new StringMap();
+
     public function new()
     {
         super('stages', 'play/stages');
@@ -22,7 +26,10 @@ class StageRegistry extends BaseRegistry<StageData>
     {
         super.load();
 
-        // Loads the entries
+        //
+        // VANILLA
+        //
+
         for (id in FileUtil.listFolders(path))
         {
             final metaPath:String = Paths.json('$path/$id/meta');
@@ -32,10 +39,38 @@ class StageRegistry extends BaseRegistry<StageData>
 
             register(id, parser.fromJson(FileUtil.getText(metaPath)));
         }
+
+        //
+        // SCRIPTED
+        //
+
+        var scripts:Array<String> = ScriptedStage.listScriptClasses();
+
+        trace('Loading ${scripts.length} scripted stage(s)...');
+
+        for (script in scripts)
+        {
+            try {
+                var stage:Stage = ScriptedStage.scriptInit(script, '');
+                scripted.set(stage.id, script);
+            }
+            catch (e)
+                trace('Failed to load script $script.');
+        }
     }
 
     public function fetchStage(id:String):Stage
     {
-        return new Stage(id, fetch(id));
+        var stage:Stage = null;
+
+        if (scripted.exists(id))
+            stage = ScriptedStage.scriptInit(scripted.get(id), id);
+        else
+            stage = new Stage(id);
+
+        stage.meta = fetch(id);
+        stage.buildProps();
+
+        return stage;
     }
 }

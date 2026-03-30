@@ -11,8 +11,11 @@ import funkin.data.song.SongRegistry;
 import funkin.data.stage.StageRegistry;
 import funkin.data.story.LevelRegistry;
 import funkin.input.Controls;
+import funkin.modding.ModHandler;
 import funkin.save.Save;
 import funkin.ui.menu.MainMenuState;
+import funkin.util.plugins.ReloadPlugin;
+import funkin.util.plugins.ScreenshotPlugin;
 import openfl.display.FPS;
 
 /**
@@ -39,6 +42,8 @@ class Main extends FlxGame
 		// INIT
 		//
 
+		ModHandler.init();
+
 		// Instances
 		Conductor.instance = new Conductor();
 		Controls.instance = new Controls();
@@ -64,11 +69,16 @@ class Main extends FlxGame
 		#end
 
 		// Flixel
-		// Yes this has to be done here
 		FlxG.fixedTimestep = false;
 		FlxG.game.focusLostFramerate = 30;
 		FlxG.inputs.resetOnStateSwitch = false;
 		FlxG.mouse.visible = false;
 		FlxObject.defaultMoves = false;
+
+		// Plugins
+		ReloadPlugin.init();
+		#if HAS_SCREENSHOTS
+		ScreenshotPlugin.init();
+		#end
 	}
 }

@@ -76,7 +76,7 @@ class StoryMenuSubState extends FunkinSubState
         add(blackTop);
 
         blackBottom = new FunkinSprite();
-        blackBottom.makeSolidColor(FlxG.width, 320, 0xFF000000);
+        blackBottom.makeSolidColor(FlxG.width, 280, 0xFF000000);
         blackBottom.y = FlxG.height - blackBottom.height;
         blackBottom.active = false;
         add(blackBottom);
@@ -207,15 +207,15 @@ class StoryMenuSubState extends FunkinSubState
         // Characters
         opponent.load(level.opponent);
         opponent.x = 250 - opponent.width / 2;
-        opponent.y = blackBottom.y - opponent.height - 10;
+        opponent.y = blackBottom.y - opponent.height - 30;
 
         player.load(level.player);
         player.screenCenter(X);
-        player.y = blackBottom.y - player.height - 10;
+        player.y = blackBottom.y - player.height - 30;
 
         gf.load(level.gf);
         gf.x = FlxG.width - gf.width / 2 - 250;
-        gf.y = blackBottom.y - gf.height - 10;
+        gf.y = blackBottom.y - gf.height - 30;
 
         // Applies exit movers
         exitMovers.add(opponent, -opponent.width);

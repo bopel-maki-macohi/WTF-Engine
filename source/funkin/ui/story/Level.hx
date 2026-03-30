@@ -25,10 +25,9 @@ class Level
     var songs:Array<String>;
     var songNames:Array<String>;
 
-    public function new(id:String, meta:LevelData)
+    public function new(id:String)
     {
         this.id = id;
-        this.meta = meta;
     }
 
     public function getSongs():Array<String>
@@ -73,7 +72,7 @@ class Level
     public function hasSong(id:String):Bool
         return getSongs().contains(id);
 
-    inline function get_name():String
+    function get_name():String
     {
         var name:Null<String> = meta.name;
         if (name.isEmpty())
@@ -81,18 +80,21 @@ class Level
         return name;
     }
 
-    inline function get_title():String
+    function get_title():String
         return meta.title ?? id;
 
-    inline function get_opponent():String
+    function get_opponent():String
         return meta.opponent;
 
-    inline function get_player():String
+    function get_player():String
         return meta.player;
 
-    inline function get_gf():String
+    function get_gf():String
         return meta.gf;
 
-    inline function get_color():String
+    function get_color():String
         return meta.color;
+
+    public function toString():String
+        return name;
 }

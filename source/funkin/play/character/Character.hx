@@ -15,13 +15,16 @@ class Character extends FunkinSprite
 
     var singTimer:Float;
 
-    public function new(id:String, meta:CharacterData, isPlayer:Bool)
+    public function new(id:String)
     {
         super();
 
         this.id = id;
-        this.meta = meta;
-        this.isPlayer = isPlayer;
+    }
+
+    public function buildSprite()
+    {
+        if (meta == null) return;
 
         // Loads the image
         var image:String = meta.image ?? id;

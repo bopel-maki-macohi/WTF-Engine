@@ -73,6 +73,8 @@ class CapsuleSprite extends FlxSpriteGroup
     {
         FlxFlicker.stopFlickering(songText);
         FlxFlicker.flicker(songText);
+
+        resetMovement();
     }
 
     function resetMovement()
@@ -117,6 +119,13 @@ class CapsuleSprite extends FlxSpriteGroup
 
         justLoaded = false;
         moveTween = null;
+    }
+
+    override public function destroy()
+    {
+        super.destroy();
+
+        moveTween?.cancel();
     }
 
     function set_song(song:Song):Song
@@ -193,5 +202,5 @@ class CapsuleSprite extends FlxSpriteGroup
     }
 
     inline function get_canMoveText():Bool
-        return songText.width > clipWidth && selected;
+        return songText.width > clipWidth && selected && !FlxFlicker.isFlickering(songText);
 }

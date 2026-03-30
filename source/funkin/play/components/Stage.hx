@@ -22,14 +22,11 @@ class Stage extends FlxGroup
     public var opponent:Character;
     public var gf:Character;
 
-    public function new(id:String, meta:StageData)
+    public function new(id:String)
     {
         super();
 
         this.id = id;
-        this.meta = meta;
-
-        buildProps();
     }
 
     public function buildProps()
