@@ -5,7 +5,6 @@ import funkin.audio.FunkinSound;
 import funkin.data.character.CharacterRegistry;
 import funkin.play.character.Character;
 import funkin.ui.FunkinSubState;
-import funkin.ui.freeplay.FreeplaySubState;
 
 /**
  * The game over sub state that appears when the player dies.
@@ -13,6 +12,8 @@ import funkin.ui.freeplay.FreeplaySubState;
 class GameOverSubState extends FunkinSubState
 {
     var skipped:Bool = false;
+
+    var menuConductor:Conductor;
 
     var music:FunkinSound;
     var startSound:FunkinSound;
@@ -28,6 +29,10 @@ class GameOverSubState extends FunkinSubState
 
         _parentState.persistentDraw = false;
 
+        menuConductor = new Conductor();
+        menuConductor.beatHit.add(beatHit);
+        menuConductor.reset(100);
+
         music = FunkinSound.load('play/music/gameover', 1, true, true, false);
 
         startSound = FunkinSound.load('play/sounds/gameover/start', 1, false);
@@ -40,8 +45,6 @@ class GameOverSubState extends FunkinSubState
             PlayState.instance.setCameraTarget(character);
             FlxG.camera.active = true;
         }
-
-        conductor.reset(100);
     }
 
     function buildCharacter()
@@ -66,8 +69,8 @@ class GameOverSubState extends FunkinSubState
         super.update(elapsed);
 
         // Updates the conductor
-        conductor.time = music?.time;
-        conductor.update();
+        menuConductor.time = music?.time;
+        menuConductor.update();
 
         if (controls.ACCEPT)
             skip();
@@ -87,7 +90,7 @@ class GameOverSubState extends FunkinSubState
 
         // Gotta reset this!
         // Or else the character keeps bopping
-        conductor.reset();
+        menuConductor.reset();
 
         FunkinSound.playOnce('play/sounds/gameover/end');
         FlxTimer.wait(1, () -> FlxG.camera.fade(0xFF000000, 2, false, close));
@@ -98,6 +101,11 @@ class GameOverSubState extends FunkinSubState
         super.beatHit(beat);
 
         character?.playAnimation('loop', true);
+
+        // We still want the beat hit script event to work
+        // So we're doing this >:)
+        @:privateAccess
+        PlayState.instance.beatHit(beat);
     }
 
     override public function close()

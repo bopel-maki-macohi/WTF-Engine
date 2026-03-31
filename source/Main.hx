@@ -12,6 +12,7 @@ import funkin.data.stage.StageRegistry;
 import funkin.data.story.LevelRegistry;
 import funkin.input.Controls;
 import funkin.modding.ModHandler;
+import funkin.modding.module.ModuleHandler;
 import funkin.save.Save;
 import funkin.ui.menu.MainMenuState;
 import funkin.util.plugins.ReloadPlugin;
@@ -55,6 +56,9 @@ class Main extends FlxGame
 		SongRegistry.instance = new SongRegistry();
 		LevelRegistry.instance = new LevelRegistry();
 		EventRegistry.instance = new EventRegistry();
+
+		// Load modules
+		ModuleHandler.load();
 	}
 
 	override function create(_)

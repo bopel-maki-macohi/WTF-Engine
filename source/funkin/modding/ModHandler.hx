@@ -5,6 +5,9 @@ import funkin.data.event.EventRegistry;
 import funkin.data.song.SongRegistry;
 import funkin.data.stage.StageRegistry;
 import funkin.data.story.LevelRegistry;
+import funkin.modding.module.ModuleHandler;
+import funkin.play.PlayState;
+import funkin.play.Playlist;
 import funkin.util.WindowUtil;
 import polymod.Polymod;
 import sys.FileSystem;
@@ -46,7 +49,6 @@ class ModHandler
     {
         Polymod.clearCache();
         Polymod.clearScripts();
-
         Polymod.reload();
 
         // Reloads the registries
@@ -56,6 +58,16 @@ class ModHandler
 		SongRegistry.instance.load();
 		LevelRegistry.instance.load();
 		EventRegistry.instance.load();
+
+        // Reload all the modules
+        ModuleHandler.load();
+
+        // Reload the current song and level
+        // This is so dumb
+        if (PlayState.song != null)
+            PlayState.song = SongRegistry.instance.fetch(PlayState.song.id);
+        if (Playlist.level != null)
+            Playlist.level = LevelRegistry.instance.fetch(Playlist.level.id);
     }
 
     static function onError(e:PolymodError)

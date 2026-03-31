@@ -2,12 +2,14 @@ package funkin.play.character;
 
 import funkin.data.character.CharacterData;
 import funkin.graphics.FunkinSprite;
+import funkin.modding.IScriptedClass.IPlayStateScriptedClass;
+import funkin.modding.event.ScriptEvent;
 import funkin.play.note.NoteDirection;
 
 /**
  * A `FunkinSprite` that sings and bops and all that.
  */
-class Character extends FunkinSprite
+class Character extends FunkinSprite implements IPlayStateScriptedClass
 {
     public var id:String;
     public var meta:CharacterData;
@@ -83,4 +85,23 @@ class Character extends FunkinSprite
         if (name != 'idle')
             resetSingTimer();
     }
+
+    public function onCreate(event:ScriptEvent) {}
+    public function onUpdate(event:UpdateScriptEvent) {}
+    public function onDestroy(event:ScriptEvent) {}
+
+    public function onNoteHit(event:NoteScriptEvent) {}
+    public function onNoteMiss(event:NoteScriptEvent) {}
+    public function onHoldNoteHold(event:HoldNoteScriptEvent) {}
+    public function onHoldNoteDrop(event:HoldNoteScriptEvent) {}
+    public function onGhostMiss(event:GhostMissScriptEvent) {}
+
+    public function onStepHit(event:ConductorScriptEvent) {}
+    public function onBeatHit(event:ConductorScriptEvent) {}
+    public function onSectionHit(event:ConductorScriptEvent) {}
+
+    public function onSongLoaded(event:SongLoadScriptEvent) {}
+    public function onSongStart(event:ScriptEvent) {}
+    public function onSongEnd(event:ScriptEvent) {}
+    public function onSongRetry(event:ScriptEvent) {}
 }

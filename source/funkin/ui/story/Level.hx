@@ -1,14 +1,15 @@
 package funkin.ui.story;
 
-import flixel.util.FlxColor;
 import funkin.data.song.SongRegistry;
 import funkin.data.story.LevelData;
+import funkin.modding.IScriptedClass.IPlayStateScriptedClass;
+import funkin.modding.event.ScriptEvent;
 import funkin.play.song.Song;
 
 /**
  * A class containing the metadata for a level.
  */
-class Level
+class Level implements IPlayStateScriptedClass
 {
     public var id:String;
     public var meta:LevelData;
@@ -94,6 +95,25 @@ class Level
 
     function get_color():String
         return meta.color;
+
+    public function onCreate(event:ScriptEvent) {}
+    public function onUpdate(event:UpdateScriptEvent) {}
+    public function onDestroy(event:ScriptEvent) {}
+
+    public function onNoteHit(event:NoteScriptEvent) {}
+    public function onNoteMiss(event:NoteScriptEvent) {}
+    public function onHoldNoteHold(event:HoldNoteScriptEvent) {}
+    public function onHoldNoteDrop(event:HoldNoteScriptEvent) {}
+    public function onGhostMiss(event:GhostMissScriptEvent) {}
+
+    public function onStepHit(event:ConductorScriptEvent) {}
+    public function onBeatHit(event:ConductorScriptEvent) {}
+    public function onSectionHit(event:ConductorScriptEvent) {}
+
+    public function onSongLoaded(event:SongLoadScriptEvent) {}
+    public function onSongStart(event:ScriptEvent) {}
+    public function onSongEnd(event:ScriptEvent) {}
+    public function onSongRetry(event:ScriptEvent) {}
 
     public function toString():String
         return name;

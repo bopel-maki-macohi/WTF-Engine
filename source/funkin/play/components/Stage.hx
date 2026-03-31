@@ -5,13 +5,16 @@ import flixel.math.FlxPoint;
 import funkin.data.character.CharacterRegistry;
 import funkin.data.stage.StageData;
 import funkin.graphics.FunkinSprite;
+import funkin.modding.IScriptedClass.IPlayStateScriptedClass;
+import funkin.modding.event.ScriptEvent;
+import funkin.modding.event.ScriptEventDispatcher;
 import funkin.play.character.Character;
 import funkin.util.MathUtil;
 
 /**
  * A group containing stage props and characters.
  */
-class Stage extends FlxGroup
+class Stage extends FlxGroup implements IPlayStateScriptedClass
 {
     public var id:String;
     public var meta:StageData;
@@ -130,4 +133,23 @@ class Stage extends FlxGroup
 
     function get_zoom():Float
         return meta?.zoom ?? Constants.DEFAULT_CAMERA_ZOOM;
+
+    public function onCreate(event:ScriptEvent) {}
+    public function onUpdate(event:UpdateScriptEvent) {}
+    public function onDestroy(event:ScriptEvent) {}
+
+    public function onNoteHit(event:NoteScriptEvent) {}
+    public function onNoteMiss(event:NoteScriptEvent) {}
+    public function onHoldNoteHold(event:HoldNoteScriptEvent) {}
+    public function onHoldNoteDrop(event:HoldNoteScriptEvent) {}
+    public function onGhostMiss(event:GhostMissScriptEvent) {}
+
+    public function onStepHit(event:ConductorScriptEvent) {}
+    public function onBeatHit(event:ConductorScriptEvent) {}
+    public function onSectionHit(event:ConductorScriptEvent) {}
+
+    public function onSongLoaded(event:SongLoadScriptEvent) {}
+    public function onSongStart(event:ScriptEvent) {}
+    public function onSongEnd(event:ScriptEvent) {}
+    public function onSongRetry(event:ScriptEvent) {}
 }

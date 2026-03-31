@@ -2,11 +2,13 @@ package funkin.play.song;
 
 import funkin.data.event.EventData;
 import funkin.data.song.SongData;
+import funkin.modding.IScriptedClass.IPlayStateScriptedClass;
+import funkin.modding.event.ScriptEvent;
 
 /**
  * A class containing meta and chart data for a song.
  */
-class Song
+class Song implements IPlayStateScriptedClass
 {
     public var id:String;
     public var meta:SongMetadata;
@@ -93,6 +95,25 @@ class Song
 
     inline function get_path():String
         return 'play/songs/$id';
+
+    public function onCreate(event:ScriptEvent) {}
+    public function onUpdate(event:UpdateScriptEvent) {}
+    public function onDestroy(event:ScriptEvent) {}
+
+    public function onNoteHit(event:NoteScriptEvent) {}
+    public function onNoteMiss(event:NoteScriptEvent) {}
+    public function onHoldNoteHold(event:HoldNoteScriptEvent) {}
+    public function onHoldNoteDrop(event:HoldNoteScriptEvent) {}
+    public function onGhostMiss(event:GhostMissScriptEvent) {}
+
+    public function onStepHit(event:ConductorScriptEvent) {}
+    public function onBeatHit(event:ConductorScriptEvent) {}
+    public function onSectionHit(event:ConductorScriptEvent) {}
+
+    public function onSongLoaded(event:SongLoadScriptEvent) {}
+    public function onSongStart(event:ScriptEvent) {}
+    public function onSongEnd(event:ScriptEvent) {}
+    public function onSongRetry(event:ScriptEvent) {}
 
     public function toString():String
         return name;

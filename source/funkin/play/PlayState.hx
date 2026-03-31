@@ -15,6 +15,8 @@ import funkin.data.song.SongData.SongNoteData;
 import funkin.data.stage.StageRegistry;
 import funkin.graphics.FunkinBar;
 import funkin.graphics.FunkinText;
+import funkin.modding.event.ScriptEvent;
+import funkin.modding.event.ScriptEventDispatcher;
 import funkin.play.character.Character;
 import funkin.play.character.HealthIcon;
 import funkin.play.components.Countdown;
@@ -161,24 +163,29 @@ class PlayState extends FunkinState
 		loadCharacters();
 		loadSong();
 
-		resetSong();
+		resetSong(false);
 
 		refresh();
 
-		healthLerp = health;
+		// Runs the create script event
+		dispatch(new ScriptEvent(Create, false));
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
-		// Updates the conductor
+		//
+		// SONG
+		//
+
 		if (songLoaded)
 		{
 			conductor.time += elapsed * Constants.MS_PER_SEC;
 			conductor.update();
 
-			if (conductor.time >= 0 && !songStarted) startSong();
+			if (conductor.time >= 0 && !songStarted)
+				startSong();
 
 			checkSongTime();
 		}
@@ -261,25 +268,44 @@ class PlayState extends FunkinState
 		}
 	}
 
-	public function resetSong()
+	public function resetSong(isRetry:Bool = true)
 	{
+		// Canceling the retry event causes a softlock when dying
+		// Putting this before it to stop that from happening
+		health = Constants.STARTING_HEALTH;
+
+		if (isRetry)
+		{
+			var event:ScriptEvent = new ScriptEvent(SongRetry, true);
+			dispatch(event);
+
+			if (event.cancelled) return;
+		}
+		else
+			healthLerp = health;
+
 		songStarted = false;
 		songEnded = false;
 
 		score = 0;
-		health = Constants.STARTING_HEALTH;
 		tallies.reset();
-
-		events = song.events.copy();
-		events.sort(SortUtil.byEventTime.bind(FlxSort.ASCENDING));
 
 		setCameraTarget(stage.player, true);
 
 		FlxG.camera.zoom = stage.zoom;
 
-		// Loads the strumline
+		//
+		// STRUMLINE
+		//
+
 		var notes:Array<SongNoteData> = song.getNotes(difficulty);
 		var speed:Float = song.getSpeed(difficulty);
+
+		events = song.events.copy();
+		events.sort(SortUtil.byEventTime.bind(FlxSort.ASCENDING));
+
+		var event:SongLoadScriptEvent = new SongLoadScriptEvent(notes, events);
+		dispatch(event);
 
 		opponentStrumline.clean();
 		playerStrumline.clean();
@@ -287,11 +313,13 @@ class PlayState extends FunkinState
 		opponentStrumline.load(notes.filter(note -> return note.d >= Constants.NOTE_COUNT), speed);
 		playerStrumline.load(notes.filter(note -> return note.d < Constants.NOTE_COUNT), speed);
 
-		// Resets the conductor
+		//
+		// CONDUCTOR
+		//
+
 		conductor.reset(song.bpm);
 		conductor.time = -conductor.crotchet * 4;
 
-		// Starts the countdown
 		countdown.start();
 
 		FunkinSound.stopAllSounds(true);
@@ -355,6 +383,9 @@ class PlayState extends FunkinState
 
 	function startSong()
 	{
+		var event:ScriptEvent = new ScriptEvent(SongStart, false);
+		dispatch(event);
+
 		songStarted = true;
 
 		FunkinSound.music.play();
@@ -363,6 +394,11 @@ class PlayState extends FunkinState
 
 	function endSong()
 	{
+		var event:ScriptEvent = new ScriptEvent(SongEnd, true);
+		dispatch(event);
+
+		if (event.cancelled) return;
+
 		songEnded = true;
 
 		FunkinSound.stopAllSounds(true);
@@ -461,12 +497,24 @@ class PlayState extends FunkinState
 			// Especially don't hit the note if it's null
 			if (!pressed || note == null) continue;
 
+			var event:NoteScriptEvent = new NoteScriptEvent(NoteHit, note);
+			dispatch(event);
+
+			if (event.cancelled) continue;
+
 			playerStrumline.hitNote(note);
 		}
 
 		// Opponent input
 		for (note in opponentStrumline.getMayHitNotes())
+		{
+			var event:NoteScriptEvent = new NoteScriptEvent(NoteHit, note);
+			dispatch(event);
+
+			if (event.cancelled) continue;
+
 			opponentStrumline.hitNote(note);
+		}
 	}
 
 	function playerNoteHit(note:NoteSprite)
@@ -501,6 +549,11 @@ class PlayState extends FunkinState
 
 	function playerHoldNoteHit(holdNote:HoldNoteSprite)
 	{
+		var event:HoldNoteScriptEvent = new HoldNoteScriptEvent(HoldNoteHold, holdNote);
+		dispatch(event);
+
+		if (event.cancelled) return;
+
 		score += Constants.HOLD_SCORE_PER_SEC * FlxG.elapsed;
 		health += Constants.HOLD_HEALTH_PER_SEC * FlxG.elapsed;
 
@@ -510,6 +563,11 @@ class PlayState extends FunkinState
 
 	function playerNoteMiss(note:NoteSprite)
 	{
+		var event:NoteScriptEvent = new NoteScriptEvent(NoteMiss, note);
+		dispatch(event);
+
+		if (event.cancelled) return;
+
 		var missScore:Float = Constants.MISS_SCORE;
 		
 		if (note.holdNote != null)
@@ -528,6 +586,11 @@ class PlayState extends FunkinState
 
 	function playerGhostMiss(direction:NoteDirection)
 	{
+		var event:GhostMissScriptEvent = new GhostMissScriptEvent(direction);
+		dispatch(event);
+		
+		if (event.cancelled) return;
+
 		score += Constants.GHOST_MISS_SCORE;
 		health += Constants.GHOST_MISS_HEALTH;
 
@@ -537,6 +600,11 @@ class PlayState extends FunkinState
 
 	function playerHoldNoteDrop(holdNote:HoldNoteSprite)
 	{
+		var event:HoldNoteScriptEvent = new HoldNoteScriptEvent(HoldNoteDrop, holdNote);
+		dispatch(event);
+
+		if (event.cancelled) return;
+
 		// Takes away score based on how long the hold note is
 		score += Constants.MISS_SCORE * (holdNote.length / 500);
 		health += Constants.MISS_HEALTH;
@@ -561,6 +629,19 @@ class PlayState extends FunkinState
 			FlxG.switchState(() -> StoryMenuSubState.build());
 		else
 			FlxG.switchState(() -> FreeplaySubState.build());
+	}
+
+	override function dispatch(event:ScriptEvent)
+	{
+		super.dispatch(event);
+
+		ScriptEventDispatcher.dispatch(Playlist.level, event);
+		ScriptEventDispatcher.dispatch(song, event);
+
+		ScriptEventDispatcher.dispatch(stage, event);
+		ScriptEventDispatcher.dispatch(stage.opponent, event);
+		ScriptEventDispatcher.dispatch(stage.player, event);
+		ScriptEventDispatcher.dispatch(stage.gf, event);
 	}
 
 	override public function openSubState(subState:FlxSubState)
@@ -604,5 +685,8 @@ class PlayState extends FunkinState
 
 		// Clear the cache because it's good
 		FunkinMemory.clearCache();
+
+		// Runs the destroy script event
+		dispatch(new ScriptEvent(Destroy, false));
 	}
 }
