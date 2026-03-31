@@ -34,6 +34,7 @@ class ModuleHandler
         dispatch(new ScriptEvent(Create, false));
 
         // Adds a callback for when the game updates
+        // This allows modules to update, even when the game isn't paused
         FlxG.signals.postUpdate.add(update);
 
         trace('Done loading modules.');
@@ -54,7 +55,7 @@ class ModuleHandler
         for (module in modules)
         {
             // Skip the module if it's inactive
-            if (!module.active || (event.type == Update && module.alwaysUpdate)) continue;
+            if (!module.active) continue;
 
             ScriptEventDispatcher.dispatch(module, event);
         }
@@ -62,11 +63,12 @@ class ModuleHandler
 
     static function update()
     {
-        // Not using dispatch() as modules need the alwaysUpdate check
-        // Who even wants their modules to update twice anyways?!
         for (module in modules)
         {
-            if (!module.active || !module.alwaysUpdate) continue;
+            if (!module.active) continue;
+
+            // Checks whether the module can actually update
+            if (FlxG.state.subState != null && !module.alwaysUpdate) continue;
 
             ScriptEventDispatcher.dispatch(module, new UpdateScriptEvent(FlxG.elapsed));
         }
