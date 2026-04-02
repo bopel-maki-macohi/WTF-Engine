@@ -5,24 +5,24 @@ package funkin.modding.event;
  */
 enum ScriptEventType
 {
-    Create;
-    Update;
-    Destroy;
-    NoteHit;
-    NoteMiss;
-    HoldNoteHold;
-    HoldNoteDrop;
-    GhostMiss;
-    StepHit;
-    BeatHit;
-    SectionHit;
-    SongLoad;
-    SongStart;
-    SongEnd;
-    SongRetry;
-    SongEvent;
-    CountdownStart;
-    CountdownStep;
-    Pause;
-    GameOver;
+	Create;
+	Update;
+	Destroy;
+	NoteHit;
+	NoteMiss;
+	HoldNoteHold;
+	HoldNoteDrop;
+	GhostMiss;
+	StepHit;
+	BeatHit;
+	SectionHit;
+	SongLoad;
+	SongStart;
+	SongEnd;
+	SongRetry;
+	SongEvent;
+	CountdownStart;
+	CountdownStep;
+	Pause;
+	GameOver;
 }

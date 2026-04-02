@@ -7,51 +7,52 @@ import funkin.graphics.FunkinSprite;
  */
 class HoldNoteCover extends FunkinSprite
 {
-    public var holdNote:HoldNoteSprite;
+	public var holdNote:HoldNoteSprite;
 
-    public function new()
-    {
-        super();
+	public function new()
+	{
+		super();
 
-        buildSprite();
-    }
+		buildSprite();
+	}
 
-    override public function update(elapsed:Float)
-    {
-        super.update(elapsed);
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
 
-        // Kill the cover if its hold note is dead
-        // This is because the hold note wants the cover to be in the afterlife
-        if (holdNote == null || !holdNote.alive) kill();
-    }
+		// Kill the cover if its hold note is dead
+		// This is because the hold note wants the cover to be in the afterlife
+		if (holdNote == null || !holdNote.alive)
+			kill();
+	}
 
-    public function buildSprite()
-    {
-        loadSprite('play/ui/note/hold-covers', 1, 44, 23);
+	public function buildSprite()
+	{
+		loadSprite('play/ui/note/hold-covers', 1, 44, 23);
 
-        for (i in 0...Constants.NOTE_COUNT)
-        {
-            var direction:NoteDirection = NoteDirection.fromInt(i);
-            var frame:Int = direction * 3;
-            
-            addAnimation(direction.name, [frame, frame + 1, frame + 2], 30);
-        }
-    }
+		for (i in 0...Constants.NOTE_COUNT)
+		{
+			var direction:NoteDirection = NoteDirection.fromInt(i);
+			var frame:Int = direction * 3;
 
-    public function play(holdNote:HoldNoteSprite, strum:StrumSprite)
-    {
-        this.holdNote = holdNote;
+			addAnimation(direction.name, [frame, frame + 1, frame + 2], 30);
+		}
+	}
 
-        x = strum.x + (strum.width - width) / 2;
-        y = strum.y + (strum.height - height) / 2;
+	public function play(holdNote:HoldNoteSprite, strum:StrumSprite)
+	{
+		this.holdNote = holdNote;
 
-        playAnimation(strum.direction.name);
-    }
+		x = strum.x + (strum.width - width) / 2;
+		y = strum.y + (strum.height - height) / 2;
 
-    override public function revive()
-    {
-        super.revive();
+		playAnimation(strum.direction.name);
+	}
 
-        holdNote = null;
-    }
+	override public function revive()
+	{
+		super.revive();
+
+		holdNote = null;
+	}
 }

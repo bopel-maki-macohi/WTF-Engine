@@ -7,6 +7,6 @@ import openfl.Lib;
  */
 class WindowUtil
 {
-    public static function alert(message:String)
-        Lib.application.window.alert(message);
+	public static function alert(message:String)
+		Lib.application.window.alert(message);
 }

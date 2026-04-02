@@ -10,27 +10,30 @@ import funkin.data.song.SongData.SongNoteData;
  */
 class SortUtil
 {
-    public static inline function byTime(order:Int, a:SongNoteData, b:SongNoteData):Int
-        return FlxSort.byValues(order, a.t, b.t);
+	public static inline function byTime(order:Int, a:SongNoteData, b:SongNoteData):Int
+		return FlxSort.byValues(order, a.t, b.t);
 
-    public static inline function byEventTime(order:Int, a:EventData, b:EventData):Int
-        return FlxSort.byValues(order, a.t, b.t);
+	public static inline function byEventTime(order:Int, a:EventData, b:EventData):Int
+		return FlxSort.byValues(order, a.t, b.t);
 
-    public static inline function byZIndex(order:Int, a:FlxBasic, b:FlxBasic):Int
-        return FlxSort.byValues(order, a.zIndex, b.zIndex);
+	public static inline function byZIndex(order:Int, a:FlxBasic, b:FlxBasic):Int
+		return FlxSort.byValues(order, a.zIndex, b.zIndex);
 
-    public static function alphabetically(a:String, b:String):Int
-    {
-        if (a == b) return 0;
-        return a < b ? -1 : 1;
-    }
+	public static function alphabetically(a:String, b:String):Int
+	{
+		if (a == b)
+			return 0;
+		return a < b ? -1 : 1;
+	}
 
-    public static function defaultsAlphabetically(defaults:Array<String>, a:String, b:String):Int
-    {
-        if (defaults.contains(a) && defaults.contains(b))
-            return defaults.indexOf(a) - defaults.indexOf(b);
-        if (defaults.contains(a)) return -1;
-        if (defaults.contains(b)) return 1;
-        return alphabetically(a, b);
-    }
+	public static function defaultsAlphabetically(defaults:Array<String>, a:String, b:String):Int
+	{
+		if (defaults.contains(a) && defaults.contains(b))
+			return defaults.indexOf(a) - defaults.indexOf(b);
+		if (defaults.contains(a))
+			return -1;
+		if (defaults.contains(b))
+			return 1;
+		return alphabetically(a, b);
+	}
 }

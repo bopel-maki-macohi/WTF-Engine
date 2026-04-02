@@ -13,113 +13,119 @@ import json2object.JsonParser;
  */
 class SongRegistry extends BaseRegistry<Song>
 {
-    public static var instance:SongRegistry;
+	public static var instance:SongRegistry;
 
-    var metaParser(default, null) = new JsonParser<SongMetadata>();
-    var chartParser(default, null) = new JsonParser<SongChartData>();
+	var metaParser(default, null) = new JsonParser<SongMetadata>();
+	var chartParser(default, null) = new JsonParser<SongChartData>();
 
-    var diffs:Array<String>;
+	var diffs:Array<String>;
 
-    public function new()
-    {
-        super('songs', 'play/songs');
-    }
+	public function new()
+	{
+		super('songs', 'play/songs');
+	}
 
-    override public function load()
-    {
-        super.load();
+	override public function load()
+	{
+		super.load();
 
-        //
-        // VANILLA
-        //
+		//
+		// VANILLA
+		//
 
-        for (id in FileUtil.listFolders(path))
-        {
-            final metaPath:String = Paths.json('$path/$id/meta');
-            final chartPath:String = Paths.json('$path/$id/chart');
+		for (id in FileUtil.listFolders(path))
+		{
+			final metaPath:String = Paths.json('$path/$id/meta');
+			final chartPath:String = Paths.json('$path/$id/chart');
 
-            // Skip the song if it doesn't have a chart or metadata file
-            if (!Paths.exists(metaPath) || !Paths.exists(chartPath)) continue;
+			// Skip the song if it doesn't have a chart or metadata file
+			if (!Paths.exists(metaPath) || !Paths.exists(chartPath))
+				continue;
 
-            var song:Song = new Song(id);
-            
-            song.meta = metaParser.fromJson(FileUtil.getText(metaPath));
-            song.chart = chartParser.fromJson(FileUtil.getText(chartPath));
+			var song:Song = new Song(id);
 
-            register(id, song);
-        }
+			song.meta = metaParser.fromJson(FileUtil.getText(metaPath));
+			song.chart = chartParser.fromJson(FileUtil.getText(chartPath));
 
-        //
-        // SCRIPTED
-        //
+			register(id, song);
+		}
 
-        var scripts:Array<String> = ScriptedSong.listScriptClasses();
+		//
+		// SCRIPTED
+		//
 
-        trace('Loading ${scripts.length} scripted song(s)...');
+		var scripts:Array<String> = ScriptedSong.listScriptClasses();
 
-        for (script in scripts)
-        {
-            try {
-                var song:Song = ScriptedSong.scriptInit(script, '');
-                var ogSong:Song = fetch(song.id);
+		trace('Loading ${scripts.length} scripted song(s)...');
 
-                song.meta = ogSong.meta;
-                song.chart = ogSong.chart;
+		for (script in scripts)
+		{
+			try
+			{
+				var song:Song = ScriptedSong.scriptInit(script, '');
+				var ogSong:Song = fetch(song.id);
 
-                entries.set(song.id, song);
-            }
-            catch (e)
-                trace('Failed to load script $script.');
-        }
-    }
+				song.meta = ogSong.meta;
+				song.chart = ogSong.chart;
 
-    public function getDifficulties():Array<String>
-    {
-        // Use a cached array to make it real easy for the engine
-        if (diffs != null) return diffs;
+				entries.set(song.id, song);
+			}
+			catch (e)
+				trace('Failed to load script $script.');
+		}
+	}
 
-        diffs = [];
+	public function getDifficulties():Array<String>
+	{
+		// Use a cached array to make it real easy for the engine
+		if (diffs != null)
+			return diffs;
 
-        for (song in entries)
-        {
-            for (diff in song.difficulties)
-            {
-                // Skip the difficulty if it's already in the list
-                if (diffs.contains(diff)) continue;
+		diffs = [];
 
-                diffs.push(diff);
-            }
-        }
+		for (song in entries)
+		{
+			for (diff in song.difficulties)
+			{
+				// Skip the difficulty if it's already in the list
+				if (diffs.contains(diff))
+					continue;
 
-        return diffs;
-    }
+				diffs.push(diff);
+			}
+		}
 
-    public function listWithDifficulty(diff:String)
-    {
-        var list:Array<String> = [];
+		return diffs;
+	}
 
-        // List songs through levels to ensure proper order
-        for (id in LevelRegistry.instance.listSorted())
-        {
-            var level:Level = LevelRegistry.instance.fetch(id);
+	public function listWithDifficulty(diff:String)
+	{
+		var list:Array<String> = [];
 
-            for (id in level.getSongs())
-            {
-                var song:Song = SongRegistry.instance.fetch(id);
+		// List songs through levels to ensure proper order
+		for (id in LevelRegistry.instance.listSorted())
+		{
+			var level:Level = LevelRegistry.instance.fetch(id);
 
-                if (list.contains(id) || !song?.difficulties?.contains(diff)) continue;
-                list.push(id);
-            }
-        }
+			for (id in level.getSongs())
+			{
+				var song:Song = SongRegistry.instance.fetch(id);
 
-        // List songs through the entries themselves
-        // Because not every song has a level
-        for (song in entries)
-        {
-            if (list.contains(song.id) || !song.difficulties.contains(diff)) continue;
-            list.push(song.id);
-        }
+				if (list.contains(id) || !song?.difficulties?.contains(diff))
+					continue;
+				list.push(id);
+			}
+		}
 
-        return list;
-    }
+		// List songs through the entries themselves
+		// Because not every song has a level
+		for (song in entries)
+		{
+			if (list.contains(song.id) || !song.difficulties.contains(diff))
+				continue;
+			list.push(song.id);
+		}
+
+		return list;
+	}
 }

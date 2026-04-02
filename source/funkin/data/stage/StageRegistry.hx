@@ -11,66 +11,68 @@ import json2object.JsonParser;
  */
 class StageRegistry extends BaseRegistry<StageData>
 {
-    public static var instance:StageRegistry;
+	public static var instance:StageRegistry;
 
-    var parser(default, null) = new JsonParser<StageData>();
+	var parser(default, null) = new JsonParser<StageData>();
 
-    var scripted:StringMap<String> = new StringMap();
+	var scripted:StringMap<String> = new StringMap();
 
-    public function new()
-    {
-        super('stages', 'play/stages');
-    }
+	public function new()
+	{
+		super('stages', 'play/stages');
+	}
 
-    override public function load()
-    {
-        super.load();
+	override public function load()
+	{
+		super.load();
 
-        //
-        // VANILLA
-        //
+		//
+		// VANILLA
+		//
 
-        for (id in FileUtil.listFolders(path))
-        {
-            final metaPath:String = Paths.json('$path/$id/meta');
+		for (id in FileUtil.listFolders(path))
+		{
+			final metaPath:String = Paths.json('$path/$id/meta');
 
-            // Skip the stage if it doesn't have metadata
-            if (!Paths.exists(metaPath)) continue;
+			// Skip the stage if it doesn't have metadata
+			if (!Paths.exists(metaPath))
+				continue;
 
-            register(id, parser.fromJson(FileUtil.getText(metaPath)));
-        }
+			register(id, parser.fromJson(FileUtil.getText(metaPath)));
+		}
 
-        //
-        // SCRIPTED
-        //
+		//
+		// SCRIPTED
+		//
 
-        var scripts:Array<String> = ScriptedStage.listScriptClasses();
+		var scripts:Array<String> = ScriptedStage.listScriptClasses();
 
-        trace('Loading ${scripts.length} scripted stage(s)...');
+		trace('Loading ${scripts.length} scripted stage(s)...');
 
-        for (script in scripts)
-        {
-            try {
-                var stage:Stage = ScriptedStage.scriptInit(script, '');
-                scripted.set(stage.id, script);
-            }
-            catch (e)
-                trace('Failed to load script $script.');
-        }
-    }
+		for (script in scripts)
+		{
+			try
+			{
+				var stage:Stage = ScriptedStage.scriptInit(script, '');
+				scripted.set(stage.id, script);
+			}
+			catch (e)
+				trace('Failed to load script $script.');
+		}
+	}
 
-    public function fetchStage(id:String):Stage
-    {
-        var stage:Stage = null;
+	public function fetchStage(id:String):Stage
+	{
+		var stage:Stage = null;
 
-        if (scripted.exists(id))
-            stage = ScriptedStage.scriptInit(scripted.get(id), id);
-        else
-            stage = new Stage(id);
+		if (scripted.exists(id))
+			stage = ScriptedStage.scriptInit(scripted.get(id), id);
+		else
+			stage = new Stage(id);
 
-        stage.meta = fetch(id);
-        stage.buildProps();
+		stage.meta = fetch(id);
+		stage.buildProps();
 
-        return stage;
-    }
+		return stage;
+	}
 }

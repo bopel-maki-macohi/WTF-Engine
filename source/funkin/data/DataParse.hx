@@ -8,9 +8,9 @@ import hxjsonast.Tools;
  */
 class DataParse
 {
-    public static function dynamicParse(json:Json, name:String):Dynamic
-        return Tools.getValue(json);
+	public static function dynamicParse(json:Json, name:String):Dynamic
+		return Tools.getValue(json);
 
-    public static function dynamicWrite(value:Dynamic):String
-        return haxe.Json.stringify(value, '\t');
+	public static function dynamicWrite(value:Dynamic):String
+		return haxe.Json.stringify(value, '\t');
 }

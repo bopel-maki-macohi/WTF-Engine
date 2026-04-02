@@ -7,47 +7,47 @@ import funkin.graphics.FunkinText;
  */
 class ScrollingText extends FunkinText
 {
-    public var scrollWidth:Float;
-    public var speed:Float;
-    public var spacing:Float;
+	public var scrollWidth:Float;
+	public var speed:Float;
+	public var spacing:Float;
 
-    public function new(x:Float = 0, y:Float = 0, text:String = '', speed:Float = 1, spacing:Float = 50)
-    {
-        super(x, y, text);
+	public function new(x:Float = 0, y:Float = 0, text:String = '', speed:Float = 1, spacing:Float = 50)
+	{
+		super(x, y, text);
 
-        this.speed = speed;
-        this.spacing = spacing;
+		this.speed = speed;
+		this.spacing = spacing;
 
-        active = true;
-    }
+		active = true;
+	}
 
-    override public function update(elapsed:Float)
-    {
-        super.update(elapsed);
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
 
-        offset.x += speed * 60 * elapsed;
+		offset.x += speed * 60 * elapsed;
 
-        if (Math.abs(offset.x) > width)
-            offset.x = 0;
-    }
+		if (Math.abs(offset.x) > width)
+			offset.x = 0;
+	}
 
-    override public function draw()
-    {
-        var lastX:Float = x;
-        var count:Int = Math.ceil(scrollWidth / width) + 2;
+	override public function draw()
+	{
+		var lastX:Float = x;
+		var count:Int = Math.ceil(scrollWidth / width) + 2;
 
-        x -= width;
-        
-        for (i in 0...count)
-        {
-            super.draw();
+		x -= width;
 
-            x += width;
-        }
+		for (i in 0...count)
+		{
+			super.draw();
 
-        x = lastX;
-    }
+			x += width;
+		}
 
-    override function get_width():Float
-        return super.get_width() + spacing * scale.x;
+		x = lastX;
+	}
+
+	override function get_width():Float
+		return super.get_width() + spacing * scale.x;
 }

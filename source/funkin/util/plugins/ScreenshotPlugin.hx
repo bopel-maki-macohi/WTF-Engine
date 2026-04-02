@@ -14,39 +14,39 @@ import sys.io.File;
  */
 class ScreenshotPlugin extends FlxBasic
 {
-    var tookScreenshot:Bool = false;
+	var tookScreenshot:Bool = false;
 
-    public static function init()
-        FlxG.plugins.addPlugin(new ScreenshotPlugin());
+	public static function init()
+		FlxG.plugins.addPlugin(new ScreenshotPlugin());
 
-    override public function update(elapsed:Float)
-    {
-        super.update(elapsed);
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
 
-        if (FlxG.keys.justPressed.F3 && !tookScreenshot)
-        {
-            #if HAS_FPS_COUNTER
-            Main.fpsCounter.visible = false;
-            #end
+		if (FlxG.keys.justPressed.F3 && !tookScreenshot)
+		{
+			#if HAS_FPS_COUNTER
+			Main.fpsCounter.visible = false;
+			#end
 
-            tookScreenshot = true;
-            
-            // Fuck you
-            // Get hit with FlxTimer.wait()
-            FlxTimer.wait(0.1, () -> {
-                
-                var data:BitmapData = BitmapData.fromImage(FlxG.stage.window.readPixels());
-                var bytes:ByteArray = data.encode(data.rect, new PNGEncoderOptions());
+			tookScreenshot = true;
 
-                File.saveBytes('screenshot.${Constants.IMAGE_EXT}', bytes);
-                FunkinSound.playOnce('ui/sounds/cancel');
+			// Fuck you
+			// Get hit with FlxTimer.wait()
+			FlxTimer.wait(0.1, () ->
+			{
+				var data:BitmapData = BitmapData.fromImage(FlxG.stage.window.readPixels());
+				var bytes:ByteArray = data.encode(data.rect, new PNGEncoderOptions());
 
-                #if HAS_FPS_COUNTER
-                Main.fpsCounter.visible = true;
-                #end
+				File.saveBytes('screenshot.${Constants.IMAGE_EXT}', bytes);
+				FunkinSound.playOnce('ui/sounds/cancel');
 
-                tookScreenshot = false;
-            });
-        }
-    }
+				#if HAS_FPS_COUNTER
+				Main.fpsCounter.visible = true;
+				#end
+
+				tookScreenshot = false;
+			});
+		}
+	}
 }

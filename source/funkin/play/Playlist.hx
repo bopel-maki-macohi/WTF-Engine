@@ -9,41 +9,42 @@ import funkin.ui.story.Level;
  */
 class Playlist
 {
-    public static var level:Level;
-    public static var isStory(get, never):Bool;
+	public static var level:Level;
+	public static var isStory(get, never):Bool;
 
-    public static var songs:Array<String>;
-    public static var score:Int;
-    public static var tallies:Tallies;
+	public static var songs:Array<String>;
+	public static var score:Int;
+	public static var tallies:Tallies;
 
-    public static function reset(?level:Level)
-    {
-        Playlist.level = level;
+	public static function reset(?level:Level)
+	{
+		Playlist.level = level;
 
-        songs = [];
-        score = 0;
-        tallies = new Tallies();
-    }
+		songs = [];
+		score = 0;
+		tallies = new Tallies();
+	}
 
-    public static function load()
-    {
-        var id:String = songs[0];
-        var song:Song = SongRegistry.instance.fetch(id);
+	public static function load()
+	{
+		var id:String = songs[0];
+		var song:Song = SongRegistry.instance.fetch(id);
 
-        PlayState.song = song;
-    }
+		PlayState.song = song;
+	}
 
-    public static function next():Bool
-    {
-        songs.shift();
+	public static function next():Bool
+	{
+		songs.shift();
 
-        if (songs.length == 0) return false;
+		if (songs.length == 0)
+			return false;
 
-        load();
+		load();
 
-        return true;
-    }
+		return true;
+	}
 
-    inline static function get_isStory():Bool
-        return level != null;
+	inline static function get_isStory():Bool
+		return level != null;
 }

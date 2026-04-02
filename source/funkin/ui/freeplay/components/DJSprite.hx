@@ -7,29 +7,30 @@ import funkin.graphics.FunkinSprite;
  */
 class DJSprite extends FunkinSprite
 {
-    var busy:Bool = false;
+	var busy:Bool = false;
 
-    public function new(x:Float = 0, y:Float = 0)
-    {
-        super(x, y);
+	public function new(x:Float = 0, y:Float = 0)
+	{
+		super(x, y);
 
-        loadSprite('ui/freeplay/dj', 1.25, 224, 258);
-        
-        addAnimation('idle', [0, 1, 2], 10, false);
-        addAnimation('confirm', [3, 4, 5], 10, false);
+		loadSprite('ui/freeplay/dj', 1.25, 224, 258);
 
-        dance();
-    }
+		addAnimation('idle', [0, 1, 2], 10, false);
+		addAnimation('confirm', [3, 4, 5], 10, false);
 
-    public function dance()
-    {
-        if (busy) return;
-        playAnimation('idle', true);
-    }
+		dance();
+	}
 
-    public function confirm()
-    {
-        busy = true;
-        playAnimation('confirm');
-    }
+	public function dance()
+	{
+		if (busy)
+			return;
+		playAnimation('idle', true);
+	}
+
+	public function confirm()
+	{
+		busy = true;
+		playAnimation('confirm');
+	}
 }

@@ -8,7 +8,7 @@ import openfl.utils.Assets;
  */
 class TextureSwap extends FlxShader
 {
-    @:glFragmentSource('
+	@:glFragmentSource('
         #pragma header
 
         uniform sampler2D uTexture;
@@ -27,14 +27,13 @@ class TextureSwap extends FlxShader
             gl_FragColor = color;
         }
     ')
+	public function new(id:String)
+	{
+		super();
 
-    public function new(id:String)
-    {
-        super();
+		loadTexture(id);
+	}
 
-        loadTexture(id);
-    }
-
-    public function loadTexture(id:String)
-        uTexture.input = Assets.getBitmapData(Paths.image(id));
+	public function loadTexture(id:String)
+		uTexture.input = Assets.getBitmapData(Paths.image(id));
 }

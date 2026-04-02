@@ -9,55 +9,58 @@ import haxe.macro.Expr;
  */
 class ZIndexMacro
 {
-    public static macro function buildFlxBasic():Array<Field>
-    {
-        var fields = Context.getBuildFields();
-        var has:Bool = false;
+	public static macro function buildFlxBasic():Array<Field>
+	{
+		var fields = Context.getBuildFields();
+		var has:Bool = false;
 
-        for (field in fields)
-        {
-            if (field.name != 'zIndex') continue;
-            has = true;
-        }
+		for (field in fields)
+		{
+			if (field.name != 'zIndex')
+				continue;
+			has = true;
+		}
 
-        if (!has)
-        {
-            fields.push({
-                name: 'zIndex',
-                access: [APublic],
-                kind: FieldType.FVar(macro:Int, macro $v{0}),
-                pos: Context.currentPos()
-            });
-        }
+		if (!has)
+		{
+			fields.push({
+				name: 'zIndex',
+				access: [APublic],
+				kind: FieldType.FVar(macro :Int, macro $v{0}),
+				pos: Context.currentPos()
+			});
+		}
 
-        return fields;
-    }
+		return fields;
+	}
 
-    public static macro function buildFlxGroup():Array<Field>
-    {
-        var fields = Context.getBuildFields();
-        var has:Bool = false;
+	public static macro function buildFlxGroup():Array<Field>
+	{
+		var fields = Context.getBuildFields();
+		var has:Bool = false;
 
-        for (field in fields)
-        {
-            if (field.name != 'refresh') continue;
-            has = true;
-        }
+		for (field in fields)
+		{
+			if (field.name != 'refresh')
+				continue;
+			has = true;
+		}
 
-        if (!has)
-        {
-            fields.push({
-                name: 'refresh',
-                access: [APublic],
-                kind: FieldType.FFun({
-                    args: [],
-                    expr: macro { sort(funkin.util.SortUtil.byZIndex); }
-                }),
-                pos: Context.currentPos()
-            });
-        }
+		if (!has)
+		{
+			fields.push({
+				name: 'refresh',
+				access: [APublic],
+				kind: FieldType.FFun({
+					args: [],
+					expr: macro
+					{sort(funkin.util.SortUtil.byZIndex);}
+				}),
+				pos: Context.currentPos()
+			});
+		}
 
-        return fields;
-    }
+		return fields;
+	}
 }
 #end

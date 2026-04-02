@@ -7,9 +7,9 @@ import funkin.modding.event.ScriptEvent;
  */
 interface IScriptedClass
 {
-    public function onCreate(event:ScriptEvent):Void;
-    public function onUpdate(event:UpdateScriptEvent):Void;
-    public function onDestroy(event:ScriptEvent):Void;
+	public function onCreate(event:ScriptEvent):Void;
+	public function onUpdate(event:UpdateScriptEvent):Void;
+	public function onDestroy(event:ScriptEvent):Void;
 }
 
 /**
@@ -17,11 +17,11 @@ interface IScriptedClass
  */
 interface INoteScriptedClass extends IScriptedClass
 {
-    public function onNoteHit(event:NoteScriptEvent):Void;
-    public function onNoteMiss(event:NoteScriptEvent):Void;
-    public function onHoldNoteHold(event:HoldNoteScriptEvent):Void;
-    public function onHoldNoteDrop(event:HoldNoteScriptEvent):Void;
-    public function onGhostMiss(event:GhostMissScriptEvent):Void;
+	public function onNoteHit(event:NoteScriptEvent):Void;
+	public function onNoteMiss(event:NoteScriptEvent):Void;
+	public function onHoldNoteHold(event:HoldNoteScriptEvent):Void;
+	public function onHoldNoteDrop(event:HoldNoteScriptEvent):Void;
+	public function onGhostMiss(event:GhostMissScriptEvent):Void;
 }
 
 /**
@@ -29,9 +29,9 @@ interface INoteScriptedClass extends IScriptedClass
  */
 interface IConductorScriptedClass extends IScriptedClass
 {
-    public function onStepHit(event:ConductorScriptEvent):Void;
-    public function onBeatHit(event:ConductorScriptEvent):Void;
-    public function onSectionHit(event:ConductorScriptEvent):Void;
+	public function onStepHit(event:ConductorScriptEvent):Void;
+	public function onBeatHit(event:ConductorScriptEvent):Void;
+	public function onSectionHit(event:ConductorScriptEvent):Void;
 }
 
 /**
@@ -39,13 +39,13 @@ interface IConductorScriptedClass extends IScriptedClass
  */
 interface IPlayStateScriptedClass extends IConductorScriptedClass extends INoteScriptedClass
 {
-    public function onSongLoaded(event:SongLoadScriptEvent):Void;
-    public function onSongStart(event:ScriptEvent):Void;
-    public function onSongEnd(event:ScriptEvent):Void;
-    public function onSongRetry(event:ScriptEvent):Void;
-    public function onSongEvent(event:SongEventScriptEvent):Void;
-    public function onCountdownStart(event:CountdownScriptEvent):Void;
-    public function onCountdownStep(event:CountdownScriptEvent):Void;
-    public function onPause(event:ScriptEvent):Void;
-    public function onGameOver(event:ScriptEvent):Void;
+	public function onSongLoaded(event:SongLoadScriptEvent):Void;
+	public function onSongStart(event:ScriptEvent):Void;
+	public function onSongEnd(event:ScriptEvent):Void;
+	public function onSongRetry(event:ScriptEvent):Void;
+	public function onSongEvent(event:SongEventScriptEvent):Void;
+	public function onCountdownStart(event:CountdownScriptEvent):Void;
+	public function onCountdownStep(event:CountdownScriptEvent):Void;
+	public function onPause(event:ScriptEvent):Void;
+	public function onGameOver(event:ScriptEvent):Void;
 }

@@ -7,51 +7,51 @@ import haxe.ds.StringMap;
  */
 class BaseRegistry<T>
 {
-    public var entries:StringMap<T> = new StringMap<T>();
+	public var entries:StringMap<T> = new StringMap<T>();
 
-    public var id:String;
-    public var path:String;
+	public var id:String;
+	public var path:String;
 
-    public function new(id:String, ?path:String)
-    {
-        this.id = id;
-        this.path = path ?? this.id;
+	public function new(id:String, ?path:String)
+	{
+		this.id = id;
+		this.path = path ?? this.id;
 
-        load();
-    }
+		load();
+	}
 
-    public function load()
-    {
-        // Clears the entries
-        clear();
+	public function load()
+	{
+		// Clears the entries
+		clear();
 
-        // Loading entries should be done through extending this
-        // Because you aren't a baby anymore
-        // Grow up by extending this class and doing things the WTF Engine way
-    }
+		// Loading entries should be done through extending this
+		// Because you aren't a baby anymore
+		// Grow up by extending this class and doing things the WTF Engine way
+	}
 
-    public function register(id:String, entry:T)
-    {
-        if (exists(id))
-            trace('$id is already registered under ${this.id}!');
-        else
-            trace('Registered $id under ${this.id}.');
-        entries.set(id, entry);
-    }
+	public function register(id:String, entry:T)
+	{
+		if (exists(id))
+			trace('$id is already registered under ${this.id}!');
+		else
+			trace('Registered $id under ${this.id}.');
+		entries.set(id, entry);
+	}
 
-    public function fetch(id:String):T
-    {
-        if (!exists(id))
-            trace('$id does NOT exist under ${this.id}!');
-        return entries.get(id);
-    }
+	public function fetch(id:String):T
+	{
+		if (!exists(id))
+			trace('$id does NOT exist under ${this.id}!');
+		return entries.get(id);
+	}
 
-    public function list():Array<String>
-        return entries.keys().array();
+	public function list():Array<String>
+		return entries.keys().array();
 
-    public function exists(id:String):Bool
-        return entries.exists(id);
+	public function exists(id:String):Bool
+		return entries.exists(id);
 
-    public function clear()
-        entries.clear();
+	public function clear()
+		entries.clear();
 }

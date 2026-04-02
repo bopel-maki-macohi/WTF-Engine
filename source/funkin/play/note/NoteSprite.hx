@@ -8,64 +8,64 @@ import funkin.graphics.FunkinSprite;
  */
 class NoteSprite extends FunkinSprite
 {
-    public var time:Float;
-    public var direction(default, set):NoteDirection;
-    public var kind:String;
+	public var time:Float;
+	public var direction(default, set):NoteDirection;
+	public var kind:String;
 
-    public var mayHit:Bool;
-    public var willMiss:Bool;
-    public var wasMissed:Bool;
+	public var mayHit:Bool;
+	public var willMiss:Bool;
+	public var wasMissed:Bool;
 
-    public var holdNote:HoldNoteSprite;
-    public var data:SongNoteData;
+	public var holdNote:HoldNoteSprite;
+	public var data:SongNoteData;
 
-    public function new()
-    {
-        super();
+	public function new()
+	{
+		super();
 
-        // No point of having this active
-        // Not like there's animation to the sprite
-        active = false;
+		// No point of having this active
+		// Not like there's animation to the sprite
+		active = false;
 
-        buildSprite();
-    }
+		buildSprite();
+	}
 
-    public function buildSprite()
-    {
-        loadSprite('play/ui/note/notes', 1, 84, 84);
+	public function buildSprite()
+	{
+		loadSprite('play/ui/note/notes', 1, 84, 84);
 
-        for (i in 0...Constants.NOTE_COUNT)
-        {
-            var direction:NoteDirection = NoteDirection.fromInt(i);
+		for (i in 0...Constants.NOTE_COUNT)
+		{
+			var direction:NoteDirection = NoteDirection.fromInt(i);
 
-            addAnimation(direction.name, [direction + Constants.NOTE_COUNT * 3]);
-        }
+			addAnimation(direction.name, [direction + Constants.NOTE_COUNT * 3]);
+		}
 
-        set_direction(direction);
-    }
+		set_direction(direction);
+	}
 
-    override public function revive()
-    {
-        super.revive();
+	override public function revive()
+	{
+		super.revive();
 
-        time = 0;
-        direction = LEFT;
-        kind = '';
+		time = 0;
+		direction = LEFT;
+		kind = '';
 
-        mayHit = false;
-        willMiss = false;
-        wasMissed = false;
+		mayHit = false;
+		willMiss = false;
+		wasMissed = false;
 
-        holdNote = null;
-        data = null;
-    }
+		holdNote = null;
+		data = null;
+	}
 
-    function set_direction(direction:NoteDirection):NoteDirection
-    {
-        this.direction = direction % Constants.NOTE_COUNT;
+	function set_direction(direction:NoteDirection):NoteDirection
+	{
+		this.direction = direction % Constants.NOTE_COUNT;
 
-        playAnimation(this.direction.name);
+		playAnimation(this.direction.name);
 
-        return direction;
-    }
+		return direction;
+	}
 }

@@ -7,28 +7,28 @@ import funkin.input.Controls;
  */
 enum abstract NoteDirection(Int) to Int from Int
 {
-    var LEFT = 0;
-    var DOWN = 1;
-    var UP = 2;
-    var RIGHT = 3;
+	var LEFT = 0;
+	var DOWN = 1;
+	var UP = 2;
+	var RIGHT = 3;
 
 	public var name(get, never):String;
 
 	public var pressed(get, never):Bool;
 	public var justPressed(get, never):Bool;
 
-    @:from
-    public static function fromInt(value:Int):NoteDirection
-    {
-        return switch (value % Constants.NOTE_COUNT)
-        {
-            case 0: LEFT;
-            case 1: DOWN;
-            case 2: UP;
-            case 3: RIGHT;
-            default: LEFT;
-        }
-    }
+	@:from
+	public static function fromInt(value:Int):NoteDirection
+	{
+		return switch (value % Constants.NOTE_COUNT)
+		{
+			case 0: LEFT;
+			case 1: DOWN;
+			case 2: UP;
+			case 3: RIGHT;
+			default: LEFT;
+		}
+	}
 
 	function get_name():String
 	{

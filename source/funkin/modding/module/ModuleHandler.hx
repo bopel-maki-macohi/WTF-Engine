@@ -10,83 +10,86 @@ import haxe.ds.StringMap;
  */
 class ModuleHandler
 {
-    static var modules(default, null) = new StringMap<Module>();
+	static var modules(default, null) = new StringMap<Module>();
 
-    public static function load()
-    {
-        clear();
+	public static function load()
+	{
+		clear();
 
-        // Loads the modules
-        var scripts:Array<String> = ScriptedModule.listScriptClasses();
+		// Loads the modules
+		var scripts:Array<String> = ScriptedModule.listScriptClasses();
 
-        for (script in scripts)
-        {
-            try
-            {
-                var module:Module = ScriptedModule.scriptInit(script, '');
-                modules.set(module.id, module);
-            }
-            catch (e)
-                trace('Failed to load script $script.');
-        }
+		for (script in scripts)
+		{
+			try
+			{
+				var module:Module = ScriptedModule.scriptInit(script, '');
+				modules.set(module.id, module);
+			}
+			catch (e)
+				trace('Failed to load script $script.');
+		}
 
-        // Runs onCreate() for all modules
-        dispatch(new ScriptEvent(Create));
+		// Runs onCreate() for all modules
+		dispatch(new ScriptEvent(Create));
 
-        // Adds a callback for when the game updates
-        // This allows modules to update, even when the game isn't paused
-        FlxG.signals.postUpdate.add(update);
+		// Adds a callback for when the game updates
+		// This allows modules to update, even when the game isn't paused
+		FlxG.signals.postUpdate.add(update);
 
-        trace('Done loading modules.');
-    }
+		trace('Done loading modules.');
+	}
 
-    public static function getModule(id:String):Module
-        return modules.get(id);
+	public static function getModule(id:String):Module
+		return modules.get(id);
 
-    public static function setModuleActive(id:String, active:Bool)
-    {
-        var module:Module = getModule(id);
-        if (module != null)
-            module.active = active;
-    }
+	public static function setModuleActive(id:String, active:Bool)
+	{
+		var module:Module = getModule(id);
+		if (module != null)
+			module.active = active;
+	}
 
-    public static function dispatch(event:ScriptEvent)
-    {
-        for (module in modules)
-        {
-            // Skip the module if it's inactive
-            if (!module.active) continue;
+	public static function dispatch(event:ScriptEvent)
+	{
+		for (module in modules)
+		{
+			// Skip the module if it's inactive
+			if (!module.active)
+				continue;
 
-            ScriptEventDispatcher.dispatch(module, event);
-        }
-    }
+			ScriptEventDispatcher.dispatch(module, event);
+		}
+	}
 
-    static function update()
-    {
-        for (module in modules)
-        {
-            if (!module.active) continue;
+	static function update()
+	{
+		for (module in modules)
+		{
+			if (!module.active)
+				continue;
 
-            // Checks whether the module can actually update
-            if (FlxG.state.subState != null && !module.alwaysUpdate) continue;
+			// Checks whether the module can actually update
+			if (FlxG.state.subState != null && !module.alwaysUpdate)
+				continue;
 
-            ScriptEventDispatcher.dispatch(module, new UpdateScriptEvent(FlxG.elapsed));
-        }
-    }
+			ScriptEventDispatcher.dispatch(module, new UpdateScriptEvent(FlxG.elapsed));
+		}
+	}
 
-    static function clear()
-    {
-        // The dispatch function checks for if a module is active
-        // We want to dispatch the onDestroy() event no matter what
-        for (module in modules)
-        {
-            var event:ScriptEvent = new ScriptEvent(Destroy);
-            ScriptEventDispatcher.dispatch(module, event);
-        }
+	static function clear()
+	{
+		// The dispatch function checks for if a module is active
+		// We want to dispatch the onDestroy() event no matter what
+		for (module in modules)
+		{
+			var event:ScriptEvent = new ScriptEvent(Destroy);
+			ScriptEventDispatcher.dispatch(module, event);
+		}
 
-        modules.clear();
+		modules.clear();
 
-        // Remove the update callback
-        FlxG.signals.postUpdate.remove(update);
-    }
+		// Remove the update callback
+		FlxG.signals.postUpdate.remove(update);
+	}
 }

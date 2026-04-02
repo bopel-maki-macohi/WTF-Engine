@@ -11,16 +11,16 @@ import funkin.play.note.NoteSprite;
  */
 class ScriptEvent
 {
-    public var type(default, null):ScriptEventType;
-    public var cancelled(default, null):Bool = false;
+	public var type(default, null):ScriptEventType;
+	public var cancelled(default, null):Bool = false;
 
-    public function new(type:ScriptEventType)
-    {
-        this.type = type;
-    }
+	public function new(type:ScriptEventType)
+	{
+		this.type = type;
+	}
 
-    public function cancel()
-        cancelled = true;
+	public function cancel()
+		cancelled = true;
 }
 
 /**
@@ -28,14 +28,14 @@ class ScriptEvent
  */
 class UpdateScriptEvent extends ScriptEvent
 {
-    public var elapsed(default, null):Float;
+	public var elapsed(default, null):Float;
 
-    public function new(elapsed:Float)
-    {
-        super(Update);
+	public function new(elapsed:Float)
+	{
+		super(Update);
 
-        this.elapsed = elapsed;
-    }
+		this.elapsed = elapsed;
+	}
 }
 
 /**
@@ -43,18 +43,18 @@ class UpdateScriptEvent extends ScriptEvent
  */
 class ConductorScriptEvent extends ScriptEvent
 {
-    public var step(default, null):Int;
-    public var beat(default, null):Int;
-    public var section(default, null):Int;
+	public var step(default, null):Int;
+	public var beat(default, null):Int;
+	public var section(default, null):Int;
 
-    public function new(type:ScriptEventType, step:Int, beat:Int, section:Int)
-    {
-        super(type);
+	public function new(type:ScriptEventType, step:Int, beat:Int, section:Int)
+	{
+		super(type);
 
-        this.step = step;
-        this.beat = beat;
-        this.section = section;
-    }
+		this.step = step;
+		this.beat = beat;
+		this.section = section;
+	}
 }
 
 /**
@@ -62,16 +62,16 @@ class ConductorScriptEvent extends ScriptEvent
  */
 class SongLoadScriptEvent extends ScriptEvent
 {
-    public var notes:Array<SongNoteData>;
-    public var events:Array<EventData>;
+	public var notes:Array<SongNoteData>;
+	public var events:Array<EventData>;
 
-    public function new(notes:Array<SongNoteData>, events:Array<EventData>)
-    {
-        super(SongLoad);
+	public function new(notes:Array<SongNoteData>, events:Array<EventData>)
+	{
+		super(SongLoad);
 
-        this.notes = notes;
-        this.events = events;
-    }
+		this.notes = notes;
+		this.events = events;
+	}
 }
 
 /**
@@ -81,14 +81,14 @@ class SongLoadScriptEvent extends ScriptEvent
  */
 class NoteScriptEvent extends ScriptEvent
 {
-    public var note(default, null):NoteSprite;
+	public var note(default, null):NoteSprite;
 
-    public function new(type:ScriptEventType, note:NoteSprite)
-    {
-        super(type);
+	public function new(type:ScriptEventType, note:NoteSprite)
+	{
+		super(type);
 
-        this.note = note;
-    }
+		this.note = note;
+	}
 }
 
 /**
@@ -98,14 +98,14 @@ class NoteScriptEvent extends ScriptEvent
  */
 class HoldNoteScriptEvent extends ScriptEvent
 {
-    public var holdNote(default, null):HoldNoteSprite;
+	public var holdNote(default, null):HoldNoteSprite;
 
-    public function new(type:ScriptEventType, holdNote:HoldNoteSprite)
-    {
-        super(type);
+	public function new(type:ScriptEventType, holdNote:HoldNoteSprite)
+	{
+		super(type);
 
-        this.holdNote = holdNote;
-    }
+		this.holdNote = holdNote;
+	}
 }
 
 /**
@@ -115,16 +115,16 @@ class HoldNoteScriptEvent extends ScriptEvent
  */
 class SongEventScriptEvent extends ScriptEvent
 {
-    public var kind:String;
-    public var value:Dynamic;
+	public var kind:String;
+	public var value:Dynamic;
 
-    public function new(kind:String, value:Dynamic)
-    {
-        super(SongEvent);
+	public function new(kind:String, value:Dynamic)
+	{
+		super(SongEvent);
 
-        this.kind = kind;
-        this.value = value;
-    }
+		this.kind = kind;
+		this.value = value;
+	}
 }
 
 /**
@@ -134,14 +134,14 @@ class SongEventScriptEvent extends ScriptEvent
  */
 class GhostMissScriptEvent extends ScriptEvent
 {
-    public var direction(default, null):NoteDirection;
+	public var direction(default, null):NoteDirection;
 
-    public function new(direction:NoteDirection)
-    {
-        super(GhostMiss);
+	public function new(direction:NoteDirection)
+	{
+		super(GhostMiss);
 
-        this.direction = direction;
-    }
+		this.direction = direction;
+	}
 }
 
 /**
@@ -151,12 +151,12 @@ class GhostMissScriptEvent extends ScriptEvent
  */
 class CountdownScriptEvent extends ScriptEvent
 {
-    public var step(default, null):Int;
+	public var step(default, null):Int;
 
-    public function new(type:ScriptEventType, step:Int)
-    {
-        super(type);
+	public function new(type:ScriptEventType, step:Int)
+	{
+		super(type);
 
-        this.step = step;
-    }
+		this.step = step;
+	}
 }

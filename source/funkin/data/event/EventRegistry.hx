@@ -8,39 +8,41 @@ import funkin.play.song.SongEvent;
  */
 class EventRegistry extends BaseRegistry<SongEvent>
 {
-    public static var instance:EventRegistry;
+	public static var instance:EventRegistry;
 
-    public function new()
-    {
-        super('events');
-    }
+	public function new()
+	{
+		super('events');
+	}
 
-    override public function load()
-    {
-        super.load();
+	override public function load()
+	{
+		super.load();
 
-        // Song events are loaded just like how scripted stuff is loaded in registries
-        // Song events are literally just code, so yeah
-        var scripts:Array<String> = ScriptedSongEvent.listScriptClasses();
+		// Song events are loaded just like how scripted stuff is loaded in registries
+		// Song events are literally just code, so yeah
+		var scripts:Array<String> = ScriptedSongEvent.listScriptClasses();
 
-        trace('Loading ${scripts.length} scripted song event(s)...');
+		trace('Loading ${scripts.length} scripted song event(s)...');
 
-        for (script in scripts)
-        {
-            try {
-                var event:SongEvent = ScriptedSongEvent.scriptInit(script, '');
-                entries.set(event.id, event);
-            }
-            catch (e)
-                trace('Failed to load script $script.');
-        }
-    }
+		for (script in scripts)
+		{
+			try
+			{
+				var event:SongEvent = ScriptedSongEvent.scriptInit(script, '');
+				entries.set(event.id, event);
+			}
+			catch (e)
+				trace('Failed to load script $script.');
+		}
+	}
 
-    public function handleEvent(event:String, value:Dynamic)
-    {
-        // Don't handle an event that doesn't exist
-        if (!exists(event)) return;
+	public function handleEvent(event:String, value:Dynamic)
+	{
+		// Don't handle an event that doesn't exist
+		if (!exists(event))
+			return;
 
-        fetch(event).handle(value);
-    }
+		fetch(event).handle(value);
+	}
 }

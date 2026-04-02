@@ -11,64 +11,66 @@ import json2object.JsonParser;
  */
 class LevelRegistry extends BaseRegistry<Level>
 {
-    public static var instance:LevelRegistry;
+	public static var instance:LevelRegistry;
 
-    var parser(default, null) = new JsonParser<LevelData>();
+	var parser(default, null) = new JsonParser<LevelData>();
 
-    public function new()
-    {
-        super('levels', 'ui/story/levels');
-    }
+	public function new()
+	{
+		super('levels', 'ui/story/levels');
+	}
 
-    override public function load()
-    {
-        super.load();
+	override public function load()
+	{
+		super.load();
 
-        //
-        // VANILLA
-        //
+		//
+		// VANILLA
+		//
 
-        for (id in FileUtil.listFolders(path))
-        {
-            final metaPath:String = Paths.json('$path/$id/meta');
+		for (id in FileUtil.listFolders(path))
+		{
+			final metaPath:String = Paths.json('$path/$id/meta');
 
-            // Skip the level if it doesn't have a metadata file
-            if (!Paths.exists(metaPath)) continue;
+			// Skip the level if it doesn't have a metadata file
+			if (!Paths.exists(metaPath))
+				continue;
 
-            var level:Level = new Level(id);
-            
-            level.meta = parser.fromJson(FileUtil.getText(metaPath));
+			var level:Level = new Level(id);
 
-            register(id, level);
-        }
+			level.meta = parser.fromJson(FileUtil.getText(metaPath));
 
-        //
-        // SCRIPTED
-        //
+			register(id, level);
+		}
 
-        var scripts:Array<String> = ScriptedLevel.listScriptClasses();
+		//
+		// SCRIPTED
+		//
 
-        trace('Loading ${scripts.length} scripted level(s)...');
+		var scripts:Array<String> = ScriptedLevel.listScriptClasses();
 
-        for (script in scripts)
-        {
-            try {
-                var level:Level = ScriptedLevel.scriptInit(script, '');
-                var ogLevel:Level = fetch(level.id);
+		trace('Loading ${scripts.length} scripted level(s)...');
 
-                level.meta = ogLevel.meta;
+		for (script in scripts)
+		{
+			try
+			{
+				var level:Level = ScriptedLevel.scriptInit(script, '');
+				var ogLevel:Level = fetch(level.id);
 
-                entries.set(level.id, level);
-            }
-            catch (e)
-                trace('Failed to load script $script.');
-        }
-    }
+				level.meta = ogLevel.meta;
 
-    public function listSorted():Array<String>
-    {
-        var list:Array<String> = list();
-        list.sort(SortUtil.defaultsAlphabetically.bind(Constants.DEFAULT_LEVELS));
-        return list;
-    }
+				entries.set(level.id, level);
+			}
+			catch (e)
+				trace('Failed to load script $script.');
+		}
+	}
+
+	public function listSorted():Array<String>
+	{
+		var list:Array<String> = list();
+		list.sort(SortUtil.defaultsAlphabetically.bind(Constants.DEFAULT_LEVELS));
+		return list;
+	}
 }

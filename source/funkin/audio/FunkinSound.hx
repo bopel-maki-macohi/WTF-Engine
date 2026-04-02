@@ -7,50 +7,54 @@ import flixel.sound.FlxSound;
  */
 class FunkinSound extends FlxSound
 {
-    public static var music:FunkinSound;
+	public static var music:FunkinSound;
 
-    public static function load(id:String, volume:Float = 1, looped:Bool = true, autoDestroy:Bool = true, autoPlay:Bool = true):FunkinSound
-    {
-        var sound:FunkinSound = cast FlxG.sound.list.recycle(FunkinSound);
-        
-        sound.loadEmbedded(Paths.sound(id), looped, autoDestroy);
-        sound.persist = false;
-        sound.volume = volume;
+	public static function load(id:String, volume:Float = 1, looped:Bool = true, autoDestroy:Bool = true, autoPlay:Bool = true):FunkinSound
+	{
+		var sound:FunkinSound = cast FlxG.sound.list.recycle(FunkinSound);
 
-        FlxG.sound.list.add(sound);
-        FlxG.sound.defaultSoundGroup.add(sound);
+		sound.loadEmbedded(Paths.sound(id), looped, autoDestroy);
+		sound.persist = false;
+		sound.volume = volume;
 
-        if (autoPlay) sound.play();
+		FlxG.sound.list.add(sound);
+		FlxG.sound.defaultSoundGroup.add(sound);
 
-        return sound;
-    }
+		if (autoPlay)
+			sound.play();
 
-    public static function playOnce(id:String, volume:Float = 1):FunkinSound
-        return load(id, volume, false);
+		return sound;
+	}
 
-    public static function playMusic(id:String, volume:Float = 1, looped:Bool = true, autoPlay:Bool = true, overrideMusic:Bool = true)
-    {
-        if (music?.playing && !overrideMusic) return;
+	public static function playOnce(id:String, volume:Float = 1):FunkinSound
+		return load(id, volume, false);
 
-        if (music == null)
-            music = new FunkinSound();
-        else if (music.active)
-            music.stop();
+	public static function playMusic(id:String, volume:Float = 1, looped:Bool = true, autoPlay:Bool = true, overrideMusic:Bool = true)
+	{
+		if (music?.playing && !overrideMusic)
+			return;
 
-        music.loadEmbedded(Paths.sound(id), looped);
-        music.volume = volume;
-        music.persist = true;
+		if (music == null)
+			music = new FunkinSound();
+		else if (music.active)
+			music.stop();
 
-        FlxG.sound.music = music;
-        FlxG.sound.defaultMusicGroup.add(music);
+		music.loadEmbedded(Paths.sound(id), looped);
+		music.volume = volume;
+		music.persist = true;
 
-        if (autoPlay) music.play();
-    }
+		FlxG.sound.music = music;
+		FlxG.sound.defaultMusicGroup.add(music);
 
-    public static function stopAllSounds(stopMusic:Bool = false)
-    {
-        for (sound in FlxG.sound.list)
-            sound.stop();
-        if (stopMusic) music?.stop();
-    }
+		if (autoPlay)
+			music.play();
+	}
+
+	public static function stopAllSounds(stopMusic:Bool = false)
+	{
+		for (sound in FlxG.sound.list)
+			sound.stop();
+		if (stopMusic)
+			music?.stop();
+	}
 }

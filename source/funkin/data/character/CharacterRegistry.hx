@@ -11,69 +11,72 @@ import json2object.JsonParser;
  */
 class CharacterRegistry extends BaseRegistry<CharacterData>
 {
-    public static var instance:CharacterRegistry;
+	public static var instance:CharacterRegistry;
 
-    var parser(default, null) = new JsonParser<CharacterData>();
+	var parser(default, null) = new JsonParser<CharacterData>();
 
-    var scripted:StringMap<String> = new StringMap<String>();
+	var scripted:StringMap<String> = new StringMap<String>();
 
-    public function new()
-    {
-        super('characters', 'play/characters');
-    }
+	public function new()
+	{
+		super('characters', 'play/characters');
+	}
 
-    override public function load()
-    {
-        super.load();
+	override public function load()
+	{
+		super.load();
 
-        //
-        // VANILLA
-        //
+		//
+		// VANILLA
+		//
 
-        for (id in FileUtil.listFolders(path))
-        {
-            final metaPath:String = Paths.json('$path/$id/meta');
+		for (id in FileUtil.listFolders(path))
+		{
+			final metaPath:String = Paths.json('$path/$id/meta');
 
-            // Skip the character if it doesn't have metadata
-            if (!Paths.exists(metaPath)) continue;
+			// Skip the character if it doesn't have metadata
+			if (!Paths.exists(metaPath))
+				continue;
 
-            register(id, parser.fromJson(FileUtil.getText(metaPath)));
-        }
+			register(id, parser.fromJson(FileUtil.getText(metaPath)));
+		}
 
-        //
-        // SCRIPTED
-        //
+		//
+		// SCRIPTED
+		//
 
-        var scripts:Array<String> = ScriptedCharacter.listScriptClasses();
+		var scripts:Array<String> = ScriptedCharacter.listScriptClasses();
 
-        trace('Loading ${scripts.length} scripted character(s)...');
+		trace('Loading ${scripts.length} scripted character(s)...');
 
-        for (script in scripts)
-        {
-            try {
-                var character:Character = ScriptedCharacter.scriptInit(script, '');
-                scripted.set(character.id, script);
-            }
-            catch (e)
-                trace('Failed to load script $script.');
-        }
-    }
+		for (script in scripts)
+		{
+			try
+			{
+				var character:Character = ScriptedCharacter.scriptInit(script, '');
+				scripted.set(character.id, script);
+			}
+			catch (e)
+				trace('Failed to load script $script.');
+		}
+	}
 
-    public function fetchCharacter(id:String, isPlayer:Bool = false):Character
-    {
-        if (!exists(id)) return null;
-        
-        var character:Character = null;
+	public function fetchCharacter(id:String, isPlayer:Bool = false):Character
+	{
+		if (!exists(id))
+			return null;
 
-        if (scripted.exists(id))
-            character = ScriptedCharacter.scriptInit(scripted.get(id), id);
-        else
-            character = new Character(id);
+		var character:Character = null;
 
-        character.meta = fetch(id);
-        character.isPlayer = isPlayer;
-        character.buildSprite();
+		if (scripted.exists(id))
+			character = ScriptedCharacter.scriptInit(scripted.get(id), id);
+		else
+			character = new Character(id);
 
-        return character;
-    }
+		character.meta = fetch(id);
+		character.isPlayer = isPlayer;
+		character.buildSprite();
+
+		return character;
+	}
 }

@@ -17,71 +17,72 @@ import sys.FileSystem;
  */
 class ModHandler
 {
-    static final MOD_FOLDER:String = 'mods';
-    static final CORE_FOLDER:String = 'assets';
+	static final MOD_FOLDER:String = 'mods';
+	static final CORE_FOLDER:String = 'assets';
 
-    static final API_VERSION_RULE:String = '>=0.1.0';
+	static final API_VERSION_RULE:String = '>=0.1.0';
 
-    public static function init()
-    {
-        // Creates the mod folder
-        if (!FileSystem.exists(MOD_FOLDER))
-            FileSystem.createDirectory(MOD_FOLDER);
+	public static function init()
+	{
+		// Creates the mod folder
+		if (!FileSystem.exists(MOD_FOLDER))
+			FileSystem.createDirectory(MOD_FOLDER);
 
-        // Initializes Polymod
-        Polymod.init({
-            modRoot: MOD_FOLDER,
-            dirs: [],
-            framework: OPENFL,
-            errorCallback: onError,
-            apiVersionRule: API_VERSION_RULE,
-            skipDependencyErrors: true,
-            useScriptedClasses: true
-        });
+		// Initializes Polymod
+		Polymod.init({
+			modRoot: MOD_FOLDER,
+			dirs: [],
+			framework: OPENFL,
+			errorCallback: onError,
+			apiVersionRule: API_VERSION_RULE,
+			skipDependencyErrors: true,
+			useScriptedClasses: true
+		});
 
-        #if HAS_MODDING
-        for (meta in Polymod.scan())
-            Polymod.loadMod(meta.dirName);
-        #end
-    }
+		#if HAS_MODDING
+		for (meta in Polymod.scan())
+			Polymod.loadMod(meta.dirName);
+		#end
+	}
 
-    public static function reload()
-    {
-        Polymod.clearCache();
-        Polymod.clearScripts();
-        Polymod.reload();
+	public static function reload()
+	{
+		Polymod.clearCache();
+		Polymod.clearScripts();
+		Polymod.reload();
 
-        // Reloads the registries
-        // Not having this would ruin the point of hot-reloading
-        CharacterRegistry.instance.load();
+		// Reloads the registries
+		// Not having this would ruin the point of hot-reloading
+		CharacterRegistry.instance.load();
 		StageRegistry.instance.load();
 		SongRegistry.instance.load();
 		LevelRegistry.instance.load();
 		EventRegistry.instance.load();
 
-        // Reload all the modules
-        ModuleHandler.load();
+		// Reload all the modules
+		ModuleHandler.load();
 
-        // Reload the current song and level
-        // This is so dumb
-        if (PlayState.song != null)
-            PlayState.song = SongRegistry.instance.fetch(PlayState.song.id);
-        if (Playlist.level != null)
-            Playlist.level = LevelRegistry.instance.fetch(Playlist.level.id);
-    }
+		// Reload the current song and level
+		// This is so dumb
+		if (PlayState.song != null)
+			PlayState.song = SongRegistry.instance.fetch(PlayState.song.id);
+		if (Playlist.level != null)
+			Playlist.level = LevelRegistry.instance.fetch(Playlist.level.id);
+	}
 
-    static function onError(e:PolymodError)
-    {
-        // Trace the message because why the hell not
-        // Only the good errors though
-        // No one cares about framework and missing icons
-        if (e.code == FRAMEWORK_INIT || e.code == MOD_MISSING_ICON) return;
+	static function onError(e:PolymodError)
+	{
+		// Trace the message because why the hell not
+		// Only the good errors though
+		// No one cares about framework and missing icons
+		if (e.code == FRAMEWORK_INIT || e.code == MOD_MISSING_ICON)
+			return;
 
-        trace(e.message);
+		trace(e.message);
 
-        // Only alert the player of errors because no one cares about the other stuff
-        // Though the player should be aware of dependency problems as well
-        if (e.severity == ERROR || e.code == MOD_DEPENDENCY_UNMET)
-            WindowUtil.alert(e.message);
-    }
+		// Only alert the player of errors because no one cares about the other stuff
+		// Though the player should be aware of dependency problems as well
+		if (e.severity == ERROR || e.code == MOD_DEPENDENCY_UNMET)
+			WindowUtil.alert(e.message);
+	}
 }

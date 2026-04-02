@@ -9,25 +9,25 @@ import funkin.ui.menu.MainMenuState;
  */
 class ReloadPlugin extends FlxBasic
 {
-    public static function init()
-        FlxG.plugins.addPlugin(new ReloadPlugin());
+	public static function init()
+		FlxG.plugins.addPlugin(new ReloadPlugin());
 
-    override public function update(elapsed:Float)
-    {
-        super.update(elapsed);
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
 
-        if (FlxG.keys.justPressed.F5)
-        {
-            // Reload mods
-            ModHandler.reload();
+		if (FlxG.keys.justPressed.F5)
+		{
+			// Reload mods
+			ModHandler.reload();
 
-            // The state has to be reloaded
-            // It's kinda the point of "hot-reloading"
-            FlxG.resetState();
-        }
+			// The state has to be reloaded
+			// It's kinda the point of "hot-reloading"
+			FlxG.resetState();
+		}
 
-        // Eh why not include this I guess
-        if (FlxG.keys.justPressed.F4)
-            FlxG.switchState(() -> new MainMenuState());
-    }
+		// Eh why not include this I guess
+		if (FlxG.keys.justPressed.F4)
+			FlxG.switchState(() -> new MainMenuState());
+	}
 }

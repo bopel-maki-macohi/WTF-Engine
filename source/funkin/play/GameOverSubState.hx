@@ -11,111 +11,114 @@ import funkin.ui.FunkinSubState;
  */
 class GameOverSubState extends FunkinSubState
 {
-    var skipped:Bool = false;
+	var skipped:Bool = false;
 
-    var menuConductor:Conductor;
+	var menuConductor:Conductor;
 
-    var music:FunkinSound;
-    var startSound:FunkinSound;
+	var music:FunkinSound;
+	var startSound:FunkinSound;
 
-    var character:Character;
+	var character:Character;
 
-    override public function create()
-    {
-        super.create();
+	override public function create()
+	{
+		super.create();
 
-        // Increments the death counter
-        PlayState.instance.deaths++;
+		// Increments the death counter
+		PlayState.instance.deaths++;
 
-        _parentState.persistentDraw = false;
+		_parentState.persistentDraw = false;
 
-        menuConductor = new Conductor();
-        menuConductor.beatHit.add(beatHit);
-        menuConductor.reset(100);
+		menuConductor = new Conductor();
+		menuConductor.beatHit.add(beatHit);
+		menuConductor.reset(100);
 
-        music = FunkinSound.load('play/music/gameover', 1, true, true, false);
+		music = FunkinSound.load('play/music/gameover', 1, true, true, false);
 
-        startSound = FunkinSound.load('play/sounds/gameover/start', 1, false);
-        startSound.onComplete = () -> music.play();
+		startSound = FunkinSound.load('play/sounds/gameover/start', 1, false);
+		startSound.onComplete = () -> music.play();
 
-        buildCharacter();
+		buildCharacter();
 
-        if (character != null)
-        {
-            PlayState.instance.setCameraTarget(character);
-            FlxG.camera.active = true;
-        }
-    }
+		if (character != null)
+		{
+			PlayState.instance.setCameraTarget(character);
+			FlxG.camera.active = true;
+		}
+	}
 
-    function buildCharacter()
-    {
-        var player:Character = PlayState.instance.stage.player;
-        if (player == null) return;
+	function buildCharacter()
+	{
+		var player:Character = PlayState.instance.stage.player;
+		if (player == null)
+			return;
 
-        character = CharacterRegistry.instance.fetchCharacter('${player.id}-death');
+		character = CharacterRegistry.instance.fetchCharacter('${player.id}-death');
 
-        // Don't do the actual character stuff if it's null
-        // Because I guess you never know when the death sprite doesn't exist
-        if (character == null) return;
+		// Don't do the actual character stuff if it's null
+		// Because I guess you never know when the death sprite doesn't exist
+		if (character == null)
+			return;
 
-        character.scrollFactor.copyFrom(player.scrollFactor);
-        character.setPosition(player.x, player.y);
-        character.playAnimation('start');
-        add(character);
-    }
+		character.scrollFactor.copyFrom(player.scrollFactor);
+		character.setPosition(player.x, player.y);
+		character.playAnimation('start');
+		add(character);
+	}
 
-    override public function update(elapsed:Float)
-    {
-        super.update(elapsed);
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
 
-        // Updates the conductor
-        menuConductor.time = music?.time;
-        menuConductor.update();
+		// Updates the conductor
+		menuConductor.time = music?.time;
+		menuConductor.update();
 
-        if (controls.ACCEPT)
-            skip();
-        if (controls.BACK)
-            PlayState.instance.exit();
-    }
+		if (controls.ACCEPT)
+			skip();
+		if (controls.BACK)
+			PlayState.instance.exit();
+	}
 
-    function skip()
-    {
-        if (skipped) return;
-        skipped = true;
+	function skip()
+	{
+		if (skipped)
+			return;
+		skipped = true;
 
-        character?.playAnimation('end');
+		character?.playAnimation('end');
 
-        music.destroy();
-        startSound.destroy();
+		music.destroy();
+		startSound.destroy();
 
-        // Gotta reset this!
-        // Or else the character keeps bopping
-        menuConductor.reset();
+		// Gotta reset this!
+		// Or else the character keeps bopping
+		menuConductor.reset();
 
-        FunkinSound.playOnce('play/sounds/gameover/end');
-        FlxTimer.wait(1, () -> FlxG.camera.fade(0xFF000000, 2, false, close));
-    }
+		FunkinSound.playOnce('play/sounds/gameover/end');
+		FlxTimer.wait(1, () -> FlxG.camera.fade(0xFF000000, 2, false, close));
+	}
 
-    override function beatHit(beat:Int)
-    {
-        super.beatHit(beat);
+	override function beatHit(beat:Int)
+	{
+		super.beatHit(beat);
 
-        character?.playAnimation('loop', true);
+		character?.playAnimation('loop', true);
 
-        // We still want the beat hit script event to work
-        // So we're doing this >:)
-        @:privateAccess
-        PlayState.instance.beatHit(beat);
-    }
+		// We still want the beat hit script event to work
+		// So we're doing this >:)
+		@:privateAccess
+		PlayState.instance.beatHit(beat);
+	}
 
-    override public function close()
-    {
-        super.close();
+	override public function close()
+	{
+		super.close();
 
-        _parentState.persistentDraw = true;
+		_parentState.persistentDraw = true;
 
-        FlxG.camera.fade(0xFF000000, 1, true);
-        
-        PlayState.instance.resetSong();
-    }
+		FlxG.camera.fade(0xFF000000, 1, true);
+
+		PlayState.instance.resetSong();
+	}
 }

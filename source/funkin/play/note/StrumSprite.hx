@@ -7,45 +7,45 @@ import funkin.graphics.FunkinSprite;
  */
 class StrumSprite extends FunkinSprite
 {
-    public var direction:NoteDirection;
-    public var confirmTime:Float = 0;
+	public var direction:NoteDirection;
+	public var confirmTime:Float = 0;
 
-    public function new(direction:NoteDirection)
-    {
-        super();
+	public function new(direction:NoteDirection)
+	{
+		super();
 
-        this.direction = direction;
+		this.direction = direction;
 
-        buildSprite();
-    }
+		buildSprite();
+	}
 
-    override public function update(elapsed:Float)
-    {
-        super.update(elapsed);
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
 
-        confirmTime = Math.max(0, confirmTime - elapsed * 10);
-    }
+		confirmTime = Math.max(0, confirmTime - elapsed * 10);
+	}
 
-    public function buildSprite()
-    {
-        loadSprite('play/ui/note/notes', 1, 84, 84);
+	public function buildSprite()
+	{
+		loadSprite('play/ui/note/notes', 1, 84, 84);
 
-        addAnimation('static', [direction]);
-        addAnimation('press', [direction + Constants.NOTE_COUNT]);
-        addAnimation('confirm', [direction + Constants.NOTE_COUNT * 2]);
+		addAnimation('static', [direction]);
+		addAnimation('press', [direction + Constants.NOTE_COUNT]);
+		addAnimation('confirm', [direction + Constants.NOTE_COUNT * 2]);
 
-        playStatic();
-    }
+		playStatic();
+	}
 
-    public function playStatic()
-        playAnimation('static');
+	public function playStatic()
+		playAnimation('static');
 
-    public function playPress()
-        playAnimation('press');
-    
-    public function playConfirm()
-    {
-        playAnimation('confirm');
-        confirmTime = 1;
-    }
+	public function playPress()
+		playAnimation('press');
+
+	public function playConfirm()
+	{
+		playAnimation('confirm');
+		confirmTime = 1;
+	}
 }

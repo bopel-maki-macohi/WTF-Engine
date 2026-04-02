@@ -11,79 +11,81 @@ import funkin.input.Controls;
  */
 class MenuItemGroup extends FlxTypedGroup<MenuItem>
 {
-    final SPACING:Float = 20;
+	final SPACING:Float = 20;
 
-    public var selected:Int;
-    public var busy:Bool = false;
+	public var selected:Int;
+	public var busy:Bool = false;
 
-    public var onChanged(default, null) = new FlxTypedSignal<Int->Void>();
+	public var onChanged(default, null) = new FlxTypedSignal<Int->Void>();
 
-    public var item(get, never):MenuItem;
+	public var item(get, never):MenuItem;
 
-    public function new(selected:Int = 0)
-    {
-        super();
+	public function new(selected:Int = 0)
+	{
+		super();
 
-        this.selected = selected;
-    }
+		this.selected = selected;
+	}
 
-    override public function update(elapsed:Float)
-    {
-        super.update(elapsed);
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
 
-        // Controls
-        var up:Bool = Controls.instance.UI_UP_P;
-        var down:Bool = Controls.instance.UI_DOWN_P;
+		// Controls
+		var up:Bool = Controls.instance.UI_UP_P;
+		var down:Bool = Controls.instance.UI_DOWN_P;
 
-        if ((up || down) && !busy)
-            change(up ? -1 : 1);
-    }
+		if ((up || down) && !busy)
+			change(up ? -1 : 1);
+	}
 
-    public function addItem(id:String, callback:Void->Void)
-    {
-        var item:MenuItem = new MenuItem(id);
-        
-        item.ID = length;
+	public function addItem(id:String, callback:Void->Void)
+	{
+		var item:MenuItem = new MenuItem(id);
 
-        item.screenCenter(X);
-        item.selected = item.ID == selected;
-        item.onSelected = callback;
+		item.ID = length;
 
-        add(item);
+		item.screenCenter(X);
+		item.selected = item.ID == selected;
+		item.onSelected = callback;
 
-        // Adjusts the position of all the items
-        forEach(item -> {
-            item.y = FlxG.height / 2 + (item.ID - length / 2) * (item.height + SPACING);
-            item.y += SPACING / 2;
-        });
-    }
+		add(item);
 
-    public function flicker()
-    {
-        FlxFlicker.stopFlickering(item);
-        FlxFlicker.flicker(item, 1, 0.04, true, true, _ -> {
-            // onSelected can be null, so we're being real careful
-            if (item.onSelected != null)
-                item.onSelected();
-        });
-    }
+		// Adjusts the position of all the items
+		forEach(item ->
+		{
+			item.y = FlxG.height / 2 + (item.ID - length / 2) * (item.height + SPACING);
+			item.y += SPACING / 2;
+		});
+	}
 
-    function change(change:Int)
-    {
-        FunkinSound.playOnce('ui/sounds/scroll');
+	public function flicker()
+	{
+		FlxFlicker.stopFlickering(item);
+		FlxFlicker.flicker(item, 1, 0.04, true, true, _ ->
+		{
+			// onSelected can be null, so we're being real careful
+			if (item.onSelected != null)
+				item.onSelected();
+		});
+	}
 
-        selected += change;
+	function change(change:Int)
+	{
+		FunkinSound.playOnce('ui/sounds/scroll');
 
-        if (selected < 0)
-            selected = length - 1;
-        else if (selected >= length)
-            selected = 0;
+		selected += change;
 
-        forEach(item -> item.selected = item.ID == selected);
+		if (selected < 0)
+			selected = length - 1;
+		else if (selected >= length)
+			selected = 0;
 
-        onChanged.dispatch(selected);
-    }
+		forEach(item -> item.selected = item.ID == selected);
 
-    inline function get_item():MenuItem
-        return members[selected];
+		onChanged.dispatch(selected);
+	}
+
+	inline function get_item():MenuItem
+		return members[selected];
 }

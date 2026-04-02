@@ -12,19 +12,19 @@ import openfl.utils.Assets;
  */
 class FunkinMemory
 {
-    public static function clearCache()
-    {
-        Assets.cache.clear();
+	public static function clearCache()
+	{
+		Assets.cache.clear();
 
-        // Clear the bitmap cache
-        FlxG.bitmap.clearCache();
-        
-        // Run the garbage collector
-        // Major? Pfff I don't know what that means
-        #if cpp
-        Gc.run(true);
-        #end
+		// Clear the bitmap cache
+		FlxG.bitmap.clearCache();
 
-        trace('Done clearing cache.');
-    }
+		// Run the garbage collector
+		// Major? Pfff I don't know what that means
+		#if cpp
+		Gc.run(true);
+		#end
+
+		trace('Done clearing cache.');
+	}
 }

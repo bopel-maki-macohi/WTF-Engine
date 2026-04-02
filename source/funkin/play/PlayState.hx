@@ -48,7 +48,7 @@ class PlayState extends FunkinState
 	public var score:Float;
 	public var tallies:Tallies;
 	public var deaths:Int = 0;
-	
+
 	public var camFollow:FlxObject;
 	public var stage:Stage;
 
@@ -208,7 +208,7 @@ class PlayState extends FunkinState
 		healthLerp = MathUtil.lerp(healthLerp, health, 0.15);
 
 		healthBar.value = healthLerp;
-		
+
 		if (opponentIcon != null)
 		{
 			opponentIcon.x = healthBar.fillPosition - opponentIcon.width + 15;
@@ -229,7 +229,7 @@ class PlayState extends FunkinState
 			timeText.text = FlxStringUtil.formatTime((FunkinSound.music.length - FunkinSound.music.time) / Constants.MS_PER_SEC);
 			timeText.screenCenter(X);
 		}
-		
+
 		FlxG.camera.zoom = MathUtil.lerp(FlxG.camera.zoom, stage.zoom, 0.03);
 		camHUD.zoom = MathUtil.lerp(camHUD.zoom, 1, 0.03);
 
@@ -248,7 +248,8 @@ class PlayState extends FunkinState
 	{
 		super.beatHit(beat);
 
-		if (subState != null) return;
+		if (subState != null)
+			return;
 
 		stage.opponent?.dance();
 		stage.player?.dance();
@@ -264,7 +265,8 @@ class PlayState extends FunkinState
 		}
 
 		// Don't bop all this stuff until the song starts
-		if (!songStarted) return;
+		if (!songStarted)
+			return;
 
 		opponentIcon?.bop();
 		playerIcon?.bop();
@@ -287,7 +289,8 @@ class PlayState extends FunkinState
 			var event:ScriptEvent = new ScriptEvent(SongRetry);
 			dispatch(event);
 
-			if (event.cancelled) return;
+			if (event.cancelled)
+				return;
 		}
 		else
 			healthLerp = health;
@@ -339,7 +342,8 @@ class PlayState extends FunkinState
 		var event:CountdownScriptEvent = new CountdownScriptEvent(CountdownStart, -1);
 		dispatch(event);
 
-		if (event.cancelled) return;
+		if (event.cancelled)
+			return;
 
 		songActive = true;
 		countdown.start();
@@ -348,12 +352,13 @@ class PlayState extends FunkinState
 	public function setCameraTarget(target:Character, instant:Bool = false)
 	{
 		// Why????
-		if (target == null) return;
+		if (target == null)
+			return;
 
 		var pos:FlxPoint = target.getGraphicMidpoint();
-        var offset:FlxPoint = MathUtil.arrayToPoint(target.meta.cameraOffset);
+		var offset:FlxPoint = MathUtil.arrayToPoint(target.meta.cameraOffset);
 
-        PlayState.instance.camFollow.setPosition(pos.x + offset.x, pos.y + offset.y);
+		PlayState.instance.camFollow.setPosition(pos.x + offset.x, pos.y + offset.y);
 
 		if (instant)
 			FlxG.camera.snapToTarget();
@@ -364,7 +369,8 @@ class PlayState extends FunkinState
 		var event:ScriptEvent = new ScriptEvent(Pause);
 		dispatch(event);
 
-		if (event.cancelled) return;
+		if (event.cancelled)
+			return;
 
 		openSubState(new PauseSubState());
 	}
@@ -427,7 +433,8 @@ class PlayState extends FunkinState
 		var event:ScriptEvent = new ScriptEvent(SongEnd);
 		dispatch(event);
 
-		if (event.cancelled) return;
+		if (event.cancelled)
+			return;
 
 		songEnded = true;
 
@@ -465,7 +472,8 @@ class PlayState extends FunkinState
 		}
 
 		// Don't resync if the song isn't playing
-		if (!FunkinSound.music.playing) return;
+		if (!FunkinSound.music.playing)
+			return;
 
 		if (Math.abs(conductor.time - FunkinSound.music.time) > Constants.RESYNC_THRESHOLD)
 		{
@@ -531,16 +539,19 @@ class PlayState extends FunkinState
 
 			// Miss if ghost tapping is disabled
 			// Don't count the miss if botplay is enabled though
-			if (note == null && pressed && !Preferences.ghostTapping && !Preferences.botplay) playerGhostMiss(direction);
+			if (note == null && pressed && !Preferences.ghostTapping && !Preferences.botplay)
+				playerGhostMiss(direction);
 
 			// Don't hit the note if nothing's being pressed
 			// Especially don't hit the note if it's null
-			if (!pressed || note == null) continue;
+			if (!pressed || note == null)
+				continue;
 
 			var event:NoteScriptEvent = new NoteScriptEvent(NoteHit, note);
 			dispatch(event);
 
-			if (event.cancelled) continue;
+			if (event.cancelled)
+				continue;
 
 			playerStrumline.hitNote(note);
 		}
@@ -551,7 +562,8 @@ class PlayState extends FunkinState
 			var event:NoteScriptEvent = new NoteScriptEvent(NoteHit, note);
 			dispatch(event);
 
-			if (event.cancelled) continue;
+			if (event.cancelled)
+				continue;
 
 			opponentStrumline.hitNote(note);
 		}
@@ -605,7 +617,8 @@ class PlayState extends FunkinState
 		var event:HoldNoteScriptEvent = new HoldNoteScriptEvent(HoldNoteHold, holdNote);
 		dispatch(event);
 
-		if (event.cancelled) return;
+		if (event.cancelled)
+			return;
 
 		score += Constants.HOLD_SCORE_PER_SEC * FlxG.elapsed;
 		health += Constants.HOLD_HEALTH_PER_SEC * FlxG.elapsed;
@@ -621,10 +634,11 @@ class PlayState extends FunkinState
 		var event:NoteScriptEvent = new NoteScriptEvent(NoteMiss, note);
 		dispatch(event);
 
-		if (event.cancelled) return;
+		if (event.cancelled)
+			return;
 
 		var missScore:Float = Constants.MISS_SCORE;
-		
+
 		if (note.holdNote != null)
 			missScore *= (note.holdNote.length / 500);
 
@@ -643,8 +657,9 @@ class PlayState extends FunkinState
 	{
 		var event:GhostMissScriptEvent = new GhostMissScriptEvent(direction);
 		dispatch(event);
-		
-		if (event.cancelled) return;
+
+		if (event.cancelled)
+			return;
 
 		score += Constants.GHOST_MISS_SCORE;
 		health += Constants.GHOST_MISS_HEALTH;
@@ -658,7 +673,8 @@ class PlayState extends FunkinState
 		var event:HoldNoteScriptEvent = new HoldNoteScriptEvent(HoldNoteDrop, holdNote);
 		dispatch(event);
 
-		if (event.cancelled) return;
+		if (event.cancelled)
+			return;
 
 		// Takes away score based on how long the hold note is
 		score += Constants.MISS_SCORE * (holdNote.length / 500);

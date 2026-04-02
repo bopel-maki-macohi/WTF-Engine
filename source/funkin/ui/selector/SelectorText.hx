@@ -12,87 +12,89 @@ import funkin.graphics.FunkinText;
  */
 class SelectorText extends FlxSpriteGroup
 {
-    final ARROW_SPACING:Float = 10;
+	final ARROW_SPACING:Float = 10;
 
-    public var selected:Int;
-    public var busy:Bool = false;
+	public var selected:Int;
+	public var busy:Bool = false;
 
-    public var size(default, set):Int = 32;
+	public var size(default, set):Int = 32;
 
-    public var onChanged(default, null) = new FlxTypedSignal<Int->Void>();
+	public var onChanged(default, null) = new FlxTypedSignal<Int->Void>();
 
-    var text:FunkinText;
-    var arrowLeft:FunkinSprite;
-    var arrowRight:FunkinSprite;
-    
-    var selectTimer:FlxTimer;
+	var text:FunkinText;
+	var arrowLeft:FunkinSprite;
+	var arrowRight:FunkinSprite;
 
-    public function new(selected:Int, arrowImage:String)
-    {
-        super();
+	var selectTimer:FlxTimer;
 
-        this.selected = selected;
+	public function new(selected:Int, arrowImage:String)
+	{
+		super();
 
-        text = new FunkinText();
-        add(text);
+		this.selected = selected;
 
-        arrowLeft = FunkinSprite.create(0, 0, arrowImage);
-        arrowLeft.active = false;
-        add(arrowLeft);
+		text = new FunkinText();
+		add(text);
 
-        arrowRight = arrowLeft.copy();
-        arrowRight.flipX = true;
-        add(arrowRight);
+		arrowLeft = FunkinSprite.create(0, 0, arrowImage);
+		arrowLeft.active = false;
+		add(arrowLeft);
 
-        change();
-    }
+		arrowRight = arrowLeft.copy();
+		arrowRight.flipX = true;
+		add(arrowRight);
 
-    function change(change:Int = 0)
-    {
-        if (busy) return;
+		change();
+	}
 
-        final lastSelected:Int = selected;
+	function change(change:Int = 0)
+	{
+		if (busy)
+			return;
 
-        selected += change;
+		final lastSelected:Int = selected;
 
-        updateSelected();
-        updateText();
+		selected += change;
 
-        if (lastSelected != selected && change != 0)
-        {
-            FunkinSound.playOnce('ui/sounds/scroll');
+		updateSelected();
+		updateText();
 
-            text.y -= 5;
+		if (lastSelected != selected && change != 0)
+		{
+			FunkinSound.playOnce('ui/sounds/scroll');
 
-            selectTimer?.cancel();
-            selectTimer = FlxTimer.wait(0.05, () -> text.y += 5);
+			text.y -= 5;
 
-            onChanged.dispatch(selected);
-        }
-    }
+			selectTimer?.cancel();
+			selectTimer = FlxTimer.wait(0.05, () -> text.y += 5);
 
-    function updateSelected()
-    {
-        // You stupid bitch
-        // You need to override this
-    }
+			onChanged.dispatch(selected);
+		}
+	}
 
-    function updateText()
-    {
-        text.x = arrowLeft.x + arrowLeft.width + ARROW_SPACING;
-        
-        arrowRight.x = text.x + text.width + ARROW_SPACING;
-        arrowLeft.y = text.y + (text.height - arrowLeft.height) / 2;
-        arrowRight.y = arrowLeft.y;
-    }
+	function updateSelected()
+	{
+		// You stupid bitch
+		// You need to override this
+	}
 
-    function set_size(size:Int):Int
-    {
-        if (text.size == size) return size;
-        text.size = size;
+	function updateText()
+	{
+		text.x = arrowLeft.x + arrowLeft.width + ARROW_SPACING;
 
-        updateText();
+		arrowRight.x = text.x + text.width + ARROW_SPACING;
+		arrowLeft.y = text.y + (text.height - arrowLeft.height) / 2;
+		arrowRight.y = arrowLeft.y;
+	}
 
-        return size;
-    }
+	function set_size(size:Int):Int
+	{
+		if (text.size == size)
+			return size;
+		text.size = size;
+
+		updateText();
+
+		return size;
+	}
 }
