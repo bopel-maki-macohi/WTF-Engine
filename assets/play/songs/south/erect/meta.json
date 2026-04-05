@@ -1,0 +1,17 @@
+{
+	"name": "South Erect",
+	"gf": "gf",
+	"difficulties": [
+		"erect",
+		"nightmare"
+	],
+	"opponent": "spooky",
+	"player": "bf",
+	"stage": "spooky",
+	"bpm": 177,
+	"artist": "Kawai Sprite (feat. Saruky)",
+	"rating": {
+		"nightmare": 9,
+		"erect": 8
+	}
+}

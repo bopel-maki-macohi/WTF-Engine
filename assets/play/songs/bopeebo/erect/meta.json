@@ -1,0 +1,17 @@
+{
+	"name": "Bopeebo Erect",
+	"gf": "gf",
+	"difficulties": [
+		"erect",
+		"nightmare"
+	],
+	"opponent": "dad",
+	"player": "bf",
+	"stage": "stage",
+	"bpm": 123,
+	"artist": "Kawai Sprite (feat. Saruky)",
+	"rating": {
+		"nightmare": 8,
+		"erect": 7
+	}
+}

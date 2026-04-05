@@ -1,0 +1,17 @@
+{
+	"name": "Fresh Erect",
+	"gf": "gf",
+	"difficulties": [
+		"erect",
+		"nightmare"
+	],
+	"opponent": "dad",
+	"player": "bf",
+	"stage": "stage",
+	"bpm": 125,
+	"artist": "Kohta Takahashi (feat. Saruky)",
+	"rating": {
+		"nightmare": 7,
+		"erect": 6
+	}
+}

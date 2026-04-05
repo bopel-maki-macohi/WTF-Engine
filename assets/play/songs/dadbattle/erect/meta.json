@@ -1,0 +1,17 @@
+{
+	"name": "DadBattle Erect",
+	"gf": "gf",
+	"difficulties": [
+		"erect",
+		"nightmare"
+	],
+	"opponent": "dad",
+	"player": "bf",
+	"stage": "stage",
+	"bpm": 190,
+	"artist": "Kawai Sprite",
+	"rating": {
+		"nightmare": 10,
+		"erect": 9
+	}
+}

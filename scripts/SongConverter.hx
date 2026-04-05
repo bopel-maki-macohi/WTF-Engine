@@ -3,10 +3,11 @@ import sys.FileSystem;
 import sys.io.File;
 
 using StringTools;
+
 #if !interp
 package scripts;
-#end
 
+#end
 
 /**
  * A class for converting a V-Slice song to a song that the engine can take.
@@ -18,121 +19,140 @@ package scripts;
  */
 class SongConverter
 {
-    static function main()
-    {
-        Sys.stdout().writeString('Song directory: ');
-        Sys.stdout().flush();
+	static function main()
+	{
+		Sys.stdout().writeString('Song directory: ');
+		Sys.stdout().flush();
 
-        final songDir:String = Sys.stdin().readLine();
+		final songDir:String = Sys.stdin().readLine();
 
-        // Retrieves the song id
-        var songName:String = songDir;
+		Sys.stdout().writeString('Variation: ');
+		Sys.stdout().flush();
 
-        songName = songName.replace('\\', '/');
-        songName = songName.substr(songName.lastIndexOf('/') + 1);
+		final variation:String = Sys.stdin().readLine();
 
-        // Converts the song
-        final metaPath:String = '$songDir/$songName-metadata.json';
-        final chartPath:String = '$songDir/$songName-chart.json';
+		// Retrieves the song id
+		var songName:String = songDir;
+		var isVariation:Bool = variation != 'default' && variation != '';
 
-        if (!FileSystem.exists(metaPath) || !FileSystem.exists(chartPath))
-        {
-            trace('Failed to convert song. Chart or metadata is missing!');
-            return;
-        }
+		songName = songName.replace('\\', '/');
+		songName = songName.substr(songName.lastIndexOf('/') + 1);
 
-        var meta:Dynamic = Json.parse(File.getContent(metaPath));
-        var chart:Dynamic = Json.parse(File.getContent(chartPath));
+		// Converts the song
+		var metaPath:String = '$songDir/$songName-metadata';
+		var chartPath:String = '$songDir/$songName-chart';
 
-        var timeChanges:Array<Dynamic> = meta.timeChanges;
+		if (isVariation)
+		{
+			metaPath += '-$variation';
+			chartPath += '-$variation';
+		}
 
-        var wtfMeta:Dynamic = {}
-        var wtfChart:Dynamic = {}
+		metaPath += '.json';
+		chartPath += '.json';
 
-        wtfMeta.name = meta.songName;
-        wtfMeta.bpm = timeChanges[0].bpm;
-        wtfMeta.artist = meta.artist;
-        wtfMeta.difficulties = meta.playData.difficulties;
-        wtfMeta.rating = meta.playData.ratings;
-        wtfMeta.stage = meta.playData.stage;
-        wtfMeta.player = meta.playData.characters.player;
-        wtfMeta.opponent = meta.playData.characters.opponent;
-        wtfMeta.gf = meta.playData.characters.girlfriend;
+		if (!FileSystem.exists(metaPath) || !FileSystem.exists(chartPath))
+		{
+			trace('Failed to convert song. Chart or metadata is missing!');
+			return;
+		}
 
-        wtfChart.speed = chart.scrollSpeed;
-        wtfChart.notes = chart.notes;
-        wtfChart.events = [];
+		var meta:Dynamic = Json.parse(File.getContent(metaPath));
+		var chart:Dynamic = Json.parse(File.getContent(chartPath));
 
-        for (event in chart.events ?? [])
-        {
-            var wtfEvent:Dynamic = {}
+		var timeChanges:Array<Dynamic> = meta.timeChanges;
 
-            var kind:String = '';
-            var value:Dynamic = {}
+		var wtfMeta:Dynamic = {}
+		var wtfChart:Dynamic = {}
 
-            switch (event.e)
-            {
-                case 'FocusCamera':
-                    kind = 'focus-camera';
+		wtfMeta.name = meta.songName;
+		wtfMeta.bpm = timeChanges[0].bpm;
+		wtfMeta.artist = meta.artist;
+		wtfMeta.difficulties = meta.playData.difficulties;
+		wtfMeta.rating = meta.playData.ratings;
+		wtfMeta.stage = meta.playData.stage;
+		wtfMeta.player = meta.playData.characters.player;
+		wtfMeta.opponent = meta.playData.characters.opponent;
+		wtfMeta.gf = meta.playData.characters.girlfriend;
 
-                    var c:Int = event.v.char;
-                    
-                    if (Type.typeof(event.v) == TInt)
-                        c = event.v;
+		wtfChart.speed = chart.scrollSpeed;
+		wtfChart.notes = chart.notes;
+		wtfChart.events = [];
 
-                    // Swap char because fuck
-                    if (c == 0)
-                        c = 1;
-                    else if (c == 1)
-                        c = 0;
+		for (event in chart.events ?? [])
+		{
+			var wtfEvent:Dynamic = {}
 
-                    value.c = c;
-                case 'PlayAnimation':
-                    kind = 'play-animation';
+			var kind:String = '';
+			var value:Dynamic = {}
 
-                    var target:String = event.v.target;
-                    var c:Int = 0;
+			switch (event.e)
+			{
+				case 'FocusCamera':
+					kind = 'focus-camera';
 
-                    if (target == 'boyfriend' || target == 'bf')
-                        c = 1;
-                    if (target == 'girlfriend' || target == 'gf')
-                        c = 2;
+					var c:Int = event.v.char;
 
-                    value.c = c;
-                    value.a = event.v.anim;
-                    value.f = event.v.force;
-                default:
-                    continue;
-            }
+					if (Type.typeof(event.v) == TInt)
+						c = event.v;
 
-            wtfEvent.t = event.t;
-            wtfEvent.e = kind;
-            wtfEvent.v = value;
+					// Swap char because fuck
+					if (c == 0)
+						c = 1;
+					else if (c == 1)
+						c = 0;
 
-            wtfChart.events.push(wtfEvent);
-        }
+					value.c = c;
+				case 'PlayAnimation':
+					kind = 'play-animation';
 
-        for (timeChange in timeChanges)
-        {
-            // Don't include the first time change
-            if (timeChange.t == 0) continue;
+					var target:String = event.v.target;
+					var c:Int = 0;
 
-            var time:Float = timeChange.t;
-            var bpm:Float = timeChange.bpm;
+					if (target == 'boyfriend' || target == 'bf')
+						c = 1;
+					if (target == 'girlfriend' || target == 'gf')
+						c = 2;
 
-            wtfChart.events.push({ t: time, e: 'change-bpm', v: { b: bpm } });
-        }
+					value.c = c;
+					value.a = event.v.anim;
+					value.f = event.v.force;
+				default:
+					continue;
+			}
 
-        wtfChart.events.sort((a, b) -> return a.t - b.t);
+			wtfEvent.t = event.t;
+			wtfEvent.e = kind;
+			wtfEvent.v = value;
 
-        // Saves the final song
-        final output:String = '../assets/play/songs/$songName';
+			wtfChart.events.push(wtfEvent);
+		}
 
-        FileSystem.createDirectory(output);
+		for (timeChange in timeChanges)
+		{
+			// Don't include the first time change
+			if (timeChange.t == 0)
+				continue;
 
-        File.saveContent('$output/meta.json', Json.stringify(wtfMeta, '\t'));
-        File.saveContent('$output/chart.json', Json.stringify(wtfChart, '\t'));
+			var time:Float = timeChange.t;
+			var bpm:Float = timeChange.bpm;
 
-        trace('Done converting song $songName.');
-    }
+			wtfChart.events.push({t: time, e: 'change-bpm', v: {b: bpm}});
+		}
+
+		wtfChart.events.sort((a, b) -> return a.t - b.t);
+
+		// Saves the final song
+		var output:String = '../assets/play/songs/$songName';
+
+		if (isVariation)
+			output += '/$variation';
+
+		FileSystem.createDirectory(output);
+
+		File.saveContent('$output/meta.json', Json.stringify(wtfMeta, '\t'));
+		File.saveContent('$output/chart.json', Json.stringify(wtfChart, '\t'));
+
+		trace('Done converting song $songName ($variation).');
+	}
 }

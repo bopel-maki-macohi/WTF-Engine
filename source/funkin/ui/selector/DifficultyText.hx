@@ -44,6 +44,11 @@ class DifficultyText extends SelectorText
 	{
 		text.text = difficulty;
 
+		// Nightmare is too lengthy of a name
+		// TODO: Find a way to make this softcoded
+		if (difficulty == 'nightmare')
+			text.text = 'night';
+
 		super.updateText();
 	}
 

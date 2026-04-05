@@ -4,6 +4,7 @@ import funkin.data.event.EventData;
 import funkin.data.song.SongData;
 import funkin.modding.IScriptedClass.IPlayStateScriptedClass;
 import funkin.modding.event.ScriptEvent;
+import haxe.ds.StringMap;
 
 /**
  * A class containing meta and chart data for a song.
@@ -13,6 +14,9 @@ class Song implements IPlayStateScriptedClass
 	public var id:String;
 	public var meta:SongMetadata;
 	public var chart:SongChartData;
+
+	public var variations:StringMap<Song>;
+	public var variation:String;
 
 	public var events(get, never):Array<EventData>;
 
@@ -31,11 +35,13 @@ class Song implements IPlayStateScriptedClass
 	public var opponentPath(get, never):String;
 	public var playerPath(get, never):String;
 
+	var diffs:Array<String>;
 	var path(get, never):String;
 
 	public function new(id:String)
 	{
 		this.id = id;
+		this.variations = new StringMap<Song>();
 	}
 
 	public function getRating(diff:String):Int
@@ -46,6 +52,22 @@ class Song implements IPlayStateScriptedClass
 
 	public function getSpeed(diff:String):Float
 		return chart.speed?.get(diff) ?? Constants.DEFAULT_SPEED;
+
+	public function getDifficulties():Array<String>
+	{
+		if (diffs != null)
+			return diffs;
+
+		diffs = difficulties.copy();
+
+		for (variation in variations)
+			diffs = diffs.concat(variation.difficulties);
+
+		return diffs;
+	}
+
+	public function hasDifficulty(diff:String):Bool
+		return getDifficulties().contains(diff);
 
 	function get_name():String
 	{
@@ -97,7 +119,12 @@ class Song implements IPlayStateScriptedClass
 		return '$path/player';
 
 	inline function get_path():String
-		return 'play/songs/$id';
+	{
+		var path:String = 'play/songs/$id';
+		if (!variation.isEmpty())
+			path += '/$variation';
+		return path;
+	}
 
 	public function onCreate(event:ScriptEvent) {}
 

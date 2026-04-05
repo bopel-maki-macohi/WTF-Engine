@@ -48,6 +48,25 @@ class SongRegistry extends BaseRegistry<Song>
 			song.chart = chartParser.fromJson(FileUtil.getText(chartPath));
 
 			register(id, song);
+
+			// Checks for variations
+			for (variation in FileUtil.listFolders('$path/$id'))
+			{
+				final metaPath:String = Paths.json('$path/$id/$variation/meta');
+				final chartPath:String = Paths.json('$path/$id/$variation/chart');
+
+				// Skip the variation if it doesn't have a chart or metadata file
+				if (!Paths.exists(metaPath) || !Paths.exists(chartPath))
+					continue;
+
+				var songVariation:Song = new Song(id);
+
+				song.variations.set(variation, songVariation);
+
+				songVariation.meta = metaParser.fromJson(FileUtil.getText(metaPath));
+				songVariation.chart = chartParser.fromJson(FileUtil.getText(chartPath));
+				songVariation.variation = variation;
+			}
 		}
 
 		//
@@ -67,6 +86,7 @@ class SongRegistry extends BaseRegistry<Song>
 
 				song.meta = ogSong.meta;
 				song.chart = ogSong.chart;
+				song.variations = ogSong.variations;
 
 				entries.set(song.id, song);
 			}
@@ -85,12 +105,11 @@ class SongRegistry extends BaseRegistry<Song>
 
 		for (song in entries)
 		{
-			for (diff in song.difficulties)
+			for (diff in song.getDifficulties())
 			{
 				// Skip the difficulty if it's already in the list
 				if (diffs.contains(diff))
 					continue;
-
 				diffs.push(diff);
 			}
 		}
@@ -98,7 +117,7 @@ class SongRegistry extends BaseRegistry<Song>
 		return diffs;
 	}
 
-	public function listWithDifficulty(diff:String)
+	public function listWithDifficulty(diff:String):Array<String>
 	{
 		var list:Array<String> = [];
 
@@ -111,7 +130,7 @@ class SongRegistry extends BaseRegistry<Song>
 			{
 				var song:Song = SongRegistry.instance.fetch(id);
 
-				if (list.contains(id) || !song?.difficulties?.contains(diff))
+				if (list.contains(id) || !song.hasDifficulty(diff))
 					continue;
 				list.push(id);
 			}
@@ -119,11 +138,11 @@ class SongRegistry extends BaseRegistry<Song>
 
 		// List songs through the entries themselves
 		// Because not every song has a level
-		for (song in entries)
+		for (id => song in entries)
 		{
-			if (list.contains(song.id) || !song.difficulties.contains(diff))
+			if (list.contains(id) || !song.difficulties.contains(diff))
 				continue;
-			list.push(song.id);
+			list.push(id);
 		}
 
 		return list;
