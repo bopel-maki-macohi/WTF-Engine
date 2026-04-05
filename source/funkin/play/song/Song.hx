@@ -38,10 +38,12 @@ class Song implements IPlayStateScriptedClass
 	var diffs:Array<String>;
 	var path(get, never):String;
 
-	public function new(id:String)
+	public function new(id:String, ?variation:String)
 	{
 		this.id = id;
-		this.variations = new StringMap<Song>();
+		this.variation = variation;
+
+		variations = new StringMap<Song>();
 	}
 
 	public function getRating(diff:String):Int
@@ -68,6 +70,13 @@ class Song implements IPlayStateScriptedClass
 
 	public function hasDifficulty(diff:String):Bool
 		return getDifficulties().contains(diff);
+
+	public function getVariation(id:String):Song
+	{
+		if (variations.exists(id))
+			return variations.get(id);
+		return this;
+	}
 
 	public function getVariationFromDifficulty(diff:String):Song
 	{

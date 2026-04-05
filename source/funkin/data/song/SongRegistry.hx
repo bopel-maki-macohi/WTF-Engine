@@ -59,13 +59,12 @@ class SongRegistry extends BaseRegistry<Song>
 				if (!Paths.exists(metaPath) || !Paths.exists(chartPath))
 					continue;
 
-				var songVariation:Song = new Song(id);
+				var songVariation:Song = new Song(id, variation);
 
 				song.variations.set(variation, songVariation);
 
 				songVariation.meta = metaParser.fromJson(FileUtil.getText(metaPath));
 				songVariation.chart = chartParser.fromJson(FileUtil.getText(chartPath));
-				songVariation.variation = variation;
 			}
 		}
 
@@ -84,11 +83,33 @@ class SongRegistry extends BaseRegistry<Song>
 				var song:Song = ScriptedSong.scriptInit(script, '');
 				var ogSong:Song = fetch(song.id);
 
+				// Allows variations to have unique scripts :D
+				if (song.variation != null && !song.variation.isEmpty())
+				{
+					ogSong = ogSong.getVariation(song.variation);
+
+					// Can't use ogSong because it just wouldn't work
+					// This is honestly better than the game crashing
+					fetch(song.id).variations.set(song.variation, song);
+				}
+				else
+					entries.set(song.id, song);
+
 				song.meta = ogSong.meta;
 				song.chart = ogSong.chart;
 				song.variations = ogSong.variations;
 
-				entries.set(song.id, song);
+				for (variation in song.variations.keys())
+				{
+					var songVariation:Song = ScriptedSong.scriptInit(script, '');
+					var ogVariation:Song = ogSong.getVariation(variation);
+
+					songVariation.meta = ogVariation.meta;
+					songVariation.chart = ogVariation.chart;
+					songVariation.variation = ogVariation.variation;
+
+					song.variations.set(variation, songVariation);
+				}
 			}
 			catch (e)
 				trace('Failed to load script $script.');

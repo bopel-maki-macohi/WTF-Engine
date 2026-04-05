@@ -9,6 +9,7 @@ import funkin.data.story.LevelRegistry;
 import funkin.modding.module.ModuleHandler;
 import funkin.play.PlayState;
 import funkin.play.Playlist;
+import funkin.play.song.Song;
 import funkin.util.WindowUtil;
 import polymod.Polymod;
 import sys.FileSystem;
@@ -67,7 +68,12 @@ class ModHandler
 		// Reload the current song and level
 		// This is so dumb
 		if (PlayState.song != null)
-			PlayState.song = SongRegistry.instance.fetch(PlayState.song.id);
+		{
+			var variation:String = PlayState.song.variation;
+			var song:Song = SongRegistry.instance.fetch(PlayState.song.id);
+
+			PlayState.song = song.getVariation(variation);
+		}
 		if (Playlist.level != null)
 			Playlist.level = LevelRegistry.instance.fetch(Playlist.level.id);
 	}
