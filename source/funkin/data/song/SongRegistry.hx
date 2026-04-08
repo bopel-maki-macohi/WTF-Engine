@@ -42,7 +42,7 @@ class SongRegistry extends BaseRegistry<Song>
 			if (!Paths.exists(metaPath) || !Paths.exists(chartPath))
 				continue;
 
-			var song:Song = new Song(id);
+			var song:Song = new Song(id, Constants.DEFAULT_VARIATION);
 
 			song.meta = metaParser.fromJson(FileUtil.getText(metaPath));
 			song.chart = chartParser.fromJson(FileUtil.getText(chartPath));
@@ -84,7 +84,12 @@ class SongRegistry extends BaseRegistry<Song>
 				var ogSong:Song = fetch(song.id);
 
 				// Allows variations to have unique scripts :D
-				if (song.variation != null && !song.variation.isEmpty())
+				// Only if the variation isn't the default one though
+				if (song.variation?.isEmpty())
+					song.variation = null;
+				song.variation ??= Constants.DEFAULT_VARIATION;
+
+				if (song.variation != Constants.DEFAULT_VARIATION)
 				{
 					ogSong = ogSong.getVariation(song.variation);
 

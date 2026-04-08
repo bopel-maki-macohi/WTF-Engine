@@ -29,6 +29,8 @@ class Constants
 	 */
 	public static final DEFAULT_LEVELS:Array<String> = ['tutorial', 'week1', 'week2'];
 
+	public static final DEFAULT_VARIATION:String = 'default';
+
 	public static final DEFAULT_NAME:String = 'Untitled';
 	public static final DEFAULT_ARTIST:String = 'Unknown';
 	public static final DEFAULT_SPEED:Float = 1;

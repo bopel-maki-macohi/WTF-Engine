@@ -10,7 +10,7 @@ class FunkinAction
 	var keys:Array<FlxKey> = [];
 	var pressed:Bool = false;
 
-	var timestamp(default, null):Int = 0;
+	var timestamp(default, null):Int = -1;
 
 	public function new(keys:Array<FlxKey>)
 	{

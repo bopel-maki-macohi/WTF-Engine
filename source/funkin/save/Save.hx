@@ -21,6 +21,7 @@ class Save
 	public function new()
 	{
 		// Loads default data if there is none
+		// Hehe merge
 		FlxG.save.mergeData(getDefault());
 
 		data = FlxG.save.data;
@@ -42,23 +43,35 @@ class Save
 	public function getSongScore(id:String, diff:String)
 		return getScore('song-$id', diff);
 
-	public function setFavorite(id:String, favorite:Bool)
+	public function setFavorite(id:String, ?variation:String, favorite:Bool)
 	{
+		if (variation?.isEmpty())
+			variation = null;
+		variation ??= Constants.DEFAULT_VARIATION;
+
 		// Don't favorite the song if it's already favorited
-		if (isSongFavorited(id) == favorite)
+		if (isSongFavorited(id, variation) == favorite)
 			return;
-		favorites.set(id, favorite);
+
+		favorites.set('$id:$variation', favorite);
 
 		if (favorite)
-			trace('Favorited song $id.');
+			trace('Favorited song $id ($variation).');
 		else
-			trace('Unfavorited song $id.');
+			trace('Unfavorited song $id ($variation).');
 
 		flush();
 	}
 
-	public function isSongFavorited(id:String):Bool
-		return favorites.get(id) ?? false;
+	public function isSongFavorited(id:String, ?variation:String):Bool
+	{
+		if (variation?.isEmpty())
+			variation = null;
+
+		variation ??= Constants.DEFAULT_VARIATION;
+
+		return favorites.get('$id:$variation') ?? false;
+	}
 
 	public function isSongComplete(id:String):Bool
 	{

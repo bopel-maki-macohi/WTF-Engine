@@ -281,7 +281,7 @@ class FreeplaySubState extends FunkinSubState
 		stateMachine.transition(Interacting);
 
 		if (song != null)
-			capsule.favorited = !Save.instance.isSongFavorited(song.id);
+			capsule.favorited = !Save.instance.isSongFavorited(song.id, song.variation);
 
 		FlxTimer.wait(0.1, () -> stateMachine.reset());
 	}
@@ -293,7 +293,16 @@ class FreeplaySubState extends FunkinSubState
 		// Song sorting
 		// Either sort by favorites, or sort by levels
 		if (selectedSort == sortText.count - 1)
-			songs = songs.filter(song -> return Save.instance.isSongFavorited(song));
+		{
+			songs = songs.filter(song ->
+			{
+				var song:Song = SongRegistry.instance.fetch(song).resolveVariation(difficulty);
+
+				final variation:String = song.variation;
+
+				return Save.instance.isSongFavorited(song.id, variation);
+			});
+		}
 		else if (selectedSort > 0)
 			songs = songs.filter(song -> return sortText.level.hasSong(song));
 

@@ -135,7 +135,7 @@ class CapsuleSprite extends FlxSpriteGroup
 
 		this.song = song;
 		this.difficulty = difficulty;
-		this.favorited = Save.instance.isSongFavorited(song?.id);
+		this.favorited = Save.instance.isSongFavorited(song?.id, song?.variation);
 
 		songText.text = song?.name ?? 'Random';
 		songText.updateHitbox();
@@ -184,7 +184,7 @@ class CapsuleSprite extends FlxSpriteGroup
 		if (!justLoaded)
 		{
 			FunkinSound.playOnce('ui/freeplay/sounds/${favorited ? 'favorite' : 'unfavorite'}');
-			Save.instance.setFavorite(song.id, favorited);
+			Save.instance.setFavorite(song.id, song.variation, favorited);
 
 			y += favorited ? -20 : 20;
 		}

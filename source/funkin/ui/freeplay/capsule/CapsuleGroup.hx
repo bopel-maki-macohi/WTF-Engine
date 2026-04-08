@@ -87,10 +87,8 @@ class CapsuleGroup extends FlxTypedGroup<CapsuleSprite>
 
 		for (i => song in songs)
 		{
-			var song:Song = SongRegistry.instance.fetch(song);
+			var song:Song = SongRegistry.instance.fetch(song).resolveVariation(diff);
 			var id:Int = i + 1;
-
-			song = song.getVariationFromDifficulty(diff);
 
 			if (prevSong?.id == song.id)
 				selected = id;

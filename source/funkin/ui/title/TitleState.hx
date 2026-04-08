@@ -146,7 +146,11 @@ class TitleState extends FunkinState
 		}
 
 		if (controls.BACK)
+		{
+			trace('Pressed back. Quitting...');
 			Sys.exit(0);
+		}
+
 		if (controls.ACCEPT)
 		{
 			if (seenIntro)

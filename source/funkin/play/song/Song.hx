@@ -78,7 +78,7 @@ class Song implements IPlayStateScriptedClass
 		return this;
 	}
 
-	public function getVariationFromDifficulty(diff:String):Song
+	public function resolveVariation(diff:String):Song
 	{
 		for (variation in variations)
 		{
