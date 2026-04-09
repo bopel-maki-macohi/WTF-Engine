@@ -38,7 +38,7 @@ class Main extends FlxGame
 		final width:Int = 0;
 		final height:Int = 0;
 		final state:InitialState = TitleState;
-		final framerate:Int = 180;
+		final framerate:Int = 60;
 		final skipSplash:Bool = true;
 		final startFullscreen:Bool = false;
 
@@ -53,7 +53,6 @@ class Main extends FlxGame
 		// Instances
 		Conductor.instance = new Conductor();
 		Controls.instance = new Controls();
-		Save.instance = new Save();
 
 		// Registries
 		CharacterRegistry.instance = new CharacterRegistry();
@@ -84,6 +83,10 @@ class Main extends FlxGame
 		FlxG.inputs.resetOnStateSwitch = false;
 		FlxG.mouse.visible = false;
 		FlxObject.defaultMoves = false;
+
+		// Save data has to be loaded here
+		// It just has to be
+		Save.instance = new Save();
 
 		// Plugins
 		ReloadPlugin.init();

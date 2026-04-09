@@ -8,6 +8,7 @@ import funkin.graphics.FunkinSprite;
 class HoldNoteCover extends FunkinSprite
 {
 	public var holdNote:HoldNoteSprite;
+	public var strum:StrumSprite;
 
 	public function new()
 	{
@@ -42,11 +43,16 @@ class HoldNoteCover extends FunkinSprite
 	public function play(holdNote:HoldNoteSprite, strum:StrumSprite)
 	{
 		this.holdNote = holdNote;
-
-		x = strum.x + (strum.width - width) / 2;
-		y = strum.y + (strum.height - height) / 2;
+		this.strum = strum;
 
 		playAnimation(strum.direction.name);
+		updatePosition();
+	}
+
+	public function updatePosition()
+	{
+		x = strum.x + (strum.width - width) / 2;
+		y = strum.y + (strum.height - height) / 2;
 	}
 
 	override public function revive()
@@ -54,5 +60,6 @@ class HoldNoteCover extends FunkinSprite
 		super.revive();
 
 		holdNote = null;
+		strum = null;
 	}
 }

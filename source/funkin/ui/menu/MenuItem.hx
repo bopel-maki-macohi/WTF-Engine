@@ -37,14 +37,14 @@ class MenuItem extends FunkinSprite
 		active = false;
 	}
 
-	function set_selected(selected:Bool):Bool
+	function set_selected(value:Bool):Bool
 	{
-		if (this.selected == selected)
-			return selected;
-		this.selected = selected;
+		if (this.selected == value)
+			return value;
+		this.selected = value;
 
-		playAnimation(selected ? 'select' : 'idle');
+		playAnimation(value ? 'select' : 'idle');
 
-		return selected;
+		return value;
 	}
 }

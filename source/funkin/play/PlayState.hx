@@ -8,6 +8,7 @@ import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
+import flixel.util.FlxTimer;
 import funkin.audio.FunkinSound;
 import funkin.data.event.EventData;
 import funkin.data.event.EventRegistry;
@@ -98,14 +99,14 @@ class PlayState extends FunkinState
 		// HUD
 		//
 
-		opponentStrumline = new Strumline();
+		opponentStrumline = new Strumline(false);
 		opponentStrumline.x = 325;
 		opponentStrumline.camera = camHUD;
 		opponentStrumline.noteHit.add(opponentNoteHit);
 		opponentStrumline.holdNoteHit.add(opponentHoldNoteHit);
 		add(opponentStrumline);
 
-		playerStrumline = new Strumline();
+		playerStrumline = new Strumline(true);
 		playerStrumline.x = FlxG.width - opponentStrumline.x;
 		playerStrumline.camera = camHUD;
 		playerStrumline.noteHit.add(playerNoteHit);
@@ -117,7 +118,6 @@ class PlayState extends FunkinState
 		healthBar = new FunkinBar(0, 0, 500, 15, 0, 1, true);
 		healthBar.setColors(Constants.HEALTH_EMPTY_COLOR, Constants.HEALTH_FILL_COLOR);
 		healthBar.screenCenter(X);
-		healthBar.y = FlxG.height - healthBar.height - 60;
 		healthBar.camera = camHUD;
 		add(healthBar);
 
@@ -125,21 +125,12 @@ class PlayState extends FunkinState
 		timeText.size = 24;
 		timeText.alignment = CENTER;
 		timeText.camera = camHUD;
-		timeText.y = 35;
-		timeText.visible = Preferences.showTimer;
 		add(timeText);
-
-		if (Preferences.downscroll)
-		{
-			healthBar.y = FlxG.height - healthBar.height - healthBar.y;
-			timeText.y = FlxG.height - timeText.height - timeText.y;
-		}
 
 		scoreText = new FunkinText(0, 0, '123456');
 		scoreText.size = 15;
 		scoreText.alignment = CENTER;
 		scoreText.camera = camHUD;
-		scoreText.y = healthBar.y + healthBar.height + 20;
 		scoreText.zIndex = 1;
 		add(scoreText);
 
@@ -187,8 +178,8 @@ class PlayState extends FunkinState
 				checkSongTime();
 			}
 
-			opponentStrumline.process(false);
-			playerStrumline.process(!Preferences.botplay);
+			opponentStrumline.process();
+			playerStrumline.process();
 
 			processEvents();
 			processInput();
@@ -236,6 +227,32 @@ class PlayState extends FunkinState
 			if (!event.cancelled)
 				openSubState(new GameOverSubState());
 		}
+	}
+
+	override public function refresh()
+	{
+		super.refresh();
+
+		timeText.y = 35;
+		timeText.visible = Preferences.showTimer;
+
+		healthBar.y = FlxG.height - healthBar.height - 60;
+
+		if (Preferences.downscroll)
+		{
+			timeText.y = FlxG.height - timeText.height - timeText.y;
+			healthBar.y = FlxG.height - healthBar.height - healthBar.y;
+		}
+
+		scoreText.y = healthBar.y + healthBar.height + 20;
+
+		if (opponentIcon != null)
+			opponentIcon.y = healthBar.y - opponentIcon.height / 2;
+		if (playerIcon != null)
+			playerIcon.y = healthBar.y - playerIcon.height / 2;
+
+		opponentStrumline.refresh();
+		playerStrumline.refresh();
 	}
 
 	override function beatHit(beat:Int)
@@ -324,6 +341,8 @@ class PlayState extends FunkinState
 		opponentStrumline.clean();
 		playerStrumline.clean();
 
+		playerStrumline.isPlayer = !Preferences.botplay;
+
 		opponentStrumline.load(notes.filter(note -> return note.d >= Constants.NOTE_COUNT), speed);
 		playerStrumline.load(notes.filter(note -> return note.d < Constants.NOTE_COUNT), speed);
 
@@ -399,14 +418,12 @@ class PlayState extends FunkinState
 		if (opponentIcon != null)
 		{
 			opponentIcon.camera = camHUD;
-			opponentIcon.y = healthBar.y - opponentIcon.height / 2;
 			add(opponentIcon);
 		}
 
 		if (playerIcon != null)
 		{
 			playerIcon.camera = camHUD;
-			playerIcon.y = healthBar.y - playerIcon.height / 2;
 			add(playerIcon);
 		}
 	}
@@ -717,6 +734,13 @@ class PlayState extends FunkinState
 		FunkinSound.music?.pause();
 		voices?.pause();
 
+		FlxTimer.globalManager.forEach(timer ->
+		{
+			if (!timer.active)
+				return;
+			timer.active = false;
+		});
+
 		FlxTween.globalManager.forEach(tween ->
 		{
 			if (!tween.active)
@@ -738,6 +762,13 @@ class PlayState extends FunkinState
 			voices.play();
 		}
 
+		FlxTimer.globalManager.forEach(timer ->
+		{
+			if (timer.active)
+				return;
+			timer.active = true;
+		});
+
 		FlxTween.globalManager.forEach(tween ->
 		{
 			if (tween.active)
@@ -752,6 +783,10 @@ class PlayState extends FunkinState
 	override public function destroy()
 	{
 		super.destroy();
+
+		// Not doing this can cause things to crash
+		// Even if it's accessed in a safe way
+		instance = null;
 
 		FunkinSound.music.stop();
 

@@ -3,6 +3,7 @@ package funkin.save;
 import funkin.data.song.SongRegistry;
 import funkin.data.story.LevelRegistry;
 import funkin.play.song.Song;
+import funkin.save.SaveData.SaveOptionsData;
 import funkin.ui.story.Level;
 import haxe.ds.StringMap;
 
@@ -15,6 +16,7 @@ class Save
 
 	public var scores(get, never):StringMap<Int>;
 	public var favorites(get, never):StringMap<Bool>;
+	public var options(get, never):SaveOptionsData;
 
 	var data:SaveData;
 
@@ -25,6 +27,17 @@ class Save
 		FlxG.save.mergeData(getDefault());
 
 		data = FlxG.save.data;
+
+		//
+		// LOAD
+		//
+
+		FlxG.drawFramerate = options.fpsCap;
+		FlxG.updateFramerate = options.fpsCap;
+
+		#if HAS_FPS_COUNTER
+		Main.fpsCounter.visible = options.showFPS;
+		#end
 	}
 
 	public function flush()
@@ -147,11 +160,23 @@ class Save
 	inline function get_favorites():StringMap<Bool>
 		return data.favorites;
 
+	inline function get_options():SaveOptionsData
+		return data.options;
+
 	inline function getDefault():SaveData
 	{
 		return {
 			scores: new StringMap<Int>(),
-			favorites: new StringMap<Bool>()
+			favorites: new StringMap<Bool>(),
+			options: {
+				downscroll: false,
+				ghostTapping: true,
+				showTimer: true,
+				#if HAS_FPS_COUNTER
+				showFPS: true,
+				#end
+				fpsCap: 200
+			}
 		}
 	}
 }

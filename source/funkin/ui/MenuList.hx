@@ -16,7 +16,7 @@ class MenuList extends FlxTypedGroup<FunkinText>
 	public var size(get, never):Int;
 
 	public var selected:Int = 0;
-	public var onChanged(default, null) = new FlxTypedSignal<String->Void>();
+	public var onSelected(default, null) = new FlxTypedSignal<String->Void>();
 
 	var controls(get, never):Controls;
 
@@ -34,7 +34,7 @@ class MenuList extends FlxTypedGroup<FunkinText>
 		if (controls.UI_UP_P || controls.UI_DOWN_P)
 			change(controls.UI_UP_P ? -1 : 1);
 		if (controls.ACCEPT)
-			onChanged.dispatch(entries[selected]);
+			onSelected.dispatch(entries[selected]);
 
 		// Updates the items to be in the correct position
 		forEachAlive(item ->
@@ -67,17 +67,17 @@ class MenuList extends FlxTypedGroup<FunkinText>
 		return FlxG.height / 2 + (item.ID - selected - 0.5) * (item.height + 50);
 	}
 
-	function set_entries(entries:Array<String>):Array<String>
+	function set_entries(value:Array<String>):Array<String>
 	{
-		if (this.entries == entries)
-			return entries;
-		this.entries = entries;
+		if (this.entries == value)
+			return value;
+		this.entries = value;
 
 		selected = 0;
 
 		killMembers();
 
-		for (i => item in entries)
+		for (i => item in value)
 		{
 			var text:FunkinText = recycle(FunkinText);
 			text.text = item;
@@ -86,7 +86,7 @@ class MenuList extends FlxTypedGroup<FunkinText>
 			text.setPosition(getItemX(text) - 500, getItemY(text));
 		}
 
-		return entries;
+		return value;
 	}
 
 	inline function get_size():Int

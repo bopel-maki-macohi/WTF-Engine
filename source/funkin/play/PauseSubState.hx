@@ -8,13 +8,14 @@ import funkin.graphics.FunkinText;
 import funkin.play.song.Song;
 import funkin.ui.FunkinSubState;
 import funkin.ui.MenuList;
+import funkin.ui.options.OptionsSubState;
 
 /**
  * The game's pause menu sub state.
  */
 class PauseSubState extends FunkinSubState
 {
-	final DEFAULT_ENTRIES:Array<String> = ['resume', 'restart', 'exit to menu'];
+	final DEFAULT_ENTRIES:Array<String> = ['resume', 'restart', 'options', 'botplay', 'exit to menu'];
 
 	var song(get, never):Song;
 	var difficulty(get, never):String;
@@ -35,9 +36,6 @@ class PauseSubState extends FunkinSubState
 
 		if (song.difficulties.length > 1)
 			DEFAULT_ENTRIES.insert(2, 'difficulty');
-		#if debug
-		DEFAULT_ENTRIES.insert(3, 'botplay');
-		#end
 
 		music = FunkinSound.load('play/music/pause', 0);
 		music.fadeIn(2);
@@ -58,24 +56,11 @@ class PauseSubState extends FunkinSubState
 		add(songText);
 
 		menuList = new MenuList(DEFAULT_ENTRIES);
-		menuList.onChanged.add(select);
+		menuList.onSelected.add(select);
 		add(menuList);
 
-		FlxTween.tween(bg, {alpha: 0.8}, 0.15);
-
-		updateSongText();
-	}
-
-	override public function update(elapsed:Float)
-	{
-		super.update(elapsed);
-
-		justOpened = false;
-	}
-
-	function updateSongText()
-	{
-		// Gotta display some good info
+		// Updates the song text
+		// Display some cool info
 		songText.text = song.name;
 		songText.text += '\ndifficulty: $difficulty';
 		songText.text += '\nartist: ${song.artist}';
@@ -87,6 +72,15 @@ class PauseSubState extends FunkinSubState
 			songText.text += '\nbotplay';
 
 		songText.x = FlxG.width - songText.width - 20;
+
+		FlxTween.tween(bg, {alpha: 0.8}, 0.15);
+	}
+
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
+
+		justOpened = false;
 	}
 
 	function select(item:String)
@@ -119,6 +113,8 @@ class PauseSubState extends FunkinSubState
 				case 'restart':
 					PlayState.instance.resetSong();
 					close();
+				case 'options':
+					openSubState(new OptionsSubState());
 				case 'exit to menu':
 					PlayState.instance.exit();
 				case 'difficulty':
@@ -131,7 +127,8 @@ class PauseSubState extends FunkinSubState
 					changingDiff = true;
 				case 'botplay':
 					Preferences.botplay = !Preferences.botplay;
-					updateSongText();
+					PlayState.instance.resetSong();
+					close();
 			}
 		}
 	}

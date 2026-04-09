@@ -7,6 +7,7 @@ import funkin.graphics.FunkinSprite;
 import funkin.graphics.FunkinText;
 import funkin.modding.event.ScriptEvent;
 import funkin.ui.freeplay.FreeplaySubState;
+import funkin.ui.options.OptionsSubState;
 import funkin.ui.story.StoryMenuSubState;
 import funkin.ui.title.TitleState;
 
@@ -53,6 +54,7 @@ class MainMenuState extends FunkinState
 		items.onChanged.add(change);
 		items.addItem('story', openStoryMenu);
 		items.addItem('freeplay', openFreeplayMenu);
+		items.addItem('options', openOptionsMenu);
 		add(items);
 
 		change(selectedItem);
@@ -107,6 +109,11 @@ class MainMenuState extends FunkinState
 			return;
 
 		openSubState(new FreeplaySubState());
+	}
+
+	function openOptionsMenu()
+	{
+		openSubState(new OptionsSubState());
 	}
 
 	public static function playMusic(fadeIn:Bool = false)

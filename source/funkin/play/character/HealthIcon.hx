@@ -68,14 +68,14 @@ class HealthIcon extends FunkinSprite
 			angle = meta.bopAngle;
 	}
 
-	function set_isDead(isDead:Bool):Bool
+	function set_isDead(value:Bool):Bool
 	{
-		if (this.isDead == isDead)
-			return isDead;
-		this.isDead = isDead;
+		if (this.isDead == value)
+			return value;
+		this.isDead = value;
 
-		animation.frameIndex = isDead ? 1 : 0;
+		animation.frameIndex = value ? 1 : 0;
 
-		return isDead;
+		return value;
 	}
 }

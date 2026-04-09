@@ -60,12 +60,14 @@ class NoteSprite extends FunkinSprite
 		data = null;
 	}
 
-	function set_direction(direction:NoteDirection):NoteDirection
+	function set_direction(value:NoteDirection):NoteDirection
 	{
-		this.direction = direction % Constants.NOTE_COUNT;
+		value %= Constants.NOTE_COUNT;
 
-		playAnimation(this.direction.name);
+		this.direction = value;
 
-		return direction;
+		playAnimation(value.name);
+
+		return value;
 	}
 }

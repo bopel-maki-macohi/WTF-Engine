@@ -12,6 +12,8 @@ import funkin.util.SortUtil;
  */
 class Strumline extends FlxGroup
 {
+	public var isPlayer:Bool;
+
 	public var data:Array<SongNoteData> = [];
 	public var speed(default, set):Float;
 
@@ -28,9 +30,11 @@ class Strumline extends FlxGroup
 	public var holdNoteHit(default, null) = new FlxTypedSignal<HoldNoteSprite->Void>();
 	public var holdNoteDrop(default, null) = new FlxTypedSignal<HoldNoteSprite->Void>();
 
-	public function new()
+	public function new(isPlayer:Bool)
 	{
 		super();
+
+		this.isPlayer = isPlayer;
 
 		strums = new FlxTypedGroup<StrumSprite>();
 		add(strums);
@@ -51,16 +55,13 @@ class Strumline extends FlxGroup
 		for (direction in 0...Constants.NOTE_COUNT)
 		{
 			var strum:StrumSprite = new StrumSprite(direction);
-			strum.y = 60;
-
-			if (Preferences.downscroll)
-				strum.y = FlxG.height - strum.height - strum.y;
-
 			strums.add(strum);
 		}
+
+		refresh();
 	}
 
-	public function process(isPlayer:Bool)
+	public function process()
 	{
 		// Spawns the notes
 		while (data[0] != null)
@@ -195,6 +196,26 @@ class Strumline extends FlxGroup
 		});
 	}
 
+	override public function refresh()
+	{
+		super.refresh();
+
+		strums.forEach(strum ->
+		{
+			strum.y = 60;
+
+			if (Preferences.downscroll)
+				strum.y = FlxG.height - strum.height - strum.y;
+		});
+
+		holdNotes.forEachAlive(holdNote -> holdNote.flipY = Preferences.downscroll);
+
+		noteSplashes.forEachAlive(splash -> splash.updatePosition());
+		holdCovers.forEachAlive(cover -> cover.updatePosition());
+
+		process();
+	}
+
 	public function load(notes:Array<SongNoteData>, speed:Float)
 	{
 		// Notes NEED to be sorted
@@ -255,32 +276,32 @@ class Strumline extends FlxGroup
 	public function getStrum(direction:NoteDirection):StrumSprite
 		return strums.members[direction];
 
-	function set_speed(speed:Float):Float
+	function set_speed(value:Float):Float
 	{
-		speed = Math.max(0, speed);
+		value = Math.max(0, value);
 
-		if (this.speed == speed)
-			return speed;
-		this.speed = speed;
+		if (this.speed == value)
+			return value;
+		this.speed = value;
 
-		holdNotes.forEachAlive(holdNote -> holdNote.speed = speed);
+		holdNotes.forEachAlive(holdNote -> holdNote.speed = value);
 
-		return speed;
+		return value;
 	}
 
-	function set_x(x:Float):Float
+	function set_x(value:Float):Float
 	{
-		this.x = x;
+		this.x = value;
 
 		strums.forEach(strum ->
 		{
 			var off:Float = (strum.direction - Constants.NOTE_COUNT / 2);
 			var spacing:Float = 2;
 
-			strum.x = x + off * (strum.width + spacing);
+			strum.x = value + off * (strum.width + spacing);
 			strum.x += spacing / 2;
 		});
 
-		return x;
+		return value;
 	}
 }

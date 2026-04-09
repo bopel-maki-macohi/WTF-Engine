@@ -71,7 +71,6 @@ class CapsuleSprite extends FlxSpriteGroup
 
 	public function flicker()
 	{
-		FlxFlicker.stopFlickering(songText);
 		FlxFlicker.flicker(songText);
 
 		resetMovement();
@@ -129,71 +128,71 @@ class CapsuleSprite extends FlxSpriteGroup
 		moveTween?.cancel();
 	}
 
-	function set_song(song:Song):Song
+	function set_song(value:Song):Song
 	{
 		justLoaded = true;
 
-		this.song = song;
+		this.song = value;
 		this.difficulty = difficulty;
-		this.favorited = Save.instance.isSongFavorited(song?.id, song?.variation);
+		this.favorited = Save.instance.isSongFavorited(value?.id, value?.variation);
 
-		songText.text = song?.name ?? 'Random';
+		songText.text = value?.name ?? 'Random';
 		songText.updateHitbox();
 
-		bpmText.text = Std.string(song?.bpm).leadingZeros(3);
+		bpmText.text = Std.string(value?.bpm).leadingZeros(3);
 		bpmText.visible = diffText.visible;
 
 		justLoaded = false;
 
 		resetMovement();
 
-		return song;
+		return value;
 	}
 
-	function set_difficulty(difficulty:String):String
+	function set_difficulty(value:String):String
 	{
-		this.difficulty = difficulty;
+		this.difficulty = value;
 
-		ratingText.text = Std.string(song?.getRating(difficulty)).leadingZeros(2);
+		ratingText.text = Std.string(song?.getRating(value)).leadingZeros(2);
 
 		diffText.visible = song != null;
 		ratingText.visible = diffText.visible;
 
-		return difficulty;
+		return value;
 	}
 
-	function set_selected(selected:Bool):Bool
+	function set_selected(value:Bool):Bool
 	{
-		if (this.selected == selected)
-			return selected;
-		this.selected = selected;
+		if (this.selected == value)
+			return value;
+		this.selected = value;
 
-		songText.alpha = selected ? 1 : 0.6;
+		songText.alpha = value ? 1 : 0.6;
 
 		resetMovement();
 
-		return selected;
+		return value;
 	}
 
-	function set_favorited(favorited:Bool):Bool
+	function set_favorited(value:Bool):Bool
 	{
-		if (this.favorited == favorited)
-			return favorited;
-		this.favorited = favorited;
+		if (this.favorited == value)
+			return value;
+		this.favorited = value;
 
 		if (!justLoaded)
 		{
-			FunkinSound.playOnce('ui/freeplay/sounds/${favorited ? 'favorite' : 'unfavorite'}');
-			Save.instance.setFavorite(song.id, song.variation, favorited);
+			FunkinSound.playOnce('ui/freeplay/sounds/${value ? 'favorite' : 'unfavorite'}');
+			Save.instance.setFavorite(song.id, song.variation, value);
 
-			y += favorited ? -20 : 20;
+			y += value ? -20 : 20;
 		}
 
-		heart.visible = favorited;
+		heart.visible = value;
 
 		resetMovement();
 
-		return favorited;
+		return value;
 	}
 
 	inline function get_clipWidth():Float

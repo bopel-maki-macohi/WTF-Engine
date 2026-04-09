@@ -7,6 +7,8 @@ import funkin.graphics.FunkinSprite;
  */
 class NoteSplash extends FunkinSprite
 {
+	public var strum:StrumSprite;
+
 	public function new()
 	{
 		super();
@@ -31,9 +33,22 @@ class NoteSplash extends FunkinSprite
 
 	public function play(strum:StrumSprite)
 	{
-		x = strum.x + (strum.width - width) / 2;
-		y = strum.y + (strum.height - height) / 2;
+		this.strum = strum;
 
 		playAnimation(strum.direction.name);
+		updatePosition();
+	}
+
+	public function updatePosition()
+	{
+		x = strum.x + (strum.width - width) / 2;
+		y = strum.y + (strum.height - height) / 2;
+	}
+
+	override public function revive()
+	{
+		super.revive();
+
+		strum = null;
 	}
 }

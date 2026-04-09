@@ -61,7 +61,6 @@ class MenuItemGroup extends FlxTypedGroup<MenuItem>
 
 	public function flicker()
 	{
-		FlxFlicker.stopFlickering(item);
 		FlxFlicker.flicker(item, 1, 0.04, true, true, _ ->
 		{
 			// onSelected can be null, so we're being real careful

@@ -56,16 +56,16 @@ class Voices
 		}
 	}
 
-	function set_opponentVolume(volume:Float):Float
+	function set_opponentVolume(value:Float):Float
 	{
-		opponent.volume = opponentVolume;
-		return opponentVolume;
+		opponent.volume = value;
+		return value;
 	}
 
-	function set_playerVolume(playerVolume:Float):Float
+	function set_playerVolume(value:Float):Float
 	{
-		player.volume = playerVolume;
-		return playerVolume;
+		player.volume = value;
+		return value;
 	}
 
 	inline function get_opponentVolume():Float

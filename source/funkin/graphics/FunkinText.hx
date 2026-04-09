@@ -24,24 +24,24 @@ class FunkinText extends FlxBitmapText
 		active = false;
 	}
 
-	override function set_text(text:String):String
+	override function set_text(value:String):String
 	{
-		text = text?.toLowerCase();
-		if (this.text == text)
-			return text;
-		return super.set_text(text);
+		value = value?.toLowerCase();
+		if (this.text == value)
+			return value;
+		return super.set_text(value);
 	}
 
-	function set_size(size:Int):Int
+	function set_size(value:Int):Int
 	{
-		this.size = size;
+		this.size = value;
 
 		// The base font size is 32, so divide size by 32
-		scale.x = size / 32;
+		scale.x = value / 32;
 		scale.y = scale.x;
 
 		updateHitbox();
 
-		return size;
+		return value;
 	}
 }
