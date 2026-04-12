@@ -45,20 +45,32 @@ class Stage extends FlxGroup implements IPlayStateScriptedClass
 			if (prop == null)
 				continue;
 
+			final image:String = '$path/props/${prop.image}';
 			final position:FlxPoint = MathUtil.arrayToPoint(prop.position);
 			final scroll:FlxPoint = MathUtil.arrayToPoint(prop.scroll, 1);
 
-			final image:String = '$path/props/${prop.image}';
+			var sprite:FunkinSprite;
 
-			var sprite:FunkinSprite = FunkinSprite.create(position.x, position.y, image, prop.scale);
+			if (props.exists(prop.prop))
+			{
+				sprite = props.get(prop.prop).copy();
+				sprite.setPosition(position.x, position.y);
+			}
+			else
+			{
+				sprite = FunkinSprite.create(position.x, position.y, image, prop.scale, prop.frameWidth, prop.frameHeight);
 
-			sprite.scrollFactor.copyFrom(scroll);
-			sprite.flipX = prop.flipX;
-			sprite.flipY = prop.flipY;
-			sprite.zIndex = prop.zIndex;
+				sprite.scrollFactor.copyFrom(scroll);
 
-			// No point of the prop being active (for now)
-			sprite.active = false;
+				sprite.flipX = prop.flipX;
+				sprite.flipY = prop.flipY;
+				sprite.zIndex = prop.zIndex;
+
+				for (anim in prop.animations)
+					sprite.addAnimation(anim.name, anim.frames, anim.framerate, anim.looped);
+
+				sprite.active = prop.animations.length > 0;
+			}
 
 			// We're done with the points
 			position.put();
@@ -167,7 +179,19 @@ class Stage extends FlxGroup implements IPlayStateScriptedClass
 
 	public function onStepHit(event:ConductorScriptEvent) {}
 
-	public function onBeatHit(event:ConductorScriptEvent) {}
+	public function onBeatHit(event:ConductorScriptEvent)
+	{
+		forEach(prop ->
+		{
+			// Character bopping is already handled
+			if (Std.isOfType(prop, Character) || !Std.isOfType(prop, FunkinSprite))
+				return;
+
+			var prop:FunkinSprite = cast prop;
+
+			prop.playAnimation('idle', true);
+		});
+	}
 
 	public function onSectionHit(event:ConductorScriptEvent) {}
 

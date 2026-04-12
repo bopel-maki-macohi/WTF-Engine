@@ -1,0 +1,82 @@
+import funkin.play.components.Stage;
+import funkin.audio.FunkinSound;
+import funkin.graphics.FunkinSprite;
+import funkin.Paths;
+
+import flixel.util.FlxTimer;
+import flixel.FlxG;
+
+class LimoStage extends Stage
+{
+    final CAR_SPEED:Float = 10000;
+
+    var carActive:Bool;
+    var carMoving:Bool;
+
+    var car:FunkinSprite;
+
+    public function new()
+    {
+        super("limo");
+    }
+
+    override function onCreate(event:ScriptEvent)
+    {
+        super.onCreate(event);
+
+        car = getProp("car");
+
+        resetCar();
+    }
+
+    override function onUpdate(event:UpdateScriptEvent)
+    {
+        super.onUpdate(event);
+
+        if (carMoving)
+        {
+            car.x -= event.elapsed * CAR_SPEED;
+
+            if (car.x < -car.width * 2)
+            {
+                resetCar();
+            }
+        }
+    }
+
+    override function onBeatHit(event:ConductorScriptEvent)
+    {
+        super.onBeatHit(event);
+
+        if (FlxG.random.bool(3))
+        {
+            startCar();
+        }
+    }
+
+    function startCar()
+    {
+        if (carActive) return;
+        carActive = true;
+
+        car.x = FlxG.width;
+        car.visible = true;
+
+        FunkinSound.playOnce(Paths.random('$path/car', 1, 2));
+
+        FlxTimer.wait(1, () ->
+        {
+            // Shakes the camera for the cool
+            FlxG.camera.shake(0.003, 0.3);
+
+            carMoving = true;
+        });
+    }
+
+    function resetCar()
+    {
+        carActive = false;
+        carMoving = false;
+        car.visible = false;
+    }
+}

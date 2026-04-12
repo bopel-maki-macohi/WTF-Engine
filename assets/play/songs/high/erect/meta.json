@@ -1,0 +1,17 @@
+{
+	"name": "High Erect",
+	"gf": "gf",
+	"difficulties": [
+		"erect",
+		"nightmare"
+	],
+	"opponent": "mom",
+	"player": "bf",
+	"stage": "limo",
+	"bpm": 125,
+	"artist": "Kohta Takahashi (feat. Kawai Sprite)",
+	"rating": {
+		"nightmare": 9,
+		"erect": 8
+	}
+}

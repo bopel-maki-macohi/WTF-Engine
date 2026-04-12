@@ -1,5 +1,7 @@
 package funkin.data.stage;
 
+import funkin.data.character.CharacterData.CharacterAnimData;
+
 /**
  * A structure object used for stage data.
  */
@@ -33,7 +35,11 @@ typedef StagePropData =
 {
 	@:optional
 	var id:String;
+	@:optional
+	var prop:String;
 	var image:String;
+	var frameWidth:Int;
+	var frameHeight:Int;
 	var position:Array<Float>;
 	var scroll:Array<Float>;
 	@:default(1)
@@ -41,4 +47,6 @@ typedef StagePropData =
 	var flipX:Bool;
 	var flipY:Bool;
 	var zIndex:Int;
+	@:default([])
+	var animations:Array<CharacterAnimData>;
 }

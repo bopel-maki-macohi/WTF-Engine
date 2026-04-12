@@ -27,7 +27,7 @@ class Constants
 	/**
 	 * This is so that the engine's levels have higher priority over custom levels.
 	 */
-	public static final DEFAULT_LEVELS:Array<String> = ['tutorial', 'week1', 'week2', 'week3'];
+	public static final DEFAULT_LEVELS:Array<String> = ['tutorial', 'week1', 'week2', 'week3', 'week4'];
 
 	public static final DEFAULT_VARIATION:String = 'default';
 

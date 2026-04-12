@@ -91,7 +91,10 @@ class SongConverter
 				case 'FocusCamera':
 					kind = 'focus-camera';
 
-					var c:Int = Std.parseInt(event.v.char);
+					var c:Dynamic = event.v.char;
+
+					if (Std.isOfType(c, String))
+						c = Std.parseInt(c);
 
 					if (Type.typeof(event.v) == TInt)
 						c = event.v;

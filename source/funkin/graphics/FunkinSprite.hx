@@ -58,6 +58,7 @@ class FunkinSprite extends FlxSprite
 		sprite.updateHitbox();
 
 		sprite.animation.copyFrom(animation);
+		sprite.scrollFactor.copyFrom(scrollFactor);
 		sprite.offset.copyFrom(offset);
 		sprite.origin.copyFrom(origin);
 
