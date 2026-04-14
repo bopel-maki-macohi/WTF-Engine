@@ -30,7 +30,9 @@ class ModHandler
 		if (!FileSystem.exists(MOD_FOLDER))
 			FileSystem.createDirectory(MOD_FOLDER);
 
-		// Initializes Polymod
+		// Initializes Polymod and its imports
+		buildImports();
+
 		Polymod.init({
 			modRoot: MOD_FOLDER,
 			dirs: [],
@@ -40,8 +42,6 @@ class ModHandler
 			skipDependencyErrors: true,
 			useScriptedClasses: true
 		});
-
-		loadImports();
 
 		#if HAS_MODDING
 		for (meta in Polymod.scan())
@@ -80,7 +80,7 @@ class ModHandler
 			Playlist.level = LevelRegistry.instance.fetch(Playlist.level.id);
 	}
 
-	static function loadImports()
+	static function buildImports()
 	{
 		// Imports Funkin' classes
 		Polymod.addDefaultImport(Constants);
