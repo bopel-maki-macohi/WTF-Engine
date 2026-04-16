@@ -14,6 +14,7 @@ class PhillyTrainStage extends Stage
 
     var trainActive:Bool = false;
     var trainMoving:Bool = false;
+    var trainBeat:Int = 0;
 
     var windows:StageProp;
     var train:StageProp;
@@ -33,10 +34,10 @@ class PhillyTrainStage extends Stage
         windowFade = Conductor.instance.crotchet;
         windowFade /= Constants.MS_PER_SEC / WINDOW_BEATS;
 
+        windows.alpha = 0;
+
         // Hides the train
         stopTrain();
-
-        pickWindowColor();
     }
 
     override function onUpdate(event:UpdateScriptEvent)
@@ -60,15 +61,24 @@ class PhillyTrainStage extends Stage
     {
         super.onBeatHit(event);
 
+        if (event.beat < 0) return;
+
         if (event.beat % WINDOW_BEATS == 0)
         {
             pickWindowColor();
         }
 
-        if (FlxG.random.bool(2))
+        if (FlxG.random.bool(10) && !trainActive && event.beat > trainBeat)
         {
-            startTrain();
+            startTrain(event.beat);
         }
+    }
+
+    override function onSongRetry(event:ScriptEvent)
+    {
+        super.onSongRetry(event);
+
+        windows.alpha = 0;
     }
 
     function pickWindowColor()
@@ -82,10 +92,10 @@ class PhillyTrainStage extends Stage
             pickWindowColor();
     }
 
-    function startTrain()
+    function startTrain(beat:Int)
     {
-        if (trainActive) return;
         trainActive = true;
+        trainBeat = beat + 50;
 
         train.visible = true;
         train.x = FlxG.width;

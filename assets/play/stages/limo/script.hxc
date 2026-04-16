@@ -9,6 +9,7 @@ class LimoStage extends Stage
 
     var carActive:Bool;
     var carMoving:Bool;
+    var carBeat:Int = 0;
 
     var car:StageProp;
 
@@ -45,16 +46,16 @@ class LimoStage extends Stage
     {
         super.onBeatHit(event);
 
-        if (FlxG.random.bool(3))
+        if (FlxG.random.bool(10) && !carActive && event.beat > carBeat)
         {
-            startCar();
+            startCar(event.beat);
         }
     }
 
-    function startCar()
+    function startCar(beat:Int)
     {
-        if (carActive) return;
         carActive = true;
+        carBeat = beat + 20;
 
         car.x = FlxG.width;
         car.visible = true;
