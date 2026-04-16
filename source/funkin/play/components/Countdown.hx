@@ -71,9 +71,10 @@ class Countdown extends FunkinSprite
 		scale.x = scale.y = 4;
 
 		FlxTween.cancelTweensOf(this);
-		FlxTween.tween(this, {"scale.x": 2}, 0.5, {
+		FlxTween.cancelTweensOf(scale);
+
+		FlxTween.tween(scale, {x: 2, y: 2}, 0.5, {
 			ease: FlxEase.elasticOut,
-			onUpdate: _ -> scale.y = scale.x,
 			onComplete: _ ->
 			{
 				FlxTween.tween(this, {alpha: 0}, 0.35, {ease: FlxEase.quadOut, onComplete: _ -> visible = false});
