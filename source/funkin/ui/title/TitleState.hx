@@ -80,6 +80,10 @@ class TitleState extends FunkinState
 		#else
 		skipIntro();
 		#end
+
+		#if HAS_DISCORD_RPC
+		DiscordRPC.updatePresence('Title Screen');
+		#end
 	}
 
 	function skipIntro()

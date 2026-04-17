@@ -5,6 +5,7 @@ import flixel.FlxGame;
 import flixel.FlxObject;
 import flixel.util.typeLimit.NextState.InitialState;
 import funkin.Conductor;
+import funkin.DiscordRPC;
 import funkin.data.character.CharacterRegistry;
 import funkin.data.event.EventRegistry;
 import funkin.data.song.SongRegistry;
@@ -91,6 +92,10 @@ class Main extends FlxGame
 		// Save data has to be loaded here
 		// It just has to be
 		Save.instance = new Save();
+
+		#if HAS_DISCORD_RPC
+		DiscordRPC.init();
+		#end
 
 		// Plugins
 		ReloadPlugin.init();

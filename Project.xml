@@ -21,6 +21,7 @@
 	<!-- __________________________ WTF Engine Defines _________________________  -->
 
 	<haxedef name="HAS_FPS_COUNTER" />
+	<haxedef name="HAS_DISCORD_RPC" />
 	<haxedef name="HAS_MODDING" />
 	<haxedef name="HAS_SCREENSHOTS" if="debug" />
 	<haxedef name="HAS_TITLE_SCARE" />
@@ -43,6 +44,7 @@
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />
+	<haxelib name="hxdiscord_rpc" />
 	<haxelib name="json2object" />
 	<haxelib name="polymod" />
 	<haxelib name="thx.core" />

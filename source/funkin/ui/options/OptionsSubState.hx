@@ -6,6 +6,7 @@ import flixel.tweens.FlxTween;
 import funkin.audio.FunkinSound;
 import funkin.graphics.FunkinSprite;
 import funkin.graphics.FunkinText;
+import funkin.ui.menu.MainMenuState;
 
 /**
  * The sub state where the player is able to customize their settings and preferences.
@@ -48,6 +49,11 @@ class OptionsSubState extends FunkinSubState
 
 		loadOptions();
 		intro();
+
+		#if HAS_DISCORD_RPC
+		if (Std.isOfType(_parentState, MainMenuState))
+			DiscordRPC.updatePresence('Options Menu');
+		#end
 	}
 
 	override public function update(elapsed:Float)
@@ -101,5 +107,13 @@ class OptionsSubState extends FunkinSubState
 
 		FlxTween.tween(bg.scale, {x: 0, y: 0}, 0.75, {ease: FlxEase.quintOut});
 		FunkinSound.playOnce('ui/sounds/cancel');
+	}
+
+	override public function close()
+	{
+		super.close();
+
+		if (Std.isOfType(_parentState, MainMenuState))
+			MainMenuState.updatePresence();
 	}
 }

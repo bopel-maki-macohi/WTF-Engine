@@ -363,6 +363,10 @@ class PlayState extends FunkinState
 		startCountdown();
 
 		FunkinSound.stopAllSounds(true);
+
+		#if HAS_DISCORD_RPC
+		DiscordRPC.updatePresence('${song.name} - ${difficulty.toUpperCase()}');
+		#end
 	}
 
 	public function startCountdown()
