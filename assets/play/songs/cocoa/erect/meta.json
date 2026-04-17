@@ -1,0 +1,17 @@
+{
+	"name": "Cocoa Erect",
+	"gf": "gf-christmas",
+	"difficulties": [
+		"erect",
+		"nightmare"
+	],
+	"opponent": "parents",
+	"player": "bf-christmas",
+	"stage": "mall",
+	"bpm": 174,
+	"artist": "Saster",
+	"rating": {
+		"nightmare": 8,
+		"erect": 7
+	}
+}

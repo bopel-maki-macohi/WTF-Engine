@@ -1,0 +1,36 @@
+{
+    "name": "Mall (Evil)",
+    "zoom": 1.125,
+    "opponent": {
+        "position": [-300, 400]
+    },
+    "player": {
+        "position": [300, 400]
+    },
+    "gf": {
+        "position": [0, 320]
+    },
+    "props": [
+        {
+            "image": "back",
+            "position": [-180, -250],
+            "scroll": [0.1, 0.1],
+            "scale": 0.8
+        },
+        {
+            "image": "front",
+            "position": [-320, 100],
+            "scroll": [0.3, 0.3],
+            "scale": 0.8
+        },
+        {
+            "image": "tree",
+            "position": [50, -150],
+            "scroll": [0.5, 0.5]
+        },
+        {
+            "image": "snow",
+            "position": [-800, 180]
+        }
+    ]
+}

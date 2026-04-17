@@ -1,0 +1,17 @@
+{
+	"name": "Eggnog Erect",
+	"gf": "gf-christmas",
+	"difficulties": [
+		"erect",
+		"nightmare"
+	],
+	"opponent": "parents",
+	"player": "bf-christmas",
+	"stage": "mall",
+	"bpm": 140,
+	"artist": "Saruky",
+	"rating": {
+		"nightmare": 7,
+		"erect": 6
+	}
+}

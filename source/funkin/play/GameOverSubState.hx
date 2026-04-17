@@ -50,10 +50,15 @@ class GameOverSubState extends FunkinSubState
 	function buildCharacter()
 	{
 		var player:Character = PlayState.instance.stage.player;
+
 		if (player == null)
 			return;
 
-		character = CharacterRegistry.instance.fetchCharacter('${player.id}-death');
+		// Characters can use the death of another character
+		// If that isn't the case, go by its id
+		final id:String = player.meta.death ?? player.id;
+
+		character = CharacterRegistry.instance.fetchCharacter('$id-death');
 
 		// Don't do the actual character stuff if it's null
 		// Because I guess you never know when the death sprite doesn't exist

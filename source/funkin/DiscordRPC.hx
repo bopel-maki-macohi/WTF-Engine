@@ -62,6 +62,12 @@ class DiscordRPC
 		presence = new DiscordRichPresence();
 		presence.type = DiscordActivityType_Playing;
 
+		// 10% chance of replacing the image icon with :whatthefuck:
+		if (FlxG.random.bool(10))
+			presence.largeImageKey = 'what-the-fuck';
+		else
+			presence.largeImageKey = '';
+
 		presence.state = state ?? presenceState;
 		presence.details = details;
 

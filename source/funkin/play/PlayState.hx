@@ -130,12 +130,14 @@ class PlayState extends FunkinState
 		add(healthBar);
 
 		timeText = new FunkinText(0, 0, '1:23');
+		timeText.setBorderStyle(OUTLINE, 0xFF000000, 3);
 		timeText.size = 24;
 		timeText.alignment = CENTER;
 		timeText.camera = camHUD;
 		add(timeText);
 
 		scoreText = new FunkinText(0, 0, '123456');
+		scoreText.setBorderStyle(OUTLINE, 0xFF000000, 3);
 		scoreText.size = 15;
 		scoreText.alignment = CENTER;
 		scoreText.camera = camHUD;
@@ -625,8 +627,13 @@ class PlayState extends FunkinState
 				tallies.shits++;
 		}
 
+		var suffix:String = '';
+
+		if (note.kind == 'alt')
+			suffix = '-alt';
+
 		if (note.kind != 'noanim')
-			stage.player?.sing(note.direction);
+			stage.player?.sing(note.direction, suffix);
 
 		voices.playerVolume = 1;
 
@@ -708,8 +715,13 @@ class PlayState extends FunkinState
 
 	function opponentNoteHit(note:NoteSprite)
 	{
+		var suffix:String = '';
+
+		if (note.kind == 'alt')
+			suffix = '-alt';
+
 		if (note.kind != 'noanim')
-			stage.opponent?.sing(note.direction);
+			stage.opponent?.sing(note.direction, suffix);
 	}
 
 	function opponentHoldNoteHit(holdNote:HoldNoteSprite)

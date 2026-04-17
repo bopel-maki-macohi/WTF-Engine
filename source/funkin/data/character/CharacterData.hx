@@ -10,6 +10,8 @@ typedef CharacterData =
 	var name:String;
 	@:optional
 	var image:String;
+	@:optional
+	var death:String;
 	var frameWidth:Int;
 	var frameHeight:Int;
 	var icon:CharacterIconData;

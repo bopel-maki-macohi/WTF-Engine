@@ -1,0 +1,11 @@
+{
+    "frameWidth": 327,
+    "frameHeight": 291,
+    "scale": 0.85,
+    "animations": [
+        {
+            "name": "idle",
+            "frames": [0, 1, 2]
+        }
+    ]
+}

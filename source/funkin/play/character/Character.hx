@@ -52,11 +52,11 @@ class Character extends StageProp implements IPlayStateScriptedClass
 		super.bop(force);
 	}
 
-	public function sing(direction:NoteDirection)
-		playAnimation(direction.name, true);
+	public function sing(direction:NoteDirection, suffix:String = '')
+		playAnimation('${direction.name}$suffix', true);
 
-	public function miss(direction:NoteDirection)
-		playAnimation('${direction.name}-miss', true);
+	public function miss(direction:NoteDirection, suffix:String = '')
+		playAnimation('${direction.name}-miss$suffix', true);
 
 	public function resetSingTimer()
 		singTimer = 0;

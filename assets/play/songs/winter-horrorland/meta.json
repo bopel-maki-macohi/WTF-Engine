@@ -1,0 +1,19 @@
+{
+	"name": "Winter Horrorland",
+	"gf": "gf-christmas",
+	"difficulties": [
+		"easy",
+		"normal",
+		"hard"
+	],
+	"opponent": "monster-christmas",
+	"player": "bf-christmas",
+	"stage": "mall-evil",
+	"bpm": 159,
+	"artist": "Bassetfilms",
+	"rating": {
+		"normal": 2,
+		"hard": 2,
+		"easy": 1
+	}
+}

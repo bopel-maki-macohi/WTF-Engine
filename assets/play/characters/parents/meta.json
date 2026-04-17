@@ -1,0 +1,46 @@
+{
+    "name": "Parents",
+    "frameWidth": 354,
+    "frameHeight": 315,
+    "globalOffset": [-80, -430],
+    "cameraOffset": [100, -80],
+    "icon": {},
+    "animations": [
+        {
+            "name": "idle",
+            "frames": [0, 1, 2]
+        },
+        {
+            "name": "left",
+            "frames": [3, 4]
+        },
+        {
+            "name": "right",
+            "frames": [5, 6]
+        },
+        {
+            "name": "up",
+            "frames": [7, 8]
+        },
+        {
+            "name": "down",
+            "frames": [9, 10]
+        },
+        {
+            "name": "left-alt",
+            "frames": [11, 12]
+        },
+        {
+            "name": "right-alt",
+            "frames": [13, 14]
+        },
+        {
+            "name": "up-alt",
+            "frames": [15, 16]
+        },
+        {
+            "name": "down-alt",
+            "frames": [17, 18]
+        }
+    ]
+}

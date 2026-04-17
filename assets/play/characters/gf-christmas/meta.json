@@ -1,0 +1,17 @@
+{
+    "name": "Girlfriend (Christmas)",
+    "frameWidth": 262,
+    "frameHeight": 295,
+    "globalOffset": [0, -400],
+    "cameraOffset": [0, -60],
+    "icon": {
+        "image": "gf"
+    },
+    "bopEvery": 1,
+    "animations": [
+        {
+            "name": "idle",
+            "frames": [0, 1, 2]
+        }
+    ]
+}
