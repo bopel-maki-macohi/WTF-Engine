@@ -32,8 +32,8 @@ class Save
 		// LOAD
 		//
 
-		FlxG.drawFramerate = options.fpsCap;
 		FlxG.updateFramerate = options.fpsCap;
+		FlxG.drawFramerate = options.fpsCap;
 
 		#if HAS_FPS_COUNTER
 		Main.fpsCounter.visible = options.showFPS;

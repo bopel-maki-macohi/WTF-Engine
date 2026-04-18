@@ -81,8 +81,8 @@ class Preferences
 		Save.instance.options.fpsCap = value;
 		Save.instance.flush();
 
-		FlxG.drawFramerate = value;
 		FlxG.updateFramerate = value;
+		FlxG.drawFramerate = value;
 
 		return value;
 	}
