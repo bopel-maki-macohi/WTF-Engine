@@ -21,7 +21,7 @@
 	<!-- __________________________ WTF Engine Defines _________________________  -->
 
 	<haxedef name="HAS_FPS_COUNTER" />
-	<haxedef name="HAS_DISCORD_RPC" />
+	<haxedef name="HAS_DISCORD_RPC" unless="hl"/>
 	<haxedef name="HAS_MODDING" />
 	<haxedef name="HAS_SCREENSHOTS" if="debug" />
 	<haxedef name="HAS_TITLE_SCARE" />

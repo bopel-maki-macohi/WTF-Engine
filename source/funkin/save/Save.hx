@@ -182,6 +182,8 @@ class Save
 				#end
 				#if HAS_DISCORD_RPC
 				discordRPC: true,
+				#else
+				discordRPC: false,
 				#end
 				fpsCap: 200
 			}
