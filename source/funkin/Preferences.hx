@@ -16,7 +16,7 @@ class Preferences
 
 	#if HAS_FPS_COUNTER
 	public static var showFPS(get, set):Bool;
-	public static var showFPSBGOpacity(get, set):Int;
+	public static var fpsBGOpacity(get, set):Int;
 	#end
 
 	public static var fpsCap(get, set):Int;
@@ -36,7 +36,9 @@ class Preferences
 	}
 
 	static inline function get_downscroll():Bool
+	{
 		return Save.instance.options.downscroll;
+	}
 
 	static inline function set_ghostTapping(value:Bool):Bool
 	{
@@ -47,7 +49,9 @@ class Preferences
 	}
 
 	static inline function get_ghostTapping():Bool
+	{
 		return Save.instance.options.ghostTapping;
+	}
 
 	static inline function set_showTimer(value:Bool):Bool
 	{
@@ -60,7 +64,9 @@ class Preferences
 	}
 
 	static inline function get_showTimer():Bool
+	{
 		return Save.instance.options.showTimer;
+	}
 
 	#if HAS_FPS_COUNTER
 	static inline function set_showFPS(value:Bool):Bool
@@ -69,27 +75,29 @@ class Preferences
 		Save.instance.flush();
 
 		Main.fpsCounter.visible = value;
-		Main.fpsCounter.set_backgroundOpacityVisible(value);
 
 		return value;
 	}
 
 	static inline function get_showFPS():Bool
-		return Save.instance.options.showFPS;
-
-	static inline function set_showFPSBGOpacity(value:Int):Int
 	{
-		Save.instance.options.showFPSBGOpacity = value;
+		return Save.instance.options.showFPS;
+	}
+
+	static inline function set_fpsBGOpacity(value:Int):Int
+	{
+		Save.instance.options.fpsBGOpacity = value;
 		Save.instance.flush();
 
-		Main.fpsCounter.backgroundOpacity = value / 100;
-		trace('showFPSBGOpacity set to $value, opacity: ${value / 100}');
-		
+		Main.fpsCounter.bg.alpha = value / 100;
+
 		return value;
 	}
 
-	static inline function get_showFPSBGOpacity():Int
-		return Save.instance.options.showFPSBGOpacity;
+	static inline function get_fpsBGOpacity():Int
+	{
+		return Save.instance.options.fpsBGOpacity;
+	}
 	#end
 
 	static inline function set_fpsCap(value:Int):Int
@@ -104,7 +112,9 @@ class Preferences
 	}
 
 	static inline function get_fpsCap():Int
+	{
 		return Save.instance.options.fpsCap;
+	}
 
 	#if HAS_DISCORD_RPC
 	static inline function set_discordRPC(value:Bool):Bool
@@ -121,11 +131,20 @@ class Preferences
 	}
 
 	static inline function get_discordRPC():Bool
+	{
 		return Save.instance.options.discordRPC;
+	}
 	#end
 
 	//
 	// DEBUG
 	//
-	public static var botplay:Bool = false;
+	public static var botplay(default, set):Bool = false;
+
+	static inline function set_botplay(value:Bool):Bool
+	{
+		botplay = value;
+		PlayState.instance?.refresh();
+		return value;
+	}
 }

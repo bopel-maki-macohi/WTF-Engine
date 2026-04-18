@@ -8,12 +8,8 @@ import funkin.data.stage.StageData.PropAnimData;
 typedef CharacterData =
 {
 	var name:String;
-	@:optional
-	var image:String;
-	@:optional
-	var death:String;
-	var frameWidth:Int;
-	var frameHeight:Int;
+	var width:Int;
+	var height:Int;
 	var icon:CharacterIconData;
 	var globalOffset:Array<Float>;
 	var cameraOffset:Array<Float>;
@@ -21,6 +17,10 @@ typedef CharacterData =
 	var scale:Float;
 	var flipX:Bool;
 	var flipY:Bool;
+	@:optional
+	var pause:String;
+	@:optional
+	var death:String;
 	@:default(2)
 	var bopEvery:Int;
 	@:default(8)
@@ -34,7 +34,7 @@ typedef CharacterData =
  */
 typedef CharacterIconData =
 {
-	var image:String;
+	var id:String;
 	@:default(1)
 	var scale:Float;
 	var flipX:Bool;

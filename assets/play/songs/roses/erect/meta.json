@@ -1,0 +1,18 @@
+{
+	"name": "Roses Erect",
+	"gf": "gf-pixel",
+	"difficulties": [
+		"erect",
+		"nightmare"
+	],
+	"opponent": "senpai-angry",
+	"player": "bf-pixel",
+	"stage": "school",
+	"bpm": 128,
+	"artist": "Kawai Sprite",
+	"style": "pixel",
+	"rating": {
+		"nightmare": 9,
+		"erect": 8
+	}
+}

@@ -6,6 +6,7 @@ import flixel.tweens.FlxTween;
 import funkin.audio.FunkinSound;
 import funkin.graphics.FunkinSprite;
 import funkin.graphics.FunkinText;
+import funkin.play.character.Character;
 import funkin.play.song.Song;
 import funkin.ui.FunkinSubState;
 import funkin.ui.MenuList;
@@ -38,7 +39,10 @@ class PauseSubState extends FunkinSubState
 		if (song.difficulties.length > 1)
 			DEFAULT_ENTRIES.insert(2, 'difficulty');
 
-		music = FunkinSound.load('play/music/pause', 0);
+		final player:Character = PlayState.instance.stage.player;
+		final musicPath:String = 'play/characters/${player?.meta?.pause ?? player?.id}/pause';
+
+		music = FunkinSound.load(musicPath, 0);
 		music.fadeIn(2);
 
 		camera = new FlxCamera();
@@ -60,19 +64,7 @@ class PauseSubState extends FunkinSubState
 		menuList.onSelected.add(select);
 		add(menuList);
 
-		// Updates the song text
-		// Display some cool info
-		songText.text = song.name;
-		songText.text += '\ndifficulty: $difficulty';
-		songText.text += '\nartist: ${song.artist}';
-		songText.text += '\n$deaths blue ball';
-
-		if (deaths != 1)
-			songText.text += 's';
-		if (Preferences.botplay)
-			songText.text += '\nbotplay';
-
-		songText.x = FlxG.width - songText.width - 20;
+		updateSongText();
 
 		FlxTween.tween(bg, {alpha: 0.8}, 0.15);
 
@@ -86,6 +78,23 @@ class PauseSubState extends FunkinSubState
 		super.update(elapsed);
 
 		justOpened = false;
+	}
+
+	function updateSongText()
+	{
+		// Updates the song text
+		// Display some cool info
+		songText.text = song.name;
+		songText.text += '\ndifficulty: $difficulty';
+		songText.text += '\nartist: ${song.artist}';
+		songText.text += '\n$deaths blue ball';
+
+		if (deaths != 1)
+			songText.text += 's';
+		if (Preferences.botplay)
+			songText.text += '\nbotplay';
+
+		songText.x = FlxG.width - songText.width - 20;
 	}
 
 	function select(item:String)
@@ -132,8 +141,7 @@ class PauseSubState extends FunkinSubState
 					changingDiff = true;
 				case 'botplay':
 					Preferences.botplay = !Preferences.botplay;
-					PlayState.instance.resetSong();
-					close();
+					updateSongText();
 			}
 		}
 	}
@@ -158,11 +166,17 @@ class PauseSubState extends FunkinSubState
 	}
 
 	inline function get_song():Song
+	{
 		return PlayState.song;
+	}
 
 	inline function get_difficulty():String
+	{
 		return PlayState.difficulty;
+	}
 
 	inline function get_deaths():Int
+	{
 		return PlayState.instance.deaths;
+	}
 }

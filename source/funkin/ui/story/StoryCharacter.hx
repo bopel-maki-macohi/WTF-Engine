@@ -40,7 +40,7 @@ class StoryCharacter extends FunkinSprite
 
 		// Loads the sprite and animations
 		// Story characters use gameplay character stuff
-		loadSprite('$path/image', meta.scale, meta.frameWidth, meta.frameHeight);
+		loadSprite('$path/image', meta.scale, meta.width, meta.height);
 
 		for (anim in meta.animations)
 			addAnimation(anim.name, anim.frames, anim.framerate, anim.looped);

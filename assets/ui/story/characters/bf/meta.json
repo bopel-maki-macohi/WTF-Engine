@@ -1,7 +1,7 @@
 {
     "name": "Boyfriend",
-    "frameWidth": 217,
-    "frameHeight": 222,
+    "width": 217,
+    "height": 222,
     "animations": [
         {
             "name": "idle",

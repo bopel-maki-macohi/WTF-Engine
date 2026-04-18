@@ -1,7 +1,7 @@
 {
     "name": "Spooky Kids",
-    "frameWidth": 184,
-    "frameHeight": 227,
+    "width": 184,
+    "height": 227,
     "scale": 0.95,
     "animations": [
         {

@@ -12,11 +12,27 @@ import funkin.util.RhythmUtil.Judgement;
  */
 class Popups extends FlxTypedGroup<FunkinSprite>
 {
+	var style:Style;
+
+	public function new(style:Style)
+	{
+		super();
+
+		this.style = style;
+	}
+
 	function popup(x:Float, y:Float, id:String):FunkinSprite
 	{
 		var popup:FunkinSprite = recycle(FunkinSprite);
 
-		popup.loadSprite('play/ui/popup/$id');
+		popup.loadSprite(id, style.scale);
+
+		if (popup.graphic == null)
+		{
+			popup.kill();
+			return popup;
+		}
+
 		popup.setPosition(x, y);
 		popup.acceleration.y = 450;
 		popup.moves = true;
@@ -37,8 +53,10 @@ class Popups extends FlxTypedGroup<FunkinSprite>
 		return popup;
 	}
 
-	public function popupJudgement(judgement:Judgement)
-		popup(80, 40, judgement);
+	public function popupJudgement(id:Judgement)
+	{
+		popup(80, 40, style.getJudgement(id));
+	}
 
 	public function popupCombo(combo:Int)
 	{
@@ -51,7 +69,8 @@ class Popups extends FlxTypedGroup<FunkinSprite>
 
 		for (i => number in numbers)
 		{
-			var sprite:FunkinSprite = popup(120, 90, 'numbers/num$number');
+			var number:Int = Std.parseInt(number);
+			var sprite:FunkinSprite = popup(120, 90, style.getComboNumber(number));
 			sprite.x += sprite.width * 0.85 * i;
 		}
 	}

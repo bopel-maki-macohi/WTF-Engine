@@ -70,8 +70,12 @@ class Voices
 	}
 
 	inline function get_opponentVolume():Float
+	{
 		return opponent.volume;
+	}
 
 	inline function get_playerVolume():Float
+	{
 		return player.volume;
+	}
 }

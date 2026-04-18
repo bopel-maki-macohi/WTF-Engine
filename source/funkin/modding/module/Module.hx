@@ -82,5 +82,7 @@ class Module implements IPlayStateScriptedClass implements IFreeplayScriptedClas
 	public function onFreeplaySongFavorited(event:FreeplaySongScriptEvent) {}
 
 	public function toString():String
+	{
 		return '$id | $active';
+	}
 }

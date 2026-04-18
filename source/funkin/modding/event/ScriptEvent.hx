@@ -22,7 +22,9 @@ class ScriptEvent
 	}
 
 	public function cancel()
+	{
 		cancelled = true;
+	}
 }
 
 /**

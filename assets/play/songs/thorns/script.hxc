@@ -1,0 +1,36 @@
+import funkin.play.cutscene.dialogue.DialogueCutscene;
+import funkin.play.song.Song;
+import funkin.play.Playlist;
+import funkin.play.PlayState;
+
+class ThornsSong extends Song
+{
+    var seenCutscene:Bool = false;
+
+    public function new()
+    {
+        super('thorns');
+    }
+
+    override function onCountdownStart(event:CountdownScriptEvent)
+    {
+        super.onCountdownStart(event);
+        
+        if (seenCutscene || !Playlist.isStory) return;
+        seenCutscene = true;
+
+        event.cancel();
+
+        PlayState.instance.startCutscene(new DialogueCutscene(id, () ->
+        {
+            PlayState.instance.startCountdown();
+        }));
+    }
+
+    override function onDestroy(event:ScriptEvent)
+    {
+        super.onDestroy(event);
+
+        seenCutscene = false;
+    }
+}

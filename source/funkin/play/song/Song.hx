@@ -24,6 +24,8 @@ class Song implements IPlayStateScriptedClass
 	public var bpm(get, never):Float;
 	public var artist(get, never):String;
 	public var difficulties(get, never):Array<String>;
+
+	public var style(get, never):String;
 	public var stickerpack(get, never):String;
 
 	public var stage(get, never):String;
@@ -47,13 +49,19 @@ class Song implements IPlayStateScriptedClass
 	}
 
 	public function getRating(diff:String):Int
+	{
 		return meta.rating?.get(diff) ?? 0;
+	}
 
 	public function getNotes(diff:String):Array<SongNoteData>
+	{
 		return chart.notes?.get(diff) ?? [];
+	}
 
 	public function getSpeed(diff:String):Float
+	{
 		return chart.speed?.get(diff) ?? Constants.DEFAULT_SPEED;
+	}
 
 	public function getDifficulties():Array<String>
 	{
@@ -69,7 +77,9 @@ class Song implements IPlayStateScriptedClass
 	}
 
 	public function hasDifficulty(diff:String):Bool
+	{
 		return getDifficulties().contains(diff);
+	}
 
 	public function getVariation(id:String):Song
 	{
@@ -108,34 +118,59 @@ class Song implements IPlayStateScriptedClass
 	}
 
 	function get_difficulties():Array<String>
+	{
 		return meta.difficulties;
+	}
+
+	function get_style():String
+	{
+		return meta.style;
+	}
 
 	function get_stickerpack():String
+	{
 		return meta.stickerpack;
+	}
 
 	function get_stage():String
+	{
 		return meta.stage;
+	}
 
 	function get_opponent():String
+	{
 		return meta.opponent;
+	}
 
 	function get_player():String
+	{
 		return meta.player;
+	}
 
 	function get_gf():String
+	{
 		return meta.gf;
+	}
 
 	function get_events():Array<EventData>
+	{
 		return chart.events;
+	}
 
 	inline function get_instPath():String
+	{
 		return '$path/inst';
+	}
 
 	inline function get_opponentPath():String
+	{
 		return '$path/opponent';
+	}
 
 	inline function get_playerPath():String
+	{
 		return '$path/player';
+	}
 
 	inline function get_path():String
 	{
@@ -186,5 +221,7 @@ class Song implements IPlayStateScriptedClass
 	public function onGameOver(event:ScriptEvent) {}
 
 	public function toString():String
+	{
 		return '$id | $name | $bpm';
+	}
 }

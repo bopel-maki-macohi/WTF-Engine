@@ -19,13 +19,14 @@ class GameOverSubState extends FunkinSubState
 	var music:FlxSound;
 	var startSound:FlxSound;
 
+	var player:Character;
 	var character:Character;
+	var id:String;
 
 	override public function create()
 	{
 		super.create();
 
-		// Increments the death counter
 		PlayState.instance.deaths++;
 
 		_parentState.persistentDraw = false;
@@ -34,42 +35,21 @@ class GameOverSubState extends FunkinSubState
 		menuConductor.beatHit.add(beatHit);
 		menuConductor.reset(100);
 
-		music = FunkinSound.load('play/music/gameover', 1, true, true, false);
-
-		startSound = FunkinSound.load('play/sounds/gameover/start', 1, false);
-		startSound.onComplete = () -> music.play();
+		player = PlayState.instance.stage.player;
+		id = player.meta.death ?? player?.id ?? 'bf';
 
 		buildCharacter();
+
+		music = FunkinSound.load(getPath('music'), 1, true, true, false);
+
+		startSound = FunkinSound.load(getPath('start'), 1, false);
+		startSound.onComplete = () -> music.play();
 
 		if (character != null)
 		{
 			PlayState.instance.setCameraTarget(character);
 			FlxG.camera.active = true;
 		}
-	}
-
-	function buildCharacter()
-	{
-		var player:Character = PlayState.instance.stage.player;
-
-		if (player == null)
-			return;
-
-		// Characters can use the death of another character
-		// If that isn't the case, go by its id
-		final id:String = player.meta.death ?? player.id;
-
-		character = CharacterRegistry.instance.fetchCharacter('$id-death');
-
-		// Don't do the actual character stuff if it's null
-		// Because I guess you never know when the death sprite doesn't exist
-		if (character == null)
-			return;
-
-		character.scrollFactor.copyFrom(player.scrollFactor);
-		character.setPosition(player.x, player.y);
-		character.playAnimation('start');
-		add(character);
 	}
 
 	override public function update(elapsed:Float)
@@ -84,6 +64,26 @@ class GameOverSubState extends FunkinSubState
 			skip();
 		if (controls.BACK)
 			PlayState.instance.exit();
+	}
+
+	function buildCharacter()
+	{
+		character = CharacterRegistry.instance.fetchCharacter('$id-death');
+
+		// Don't do the actual character stuff if it's null
+		// Because I guess you never know when the death sprite doesn't exist
+		if (character == null)
+			return;
+
+		character.scrollFactor.copyFrom(player.scrollFactor);
+		character.setPosition(player.x, player.y);
+		character.playAnimation('start');
+		add(character);
+	}
+
+	function getPath(id:String):String
+	{
+		return '${character?.charPath}/$id';
 	}
 
 	function skip()
@@ -101,7 +101,7 @@ class GameOverSubState extends FunkinSubState
 		// Or else the character keeps bopping
 		menuConductor.reset();
 
-		FunkinSound.playOnce('play/sounds/gameover/end');
+		FunkinSound.playOnce(getPath('end'));
 		FlxTimer.wait(1, () -> FlxG.camera.fade(0xFF000000, 2, false, close));
 	}
 

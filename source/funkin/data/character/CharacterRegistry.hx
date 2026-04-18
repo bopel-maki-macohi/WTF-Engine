@@ -14,7 +14,6 @@ class CharacterRegistry extends BaseRegistry<CharacterData>
 	public static var instance:CharacterRegistry;
 
 	var parser(default, null) = new JsonParser<CharacterData>();
-
 	var scripted:StringMap<String> = new StringMap<String>();
 
 	public function new()

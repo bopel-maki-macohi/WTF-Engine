@@ -9,23 +9,17 @@ class NoteSplash extends FunkinSprite
 {
 	public var strum:StrumSprite;
 
-	public function new()
+	public function buildSprite(style:Style)
 	{
-		super();
-
-		buildSprite();
-	}
-
-	public function buildSprite()
-	{
-		loadSprite('play/ui/note/splashes', 1.35, 82, 85);
+		loadSprite(style.getPath('splashes'), style.noteSplash.scale, style.noteSplash.width, style.noteSplash.height);
 
 		for (i in 0...Constants.NOTE_COUNT)
 		{
 			var direction:NoteDirection = NoteDirection.fromInt(i);
-			var frame:Int = direction * 3;
+			var frames:Array<Int> = style.getNoteFrames(style.noteSplash.animations, direction);
+			var framerate:Int = Std.int(Math.max(1, style.noteSplash.framerate));
 
-			addAnimation(direction.name, [frame, frame + 1, frame + 2], 15, false);
+			addAnimation(direction.name, frames, framerate, false);
 		}
 
 		animation.onFinish.add(_ -> kill());
@@ -34,6 +28,9 @@ class NoteSplash extends FunkinSprite
 	public function play(strum:StrumSprite)
 	{
 		this.strum = strum;
+
+		if (graphic == null)
+			kill();
 
 		playAnimation(strum.direction.name);
 		updatePosition();

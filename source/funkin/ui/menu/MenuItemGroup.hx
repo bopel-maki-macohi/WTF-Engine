@@ -86,5 +86,7 @@ class MenuItemGroup extends FlxTypedGroup<MenuItem>
 	}
 
 	inline function get_item():MenuItem
+	{
 		return members[selected];
+	}
 }

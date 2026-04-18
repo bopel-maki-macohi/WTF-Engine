@@ -17,7 +17,9 @@ class ScreenshotPlugin extends FlxBasic
 	var tookScreenshot:Bool = false;
 
 	public static function init()
+	{
 		FlxG.plugins.addPlugin(new ScreenshotPlugin());
+	}
 
 	override public function update(elapsed:Float)
 	{

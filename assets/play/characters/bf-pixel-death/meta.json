@@ -1,0 +1,22 @@
+{
+    "name": "Boyfriend (Pixel) (Death)",
+    "width": 61,
+    "height": 65,
+    "scale": 3.5,
+    "globalOffset": [100, -250],
+    "cameraOffset": [0, 0],
+    "animations": [
+        {
+            "name": "start",
+            "frames": [0, 1, 2]
+        },
+        {
+            "name": "loop",
+            "frames": [3, 4, 2]
+        },
+        {
+            "name": "end",
+            "frames": [5, 6, 2]
+        }
+    ]
+}

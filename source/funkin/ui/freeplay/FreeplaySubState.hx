@@ -383,10 +383,14 @@ class FreeplaySubState extends FunkinSubState
 	}
 
 	inline function get_song():Song
+	{
 		return capsules.song;
+	}
 
 	inline function get_difficulty():String
+	{
 		return diffText.difficulty;
+	}
 
 	public static function build(skipIntro:Bool = true):FunkinState
 	{

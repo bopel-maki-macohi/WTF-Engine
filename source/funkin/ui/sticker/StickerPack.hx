@@ -22,10 +22,14 @@ class StickerPack
 	}
 
 	public function buildSticker(id:String):StickerSprite
+	{
 		return new StickerSprite(this.id, id);
+	}
 
 	public function pickRandom():String
+	{
 		return FlxG.random.getObject(images);
+	}
 
 	function get_name():String
 	{
@@ -61,5 +65,7 @@ class StickerPack
 	}
 
 	public function toString():String
+	{
 		return '$id | $name';
+	}
 }

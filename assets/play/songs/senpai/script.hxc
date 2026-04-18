@@ -1,0 +1,86 @@
+import flixel.util.FlxTimer;
+import funkin.audio.FunkinSound;
+import funkin.play.character.Character;
+import funkin.play.cutscene.dialogue.DialogueCutscene;
+import funkin.play.song.Song;
+import funkin.play.Playlist;
+import funkin.play.PlayState;
+
+class SenpaiSong extends Song
+{
+    var seenCutscene:Bool = false;
+
+    var sentpajim:Bool;
+    var noteCount:Int;
+
+    public function new()
+    {
+        super("senpai");
+    }
+
+    override function onCountdownStart(event:CountdownScriptEvent)
+    {
+        super.onCountdownStart(event);
+
+        if (seenCutscene || !Playlist.isStory) return;
+        seenCutscene = true;
+
+        event.cancel();
+
+        PlayState.instance.startCutscene(new DialogueCutscene(id, () ->
+        {
+            PlayState.instance.startCountdown();
+        }));
+    }
+
+    override function onSongLoaded(event:SongLoadScriptEvent)
+    {
+        super.onSongLoaded(event);
+
+        // 1/2000 chance of occurring
+        sentpajim = FlxG.random.bool(0.05);
+        noteCount = 0;
+    }
+
+    override function onNoteHit(event:NoteScriptEvent)
+    {
+        super.onNoteHit(event);
+
+        if (event.note.isPlayer) return;
+
+        var opponent:Character = PlayState.instance.stage.opponent;
+
+        noteCount++;
+
+        if (sentpajim && noteCount > 3 && opponent?.hasAnimation("sentpajim"))
+        {
+            // Prevents singing from overriding the animation
+            event.note.kind = "noanim";
+
+            opponent.playAnimation("sentpajim");
+            opponent.screenCenter();
+            opponent.centerOffsets();
+            opponent.scrollFactor.set();
+
+            PlayState.instance.stage.remove(opponent, true);
+            PlayState.instance.add(opponent);
+            
+            PlayState.instance.camHUD.visible = false;
+            PlayState.instance.stage.visible = false;
+
+            PlayState.instance.songActive = false;
+
+            FlxG.camera.active = false;
+
+            FunkinSound.stopAllSounds(true);
+            FlxTimer.wait(0.1, PlayState.instance.endSong);
+        }
+    }
+
+    override function onDestroy(event:ScriptEvent)
+    {
+        super.onDestroy(event);
+
+        seenCutscene = false;
+    }
+}

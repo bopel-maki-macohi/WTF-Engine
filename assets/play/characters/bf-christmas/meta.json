@@ -1,12 +1,13 @@
 {
     "name": "Boyfriend (Christmas)",
-    "frameWidth": 266,
-    "frameHeight": 248,
+    "width": 266,
+    "height": 248,
     "globalOffset": [0, -350],
     "cameraOffset": [-100, -100],
+    "pause": "bf",
     "death": "bf",
     "icon": {
-        "image": "bf",
+        "id": "bf",
         "flipX": true
     },
     "flipX": true,

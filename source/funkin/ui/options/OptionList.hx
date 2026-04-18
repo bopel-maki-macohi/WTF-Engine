@@ -98,9 +98,11 @@ class OptionList extends FlxTypedGroup<Option>
 		option.value += option.step * change;
 
 		if (lastValue != option.value)
+		{
 			option.x += 10 * (change > 0 ? 1 : -1);
 
-		FunkinSound.playOnce('ui/sounds/scroll');
+			FunkinSound.playOnce('ui/sounds/scroll');
+		}
 	}
 
 	function select()
@@ -131,8 +133,12 @@ class OptionList extends FlxTypedGroup<Option>
 	}
 
 	inline function get_option():Option
+	{
 		return members[selected];
+	}
 
 	inline function get_controls():Controls
+	{
 		return Controls.instance;
+	}
 }

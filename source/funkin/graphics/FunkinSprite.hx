@@ -11,7 +11,9 @@ import flixel.util.FlxColor;
 class FunkinSprite extends FlxSprite
 {
 	public static function create(x:Float, y:Float, id:String, scale:Float = 1, width:Int = 0, height:Int = 0):FunkinSprite
+	{
 		return new FunkinSprite(x, y).loadSprite(id, scale, width, height);
+	}
 
 	public function loadSprite(id:String, scale:Float = 1, width:Int = 0, height:Int = 0):FunkinSprite
 	{
@@ -24,8 +26,12 @@ class FunkinSprite extends FlxSprite
 
 		// Properly loads the graphic
 		loadGraphic(graphic, width > 0 || height > 0, width, height);
-		setGraphicSize(Std.int(this.width * Constants.ZOOM * scale));
-		updateHitbox();
+
+		if (graphic != null)
+		{
+			setGraphicSize(Std.int(this.width * Constants.ZOOM * scale));
+			updateHitbox();
+		}
 
 		return this;
 	}
@@ -41,7 +47,9 @@ class FunkinSprite extends FlxSprite
 	}
 
 	public function addAnimation(name:String, frames:Array<Int>, framerate:Int = 10, looped:Bool = true)
+	{
 		animation.add(name, frames, framerate, looped);
+	}
 
 	public function playAnimation(name:String, force:Bool = false)
 	{
@@ -51,10 +59,14 @@ class FunkinSprite extends FlxSprite
 	}
 
 	public function hasAnimation(name:String):Bool
+	{
 		return animation.exists(name);
+	}
 
 	public function getCurrentAnimation():String
+	{
 		return animation.curAnim?.name ?? '';
+	}
 
 	override public function clone():FunkinSprite
 	{

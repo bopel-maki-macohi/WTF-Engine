@@ -1,11 +1,11 @@
 {
     "name": "Monster (Christmas)",
-    "frameWidth": 232,
-    "frameHeight": 331,
+    "width": 232,
+    "height": 331,
     "globalOffset": [30, -460],
     "cameraOffset": [100, -80],
     "icon": {
-        "image": "monster"
+        "id": "monster"
     },
     "animations": [
         {

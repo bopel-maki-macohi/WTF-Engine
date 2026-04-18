@@ -30,22 +30,26 @@ class Strumline extends FlxGroup
 	public var holdNoteHit(default, null) = new FlxTypedSignal<HoldNoteSprite->Void>();
 	public var holdNoteDrop(default, null) = new FlxTypedSignal<HoldNoteSprite->Void>();
 
-	public function new(isPlayer:Bool)
+	var dirty:Bool = false;
+	var style:Style;
+
+	public function new(style:Style, isPlayer:Bool)
 	{
 		super();
 
+		this.style = style;
 		this.isPlayer = isPlayer;
 
 		strums = new FlxTypedGroup<StrumSprite>();
 		add(strums);
 
-		noteSplashes = new FlxTypedGroup<NoteSplash>(Constants.NOTE_COUNT);
+		noteSplashes = new FlxTypedGroup<NoteSplash>();
 		add(noteSplashes);
 
 		holdNotes = new FlxTypedGroup<HoldNoteSprite>();
 		add(holdNotes);
 
-		holdCovers = new FlxTypedGroup<HoldNoteCover>(Constants.NOTE_COUNT);
+		holdCovers = new FlxTypedGroup<HoldNoteCover>();
 		add(holdCovers);
 
 		notes = new FlxTypedGroup<NoteSprite>();
@@ -55,6 +59,7 @@ class Strumline extends FlxGroup
 		for (direction in 0...Constants.NOTE_COUNT)
 		{
 			var strum:StrumSprite = new StrumSprite(direction);
+			strum.buildSprite(style);
 			strums.add(strum);
 		}
 
@@ -84,6 +89,10 @@ class Strumline extends FlxGroup
 
 			// Creates a note
 			var note:NoteSprite = notes.recycle(NoteSprite);
+
+			if (note.graphic == null)
+				note.buildSprite(style);
+
 			note.y = -9999;
 
 			note.time = time;
@@ -96,6 +105,10 @@ class Strumline extends FlxGroup
 			if (length > 25)
 			{
 				var holdNote:HoldNoteSprite = holdNotes.recycle(HoldNoteSprite);
+
+				if (holdNote.graphic == null)
+					holdNote.buildSprite(style);
+
 				holdNote.y = -9999;
 
 				holdNote.time = time;
@@ -161,7 +174,7 @@ class Strumline extends FlxGroup
 			if (holdNote.wasHit)
 			{
 				// Drops the hold note
-				if (!holdNote.direction.pressed && isPlayer && holdNote.length > 100)
+				if (!holdNote.direction.pressed && isPlayer && holdNote.length > 100 && !dirty)
 				{
 					holdNote.kill();
 					holdNoteDrop.dispatch(holdNote);
@@ -186,7 +199,7 @@ class Strumline extends FlxGroup
 		{
 			final pressed:Bool = strum.direction.pressed;
 
-			if (strum.confirmTime > 0)
+			if (strum.confirmTime > 0 || dirty)
 				return;
 
 			if (pressed && isPlayer)
@@ -199,6 +212,8 @@ class Strumline extends FlxGroup
 	override public function refresh()
 	{
 		super.refresh();
+
+		dirty = true;
 
 		strums.forEach(strum ->
 		{
@@ -214,6 +229,8 @@ class Strumline extends FlxGroup
 		holdCovers.forEachAlive(cover -> cover.updatePosition());
 
 		process();
+
+		dirty = false;
 	}
 
 	public function load(notes:Array<SongNoteData>, speed:Float)
@@ -246,6 +263,9 @@ class Strumline extends FlxGroup
 		var splash:NoteSplash = noteSplashes.recycle(NoteSplash);
 		var strum:StrumSprite = getStrum(direction);
 
+		if (splash.graphic == null)
+			splash.buildSprite(style);
+
 		splash.play(strum);
 	}
 
@@ -253,6 +273,9 @@ class Strumline extends FlxGroup
 	{
 		var cover:HoldNoteCover = holdCovers.recycle(HoldNoteCover);
 		var strum:StrumSprite = getStrum(holdNote.direction);
+
+		if (cover.graphic == null)
+			cover.buildSprite(style);
 
 		cover.play(holdNote, strum);
 	}
@@ -271,10 +294,14 @@ class Strumline extends FlxGroup
 	}
 
 	public function getMayHitNotes():Array<NoteSprite>
+	{
 		return notes.members.filter(note -> return note.alive && note.mayHit && !note.willMiss);
+	}
 
 	public function getStrum(direction:NoteDirection):StrumSprite
+	{
 		return strums.members[direction];
+	}
 
 	function set_speed(value:Float):Float
 	{
@@ -289,7 +316,7 @@ class Strumline extends FlxGroup
 		return value;
 	}
 
-	function set_x(value:Float):Float
+	inline function set_x(value:Float):Float
 	{
 		this.x = value;
 

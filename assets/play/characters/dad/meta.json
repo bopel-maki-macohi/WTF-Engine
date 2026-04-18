@@ -1,7 +1,7 @@
 {
     "name": "Daddy Dearest",
-    "frameWidth": 249,
-    "frameHeight": 315,
+    "width": 249,
+    "height": 315,
     "globalOffset": [0, -440],
     "cameraOffset": [100, -80],
     "icon": {},

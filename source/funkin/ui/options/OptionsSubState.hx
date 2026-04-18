@@ -6,7 +6,6 @@ import flixel.tweens.FlxTween;
 import funkin.audio.FunkinSound;
 import funkin.graphics.FunkinSprite;
 import funkin.graphics.FunkinText;
-import funkin.ui.menu.MainMenuState;
 
 /**
  * The sub state where the player is able to customize their settings and preferences.
@@ -71,8 +70,8 @@ class OptionsSubState extends FunkinSubState
 		options.addOption('showTimer', 'show timer');
 
 		#if HAS_FPS_COUNTER
-		options.addOption('showFPS', 'debug display');
-		options.addOption('showFPSBGOpacity', 'debug display bg', 50, 0, 100);
+		options.addOption('showFPS', 'show fps');
+		options.addOption('fpsBGOpacity', 'fps background', 10, 0, 100);
 		#end
 		options.addOption('fpsCap', 'fps cap', 10, 60, 500);
 

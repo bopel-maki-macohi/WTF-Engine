@@ -1,0 +1,32 @@
+{
+    "name": "Funkin",
+    "artist": "VirtuGuy",
+    "scale": 1,
+    "note": {
+        "width": 84,
+        "height": 84
+    },
+    "noteSplash": {
+        "width": 82,
+        "height": 85,
+        "scale": 1.35,
+        "framerate": 15,
+        "animations": {
+            "left": [0, 1, 2],
+            "down": [3, 4, 5],
+            "up": [6, 7, 8],
+            "right": [9, 10, 11]
+        }
+    },
+    "holdCover": {
+        "width": 44,
+        "height": 23,
+        "framerate": 30,
+        "animations": {
+            "left": [0, 1, 2],
+            "down": [3, 4, 5],
+            "up": [6, 7, 8],
+            "right": [9, 10, 11]
+        }
+    }
+}

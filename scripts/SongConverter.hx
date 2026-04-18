@@ -68,6 +68,7 @@ class SongConverter
 		wtfMeta.name = meta.songName;
 		wtfMeta.bpm = timeChanges[0].bpm;
 		wtfMeta.artist = meta.artist;
+		wtfMeta.style = meta.playData.noteStyle;
 		wtfMeta.difficulties = meta.playData.difficulties;
 		wtfMeta.rating = meta.playData.ratings;
 		wtfMeta.stage = meta.playData.stage;

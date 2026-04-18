@@ -1,7 +1,7 @@
 {
     "name": "Pico",
-    "frameWidth": 240,
-    "frameHeight": 244,
+    "width": 240,
+    "height": 244,
     "globalOffset": [0, -350],
     "cameraOffset": [100, -100],
     "icon": {},

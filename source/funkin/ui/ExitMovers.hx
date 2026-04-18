@@ -22,7 +22,9 @@ class ExitMovers
 	public function new() {}
 
 	public function add(object:FlxObject, ?x:Float, ?y:Float)
+	{
 		movers.set(object, {x: x, y: y});
+	}
 
 	public function intro()
 	{

@@ -59,7 +59,9 @@ class FunkinBar extends FlxSpriteGroup
 	}
 
 	inline function get_percent():Float
+	{
 		return value / max;
+	}
 
 	inline function get_fillPosition():Float
 	{

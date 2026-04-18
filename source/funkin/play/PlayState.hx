@@ -14,6 +14,7 @@ import funkin.data.event.EventData;
 import funkin.data.event.EventRegistry;
 import funkin.data.song.SongData.SongNoteData;
 import funkin.data.stage.StageRegistry;
+import funkin.data.style.StyleRegistry;
 import funkin.graphics.FunkinBar;
 import funkin.graphics.FunkinSprite;
 import funkin.graphics.FunkinText;
@@ -23,6 +24,7 @@ import funkin.play.character.Character;
 import funkin.play.character.HealthIcon;
 import funkin.play.components.Countdown;
 import funkin.play.components.Popups;
+import funkin.play.cutscene.BaseCutscene;
 import funkin.play.note.HoldNoteSprite;
 import funkin.play.note.NoteDirection;
 import funkin.play.note.NoteSprite;
@@ -53,20 +55,23 @@ class PlayState extends FunkinState
 	public var deaths:Int = 0;
 
 	public var camFollow:FlxObject;
+	public var cutscene:BaseCutscene;
+
 	public var stage:Stage;
+	public var style:Style;
+
+	public var songLoaded:Bool;
+	public var songStarted:Bool;
+	public var songEnded:Bool;
+	public var songActive:Bool;
+
+	public var health:Float;
+	public var healthLerp:Float;
+
+	public var camHUD:FlxCamera;
 
 	var events:Array<EventData>;
 	var voices:Voices;
-
-	var songLoaded:Bool;
-	var songStarted:Bool;
-	var songEnded:Bool;
-	var songActive:Bool;
-
-	var health:Float;
-	var healthLerp:Float;
-
-	var camHUD:FlxCamera;
 
 	var opponentStrumline:Strumline;
 	var playerStrumline:Strumline;
@@ -84,6 +89,7 @@ class PlayState extends FunkinState
 		super.create();
 
 		instance = this;
+		style = StyleRegistry.instance.fetch(song.style);
 
 		//
 		// CAMERAS
@@ -101,14 +107,14 @@ class PlayState extends FunkinState
 		// HUD
 		//
 
-		opponentStrumline = new Strumline(false);
+		opponentStrumline = new Strumline(style, false);
 		opponentStrumline.x = 325;
 		opponentStrumline.camera = camHUD;
 		opponentStrumline.noteHit.add(opponentNoteHit);
 		opponentStrumline.holdNoteHit.add(opponentHoldNoteHit);
 		add(opponentStrumline);
 
-		playerStrumline = new Strumline(true);
+		playerStrumline = new Strumline(style, true);
 		playerStrumline.x = FlxG.width - opponentStrumline.x;
 		playerStrumline.camera = camHUD;
 		playerStrumline.noteHit.add(playerNoteHit);
@@ -117,7 +123,7 @@ class PlayState extends FunkinState
 		playerStrumline.holdNoteDrop.add(playerHoldNoteDrop);
 		add(playerStrumline);
 
-		healthBorder = FunkinSprite.create(0, 0, 'play/ui/bar');
+		healthBorder = FunkinSprite.create(0, 0, 'play/bar');
 		healthBorder.screenCenter(X);
 		healthBorder.active = false;
 		healthBorder.camera = camHUD;
@@ -144,7 +150,7 @@ class PlayState extends FunkinState
 		scoreText.zIndex = 2;
 		add(scoreText);
 
-		countdown = new Countdown();
+		countdown = new Countdown(style);
 		countdown.camera = camHUD;
 		add(countdown);
 
@@ -155,7 +161,7 @@ class PlayState extends FunkinState
 		stage = StageRegistry.instance.fetchStage(song.stage);
 		add(stage);
 
-		popups = new Popups();
+		popups = new Popups(style);
 		add(popups);
 
 		loadCharacters();
@@ -264,6 +270,8 @@ class PlayState extends FunkinState
 		if (playerIcon != null)
 			playerIcon.y = healthBar.y - playerIcon.height / 2;
 
+		playerStrumline.isPlayer = !Preferences.botplay;
+
 		opponentStrumline.refresh();
 		playerStrumline.refresh();
 	}
@@ -335,10 +343,7 @@ class PlayState extends FunkinState
 
 		FlxG.camera.zoom = stage.zoom;
 
-		//
-		// STRUMLINE
-		//
-
+		// Loads the strumline
 		var notes:Array<SongNoteData> = song.getNotes(difficulty);
 		var speed:Float = song.getSpeed(difficulty);
 
@@ -350,25 +355,20 @@ class PlayState extends FunkinState
 		opponentStrumline.clean();
 		playerStrumline.clean();
 
-		playerStrumline.isPlayer = !Preferences.botplay;
-
 		opponentStrumline.load(notes.filter(note -> return note.d >= Constants.NOTE_COUNT), speed);
 		playerStrumline.load(notes.filter(note -> return note.d < Constants.NOTE_COUNT), speed);
 
-		//
-		// CONDUCTOR
-		//
-
+		// Resets conductor stuff
 		conductor.reset(song.bpm);
 		conductor.time = -conductor.crotchet * 4;
-
-		startCountdown();
 
 		FunkinSound.stopAllSounds(true);
 
 		#if HAS_DISCORD_RPC
 		DiscordRPC.updatePresence('${song.name} - ${difficulty.toUpperCase()}');
 		#end
+
+		startCountdown();
 	}
 
 	public function startCountdown()
@@ -383,6 +383,19 @@ class PlayState extends FunkinState
 		countdown.start();
 	}
 
+	public function startCutscene(cutscene:BaseCutscene)
+	{
+		if (cutscene == null)
+			return;
+
+		this.cutscene?.destroy();
+		this.cutscene = cutscene;
+
+		cutscene.start();
+
+		add(cutscene);
+	}
+
 	public function setCameraTarget(target:Character, instant:Bool = false)
 	{
 		// Why????
@@ -391,6 +404,9 @@ class PlayState extends FunkinState
 
 		var pos:FlxPoint = target.getGraphicMidpoint();
 		var offset:FlxPoint = MathUtil.arrayToPoint(target.meta.cameraOffset);
+
+		if (target.flipX)
+			offset.x = -offset.x;
 
 		PlayState.instance.camFollow.setPosition(pos.x + offset.x, pos.y + offset.y);
 
@@ -769,9 +785,7 @@ class PlayState extends FunkinState
 			tween.active = false;
 		});
 
-		FunkinSound.music.pause();
-
-		FlxG.sound.defaultSoundGroup.pause();
+		FlxG.sound.list.forEachAlive(sound -> sound.pause());
 		FlxG.camera.active = false;
 	}
 
@@ -793,9 +807,7 @@ class PlayState extends FunkinState
 			tween.active = true;
 		});
 
-		FunkinSound.music.resume();
-
-		FlxG.sound.defaultSoundGroup.resume();
+		FlxG.sound.list.forEachAlive(sound -> sound.resume());
 		FlxG.camera.active = true;
 	}
 

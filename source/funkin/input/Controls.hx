@@ -54,73 +54,119 @@ class Controls
 	public var SORT_RIGHT(get, never):Bool;
 
 	inline function get_NOTE_LEFT():Bool
+	{
 		return getAction(NoteLeft).check();
+	}
 
 	inline function get_NOTE_DOWN():Bool
+	{
 		return getAction(NoteDown).check();
+	}
 
 	inline function get_NOTE_UP():Bool
+	{
 		return getAction(NoteUp).check();
+	}
 
 	inline function get_NOTE_RIGHT():Bool
+	{
 		return getAction(NoteRight).check();
+	}
 
 	inline function get_NOTE_LEFT_P():Bool
+	{
 		return getAction(NoteLeft).checkPressed();
+	}
 
 	inline function get_NOTE_DOWN_P():Bool
+	{
 		return getAction(NoteDown).checkPressed();
+	}
 
 	inline function get_NOTE_UP_P():Bool
+	{
 		return getAction(NoteUp).checkPressed();
+	}
 
 	inline function get_NOTE_RIGHT_P():Bool
+	{
 		return getAction(NoteRight).checkPressed();
+	}
 
 	inline function get_UI_LEFT():Bool
+	{
 		return getAction(UILeft).check();
+	}
 
 	inline function get_UI_DOWN():Bool
+	{
 		return getAction(UIDown).check();
+	}
 
 	inline function get_UI_UP():Bool
+	{
 		return getAction(UIUp).check();
+	}
 
 	inline function get_UI_RIGHT():Bool
+	{
 		return getAction(UIRight).check();
+	}
 
 	inline function get_UI_LEFT_P():Bool
+	{
 		return getAction(UILeft).checkPressed();
+	}
 
 	inline function get_UI_DOWN_P():Bool
+	{
 		return getAction(UIDown).checkPressed();
+	}
 
 	inline function get_UI_UP_P():Bool
+	{
 		return getAction(UIUp).checkPressed();
+	}
 
 	inline function get_UI_RIGHT_P():Bool
+	{
 		return getAction(UIRight).checkPressed();
+	}
 
 	inline function get_ACCEPT():Bool
+	{
 		return getAction(Accept).checkPressed();
+	}
 
 	inline function get_BACK():Bool
+	{
 		return getAction(Back).checkPressed();
+	}
 
 	inline function get_PAUSE():Bool
+	{
 		return getAction(Pause).checkPressed();
+	}
 
 	inline function get_RESET():Bool
+	{
 		return getAction(Reset).checkPressed();
+	}
 
 	inline function get_FAVORITE():Bool
+	{
 		return getAction(Favorite).checkPressed();
+	}
 
 	inline function get_SORT_LEFT():Bool
+	{
 		return getAction(SortLeft).checkPressed();
+	}
 
 	inline function get_SORT_RIGHT():Bool
+	{
 		return getAction(SortRight).checkPressed();
+	}
 
 	var gamepadConnected:Bool = false;
 
@@ -139,7 +185,9 @@ class Controls
 	}
 
 	inline function getAction(id:Control):FunkinAction
+	{
 		return actions.get(id);
+	}
 
 	function keyDown(event:KeyboardEvent)
 	{

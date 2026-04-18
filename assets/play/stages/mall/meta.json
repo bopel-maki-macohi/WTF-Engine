@@ -22,8 +22,8 @@
             "position": [-50, 10],
             "scroll": [0.3, 0.3],
             "scale": 0.8,
-            "frameWidth": 997,
-            "frameHeight": 121,
+            "width": 997,
+            "height": 121,
             "animations": [
                 {
                     "name": "idle",
@@ -45,8 +45,8 @@
         {
             "image": "boppers-bottom",
             "position": [-180, -130],
-            "frameWidth": 810,
-            "frameHeight": 277,
+            "width": 810,
+            "height": 277,
             "animations": [
                 {
                     "name": "idle",
@@ -62,8 +62,8 @@
             "image": "santa",
             "position": [-760, -30],
             "scale": 1.1,
-            "frameWidth": 219,
-            "frameHeight": 254,
+            "width": 219,
+            "height": 254,
             "animations": [
                 {
                     "name": "idle",

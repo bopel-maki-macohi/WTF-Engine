@@ -51,8 +51,12 @@ class FunkinSubState extends FlxSubState
 	function sectionHit(section:Int) {}
 
 	inline function get_conductor():Conductor
+	{
 		return Conductor.instance;
+	}
 
 	inline function get_controls():Controls
+	{
 		return Controls.instance;
+	}
 }

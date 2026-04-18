@@ -49,5 +49,7 @@ class ScrollingText extends FunkinText
 	}
 
 	override function get_width():Float
+	{
 		return super.get_width() + spacing * scale.x;
+	}
 }

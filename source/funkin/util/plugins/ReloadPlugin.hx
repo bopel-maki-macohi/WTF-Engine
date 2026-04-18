@@ -12,7 +12,9 @@ class ReloadPlugin extends FlxBasic
 	public static var instance:ReloadPlugin;
 
 	public static function init()
+	{
 		FlxG.plugins.addPlugin(new ReloadPlugin());
+	}
 
 	public function new()
 	{

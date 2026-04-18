@@ -12,7 +12,9 @@ class MathUtil
 	 * A lerp function, but it's actually framerate independent.
 	 */
 	public static inline function lerp(a:Float, b:Float, ratio:Float):Float
+	{
 		return FlxMath.lerp(a, b, FlxMath.getElapsedLerp(ratio, FlxG.elapsed));
+	}
 
 	/**
 	 * Converts an array to an `FlxPoint`.

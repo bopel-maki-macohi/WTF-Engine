@@ -14,7 +14,6 @@ class StageRegistry extends BaseRegistry<StageData>
 	public static var instance:StageRegistry;
 
 	var parser(default, null) = new JsonParser<StageData>();
-
 	var scripted:StringMap<String> = new StringMap();
 
 	public function new()

@@ -10,13 +10,6 @@ class HoldNoteCover extends FunkinSprite
 	public var holdNote:HoldNoteSprite;
 	public var strum:StrumSprite;
 
-	public function new()
-	{
-		super();
-
-		buildSprite();
-	}
-
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -27,16 +20,17 @@ class HoldNoteCover extends FunkinSprite
 			kill();
 	}
 
-	public function buildSprite()
+	public function buildSprite(style:Style)
 	{
-		loadSprite('play/ui/note/hold-covers', 1, 44, 23);
+		loadSprite(style.getPath('hold-covers'), style.holdCover.scale, style.holdCover.width, style.holdCover.height);
 
 		for (i in 0...Constants.NOTE_COUNT)
 		{
 			var direction:NoteDirection = NoteDirection.fromInt(i);
-			var frame:Int = direction * 3;
+			var frames:Array<Int> = style.getNoteFrames(style.holdCover.animations, direction);
+			var framerate:Int = style.holdCover.framerate;
 
-			addAnimation(direction.name, [frame, frame + 1, frame + 2], 30);
+			addAnimation(direction.name, frames, framerate);
 		}
 	}
 
@@ -44,6 +38,9 @@ class HoldNoteCover extends FunkinSprite
 	{
 		this.holdNote = holdNote;
 		this.strum = strum;
+
+		if (graphic == null)
+			kill();
 
 		playAnimation(strum.direction.name);
 		updatePosition();

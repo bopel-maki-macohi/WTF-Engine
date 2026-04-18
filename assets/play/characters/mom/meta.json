@@ -1,7 +1,7 @@
 {
     "name": "Mommy Mearest",
-    "frameWidth": 323,
-    "frameHeight": 339,
+    "width": 323,
+    "height": 339,
     "globalOffset": [0, -460],
     "cameraOffset": [100, -80],
     "icon": {},

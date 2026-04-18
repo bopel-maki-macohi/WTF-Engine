@@ -47,11 +47,17 @@ class BaseRegistry<T>
 	}
 
 	public function list():Array<String>
+	{
 		return entries.keys().array();
+	}
 
 	public function exists(id:String):Bool
+	{
 		return entries.exists(id);
+	}
 
 	public function clear()
+	{
 		entries.clear();
+	}
 }

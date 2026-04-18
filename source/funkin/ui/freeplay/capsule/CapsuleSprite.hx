@@ -204,5 +204,7 @@ class CapsuleSprite extends FlxSpriteGroup
 	}
 
 	inline function get_canMoveText():Bool
+	{
 		return songText.width > clipWidth && selected && !FlxFlicker.isFlickering(songText);
+	}
 }

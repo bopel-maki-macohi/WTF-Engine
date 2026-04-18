@@ -8,12 +8,14 @@ import openfl.utils.Assets;
 class FileUtil
 {
 	public static function getText(id:String):String
+	{
 		return try
 		{
 			Assets.getText(id);
 		}
 		catch (e)
 			'';
+	}
 
 	public static function listFolders(id:String):Array<String>
 	{

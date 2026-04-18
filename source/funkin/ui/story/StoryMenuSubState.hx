@@ -295,10 +295,14 @@ class StoryMenuSubState extends FunkinSubState
 	}
 
 	inline function get_level():Level
+	{
 		return titleGroup.level;
+	}
 
 	inline function get_difficulty():String
+	{
 		return diffText.difficulty;
+	}
 
 	public static function build(skipIntro:Bool = true):FunkinState
 	{

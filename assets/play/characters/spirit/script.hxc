@@ -1,0 +1,22 @@
+import flixel.addons.effects.FlxTrail;
+import funkin.play.character.Character;
+import funkin.play.PlayState;
+
+class SpiritCharacter extends Character
+{
+    public function new()
+    {
+        super("spirit");
+    }
+
+    override function onCreate(event:ScriptEvent)
+    {
+        super.onCreate(event);
+
+        var trail:FlxTrail = new FlxTrail(this.superClass, null, 4, 24, 0.3, 0.069);
+        trail.zIndex = zIndex - 1;
+
+        PlayState.instance.stage.add(trail);
+        PlayState.instance.stage.refresh();
+    }
+}

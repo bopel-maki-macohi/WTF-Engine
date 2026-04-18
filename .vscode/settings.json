@@ -13,4 +13,7 @@
 	},
 	"haxe.enableExtendedIndentation": true,
 	"haxe.enableServerView": true,
+	"files.associations": {
+		"*.hxc": "haxe"
+	}
 }

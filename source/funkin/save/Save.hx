@@ -37,7 +37,7 @@ class Save
 
 		#if HAS_FPS_COUNTER
 		Main.fpsCounter.visible = options.showFPS;
-		Main.fpsCounter.backgroundOpacity = options.showFPSBGOpacity / 100;
+		Main.fpsCounter.bg.alpha = options.fpsBGOpacity / 100;
 		#end
 
 		#if HAS_DISCORD_RPC
@@ -57,10 +57,14 @@ class Save
 	//
 
 	public function setSongScore(id:String, diff:String, score:Int, force:Bool = true)
+	{
 		return setScore('song-$id', diff, score, force);
+	}
 
 	public function getSongScore(id:String, diff:String)
+	{
 		return getScore('song-$id', diff);
+	}
 
 	public function setFavorite(id:String, ?variation:String, favorite:Bool)
 	{
@@ -113,10 +117,14 @@ class Save
 	//
 
 	public function setLevelScore(id:String, diff:String, score:Int, force:Bool = true)
+	{
 		return setScore('level-$id', diff, score, force);
+	}
 
 	public function getLevelScore(id:String, diff:String):Int
+	{
 		return getScore('level-$id', diff);
+	}
 
 	public function isLevelComplete(id:String):Bool
 	{
@@ -154,20 +162,28 @@ class Save
 	}
 
 	function getScore(id:String, diff:String):Int
+	{
 		return scores.get('$id-$diff') ?? 0;
+	}
 
 	//
 	// GETTERS
 	//
 
 	inline function get_scores():StringMap<Int>
+	{
 		return data.scores;
+	}
 
 	inline function get_favorites():StringMap<Bool>
+	{
 		return data.favorites;
+	}
 
 	inline function get_options():SaveOptionsData
+	{
 		return data.options;
+	}
 
 	inline function getDefault():SaveData
 	{
@@ -179,7 +195,7 @@ class Save
 				ghostTapping: true,
 				showTimer: true,
 				showFPS: true,
-				showFPSBGOpacity: 50,
+				fpsBGOpacity: 50,
 				discordRPC: true,
 				fpsCap: 200
 			}

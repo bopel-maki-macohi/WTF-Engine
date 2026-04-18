@@ -39,10 +39,8 @@ class EventRegistry extends BaseRegistry<SongEvent>
 
 	public function handleEvent(event:String, value:Dynamic)
 	{
-		// Don't handle an event that doesn't exist
 		if (!exists(event))
 			return;
-
 		fetch(event).handle(value);
 	}
 }

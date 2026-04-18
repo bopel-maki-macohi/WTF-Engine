@@ -45,6 +45,8 @@ class Playlist
 		return true;
 	}
 
-	inline static function get_isStory():Bool
+	static inline function get_isStory():Bool
+	{
 		return level != null;
+	}
 }

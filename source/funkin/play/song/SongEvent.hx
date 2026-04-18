@@ -24,16 +24,24 @@ class SongEvent
 	}
 
 	function getInt(id:String):Int
+	{
 		return Std.int(getValue(id));
+	}
 
 	function getFloat(id:String):Float
+	{
 		return getValue(id);
+	}
 
 	function getBool(id:String):Bool
+	{
 		return getValue(id);
+	}
 
 	function getString(id:String):String
+	{
 		return Std.string(getValue(id));
+	}
 
 	function getCharacter(id:String):Character
 	{
@@ -51,11 +59,17 @@ class SongEvent
 	}
 
 	function getValue(id:String):Dynamic
+	{
 		return Reflect.field(value, id);
+	}
 
 	inline function hasValue(id:String):Bool
+	{
 		return Reflect.hasField(value, id);
+	}
 
 	public function toString():String
+	{
 		return id;
+	}
 }

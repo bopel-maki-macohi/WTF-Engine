@@ -8,6 +8,13 @@
       "url": "https://github.com/HaxeFlixel/flixel"
     },
     {
+      "name": "flixel-addons",
+      "type": "git",
+      "dir": null,
+      "ref": "75a25a3adfe6c50690444e3af54cc0ed341b3274",
+      "url": "https://github.com/HaxeFlixel/flixel-addons"
+    },
+    {
       "name": "hxcpp",
       "type": "git",
       "dir": null,
@@ -26,8 +33,10 @@
     },
     {
       "name": "json2object",
-      "type": "haxelib",
-      "version": "3.11.0"
+      "type": "git",
+      "dir": null,
+      "ref": "59e0467c953d1f26e3cbf2a070f140e2d2e8457d",
+      "url": "https://github.com/FunkinCrew/json2object"
     },
     {
       "name": "jsonpatch",

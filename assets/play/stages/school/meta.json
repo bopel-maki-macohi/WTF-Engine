@@ -1,0 +1,66 @@
+{
+    "name": "School",
+    "zoom": 1.25,
+    "opponent": {
+        "position": [-250, 350]
+    },
+    "player": {
+        "position": [250, 350]
+    },
+    "gf": {
+        "position": [0, 300]
+    },
+    "props": [
+        {
+            "image": "sky",
+            "position": [0, -50],
+            "scroll": [0.1, 0.1],
+            "scale": 3.5
+        },
+        {
+            "image": "school",
+            "position": [-350, -220],
+            "scroll": [0.75, 0.75],
+            "scale": 3
+        },
+        {
+            "image": "ground",
+            "position": [-600, 30],
+            "scale": 3.5
+        },
+        {
+            "id": "girls1",
+            "image": "girls",
+            "position": [-320, -180],
+            "scale": 3.5,
+            "width": 83,
+            "height": 70,
+            "animations": [
+                {
+                    "name": "idle",
+                    "frames": [0, 1, 2]
+                },
+                {
+                    "name": "idle-scared",
+                    "frames": [3, 4, 5]
+                }
+            ]
+        },
+        {
+            "id": "girls2",
+            "prop": "girls1",
+            "position": [200, -180]
+        },
+        {
+            "image": "tree",
+            "position": [-530, -440],
+            "scale": 3.5
+        },
+        {
+            "image": "tree",
+            "position": [440, -440],
+            "scale": 3.5,
+            "flipX": true
+        }
+    ]
+}

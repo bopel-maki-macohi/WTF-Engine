@@ -104,7 +104,9 @@ class Option extends FlxSpriteGroup
 	}
 
 	inline function get_value():Dynamic
+	{
 		return Reflect.getProperty(Preferences, id);
+	}
 
 	function get_type():OptionType
 	{

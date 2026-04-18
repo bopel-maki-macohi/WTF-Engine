@@ -40,8 +40,10 @@ class ModuleHandler
 		trace('Done loading modules.');
 	}
 
-	public static function getModule(id:String):Module
+	public static inline function getModule(id:String):Module
+	{
 		return modules.get(id);
+	}
 
 	public static function setModuleActive(id:String, active:Bool)
 	{

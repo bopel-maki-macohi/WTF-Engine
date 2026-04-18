@@ -14,6 +14,7 @@ class Constants
 	public static final IMAGE_EXT:String = 'png';
 	public static final SOUND_EXT:String = 'ogg';
 	public static final JSON_EXT:String = 'json';
+	public static final FRAG_EXT:String = 'frag';
 
 	public static final MS_PER_SEC:Int = 1000;
 	public static final SECS_PER_MIN:Int = 60;
@@ -27,7 +28,12 @@ class Constants
 	/**
 	 * This is so that the engine's levels have higher priority over custom levels.
 	 */
-	public static final DEFAULT_LEVELS:Array<String> = ['tutorial', 'week1', 'week2', 'week3', 'week4', 'week5'];
+	public static final DEFAULT_LEVELS:Array<String> = ['tutorial', 'week1', 'week2', 'week3', 'week4', 'week5', 'week6'];
+
+	/**
+	 * This is so that the engine's songs have higher priority over custom songs.
+	 */
+	public static final DEFAULT_SONGS:Array<String> = ['test'];
 
 	public static final DEFAULT_VARIATION:String = 'default';
 
@@ -60,5 +66,7 @@ class Constants
 	public static final GHOST_MISS_HEALTH:Float = -0.025;
 
 	inline static function get_VERSION():String
+	{
 		return 'v${Application.current.meta.get('version')}';
+	}
 }

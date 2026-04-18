@@ -84,8 +84,12 @@ class Conductor
 	}
 
 	inline function get_crotchet():Float
+	{
 		return Constants.SECS_PER_MIN / bpm * Constants.MS_PER_SEC;
+	}
 
 	inline function get_quaver():Float
+	{
 		return crotchet / Constants.STEPS_PER_BEAT;
+	}
 }

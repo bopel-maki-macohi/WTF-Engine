@@ -53,5 +53,7 @@ class DifficultyText extends SelectorText
 	}
 
 	inline function get_difficulty():String
+	{
 		return difficulties[selected];
+	}
 }

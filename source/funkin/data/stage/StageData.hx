@@ -38,8 +38,8 @@ typedef StagePropData =
 	@:optional
 	var prop:String;
 	var image:String;
-	var frameWidth:Int;
-	var frameHeight:Int;
+	var width:Int;
+	var height:Int;
 	var position:Array<Float>;
 	var scroll:Array<Float>;
 	@:default(1)

@@ -6,6 +6,7 @@ import funkin.data.song.SongRegistry;
 import funkin.data.stage.StageRegistry;
 import funkin.data.sticker.StickerRegistry;
 import funkin.data.story.LevelRegistry;
+import funkin.data.style.StyleRegistry;
 import funkin.modding.module.ModuleHandler;
 import funkin.play.PlayState;
 import funkin.play.Playlist;
@@ -60,6 +61,7 @@ class ModHandler
 		SongRegistry.instance.load();
 		LevelRegistry.instance.load();
 		EventRegistry.instance.load();
+		StyleRegistry.instance.load();
 		StickerRegistry.instance.load();
 
 		// Reload all the modules

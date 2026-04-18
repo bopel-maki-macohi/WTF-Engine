@@ -90,8 +90,12 @@ class MenuList extends FlxTypedGroup<FunkinText>
 	}
 
 	inline function get_size():Int
+	{
 		return countLiving();
+	}
 
 	inline function get_controls():Controls
+	{
 		return Controls.instance;
+	}
 }

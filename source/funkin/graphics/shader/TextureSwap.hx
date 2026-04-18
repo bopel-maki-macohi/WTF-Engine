@@ -11,13 +11,13 @@ class TextureSwap extends FlxShader
 	@:glFragmentSource('
         #pragma header
 
-        uniform sampler2D uTexture;
+        uniform sampler2D texture;
 
         void main()
         {
             vec2 uv = openfl_TextureCoordv;
             vec4 color = texture2D(bitmap, uv);
-            vec4 texColor = texture2D(uTexture, uv);
+            vec4 texColor = texture2D(texture, uv);
 
             if (color.a > 0.0)
             {
@@ -35,5 +35,5 @@ class TextureSwap extends FlxShader
 	}
 
 	public function loadTexture(id:String)
-		uTexture.input = Assets.getBitmapData(Paths.image(id));
+		texture.input = Assets.getBitmapData(Paths.image(id));
 }

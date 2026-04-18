@@ -52,7 +52,9 @@ class SortText extends SelectorText
 	}
 
 	inline function get_count():Int
+	{
 		return 2 + LevelRegistry.instance.list().length;
+	}
 
 	inline function get_level():Level
 	{

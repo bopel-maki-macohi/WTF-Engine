@@ -41,11 +41,17 @@ class StateMachine
 	}
 
 	public function is(state:State):Bool
+	{
 		return currentState == state;
+	}
 
 	public function canInteract():Bool
+	{
 		return currentState == Idle;
+	}
 
 	public function transitioning():Bool
+	{
 		return currentState == Transitioning;
+	}
 }

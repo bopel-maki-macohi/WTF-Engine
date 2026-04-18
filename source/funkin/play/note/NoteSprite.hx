@@ -19,29 +19,22 @@ class NoteSprite extends FunkinSprite
 	public var holdNote:HoldNoteSprite;
 	public var data:SongNoteData;
 
-	public function new()
+	public var isPlayer(get, never):Bool;
+
+	public function buildSprite(style:Style)
 	{
-		super();
-
-		// No point of having this active
-		// Not like there's animation to the sprite
-		active = false;
-
-		buildSprite();
-	}
-
-	public function buildSprite()
-	{
-		loadSprite('play/ui/note/notes', 1, 84, 84);
+		loadSprite(style.getPath('notes'), style.note.scale, style.note.width, style.note.height);
 
 		for (i in 0...Constants.NOTE_COUNT)
 		{
 			var direction:NoteDirection = NoteDirection.fromInt(i);
+			var frame:Int = direction + Constants.NOTE_COUNT * 3;
 
-			addAnimation(direction.name, [direction + Constants.NOTE_COUNT * 3]);
+			addAnimation(direction.name, [frame]);
 		}
 
-		set_direction(direction);
+		this.direction = direction;
+		this.active = false;
 	}
 
 	override public function revive()
@@ -60,7 +53,7 @@ class NoteSprite extends FunkinSprite
 		data = null;
 	}
 
-	function set_direction(value:NoteDirection):NoteDirection
+	inline function set_direction(value:NoteDirection):NoteDirection
 	{
 		value %= Constants.NOTE_COUNT;
 
@@ -69,5 +62,10 @@ class NoteSprite extends FunkinSprite
 		playAnimation(value.name);
 
 		return value;
+	}
+
+	inline function get_isPlayer():Bool
+	{
+		return data.d < Constants.NOTE_COUNT;
 	}
 }

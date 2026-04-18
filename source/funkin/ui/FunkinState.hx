@@ -41,13 +41,19 @@ class FunkinState extends FlxState
 	}
 
 	function stepHit(step:Int)
+	{
 		dispatch(new ConductorScriptEvent(StepHit, step, conductor.beat, conductor.section));
+	}
 
 	function beatHit(beat:Int)
+	{
 		dispatch(new ConductorScriptEvent(BeatHit, conductor.step, beat, conductor.section));
+	}
 
 	function sectionHit(section:Int)
+	{
 		dispatch(new ConductorScriptEvent(SectionHit, conductor.step, conductor.beat, section));
+	}
 
 	override public function destroy()
 	{
@@ -60,8 +66,12 @@ class FunkinState extends FlxState
 	}
 
 	inline function get_conductor():Conductor
+	{
 		return Conductor.instance;
+	}
 
 	inline function get_controls():Controls
+	{
 		return Controls.instance;
+	}
 }

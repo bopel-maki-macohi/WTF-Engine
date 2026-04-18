@@ -1,0 +1,35 @@
+import flixel.addons.display.FlxRuntimeShader;
+import funkin.play.stage.Stage;
+import funkin.util.FileUtil;
+
+class SchoolEvilStage extends Stage
+{
+    var wiggleTime:Float = 0;
+    var wiggle:FlxRuntimeShader;
+
+    public function new()
+    {
+        super('school-evil');
+    }
+
+    override function onCreate(event:ScriptEvent)
+    {
+        super.onCreate(event);
+
+        wiggle = new FlxRuntimeShader(FileUtil.getText(Paths.frag('$path/wiggle')));
+        wiggle.setFloat("speed", 2);
+        wiggle.setFloat("frequency", 20);
+        wiggle.setFloat("waveAmplitude", 0.01);
+
+        getProp('back').shader = wiggle;
+    }
+
+    override function onUpdate(event:UpdateScriptEvent)
+    {
+        super.onUpdate(event);
+
+        wiggleTime += event.elapsed;
+
+        wiggle.setFloat('time', wiggleTime);
+    }
+}

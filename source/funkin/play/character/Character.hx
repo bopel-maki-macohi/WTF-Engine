@@ -14,6 +14,10 @@ class Character extends StageProp implements IPlayStateScriptedClass
 	public var meta:CharacterData;
 	public var isPlayer:Bool;
 
+	// Flixel is so fucking stupid
+	// Why does path HAVE to be an already existing variable?!
+	public var charPath(get, never):String;
+
 	var singTimer:Float;
 
 	public function buildSprite()
@@ -22,9 +26,7 @@ class Character extends StageProp implements IPlayStateScriptedClass
 			return;
 
 		// Loads the image
-		var image:String = meta.image ?? id;
-
-		loadSprite('play/characters/$image/image', meta.scale, meta.frameWidth, meta.frameHeight);
+		loadSprite('$charPath/image', meta.scale, meta.width, meta.height);
 		loadAnimations(meta.animations);
 
 		bopEvery = meta.bopEvery;
@@ -53,13 +55,23 @@ class Character extends StageProp implements IPlayStateScriptedClass
 	}
 
 	public function sing(direction:NoteDirection, suffix:String = '')
+	{
+		if (flipX && direction.horizontal)
+			direction = direction.inverse;
 		playAnimation('${direction.name}$suffix', true);
+	}
 
 	public function miss(direction:NoteDirection, suffix:String = '')
+	{
+		if (flipX && direction.horizontal)
+			direction = direction.inverse;
 		playAnimation('${direction.name}-miss$suffix', true);
+	}
 
 	public function resetSingTimer()
+	{
 		singTimer = 0;
+	}
 
 	public function buildHealthIcon():HealthIcon
 	{
@@ -75,8 +87,13 @@ class Character extends StageProp implements IPlayStateScriptedClass
 		super.playAnimation(name, force);
 
 		// Resets the sing timer
-		if (name != 'idle')
+		if (!name.startsWith('idle'))
 			resetSingTimer();
+	}
+
+	inline function get_charPath():String
+	{
+		return 'play/characters/$id';
 	}
 
 	public function onCreate(event:ScriptEvent) {}

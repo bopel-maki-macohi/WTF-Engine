@@ -13,16 +13,13 @@ class Countdown extends FunkinSprite
 	public var started:Bool = false;
 	public var step:Int;
 
-	public function new()
+	var style:Style;
+
+	public function new(style:Style)
 	{
 		super();
 
-		loadSprite('play/ui/countdown', 1, 259, 99);
-		screenCenter();
-
-		addAnimation('ready', [0]);
-		addAnimation('set', [1]);
-		addAnimation('go', [2]);
+		this.style = style;
 
 		visible = false;
 		active = false;
@@ -48,32 +45,35 @@ class Countdown extends FunkinSprite
 		switch (step)
 		{
 			case 0:
-				FunkinSound.playOnce('play/sounds/countdown/three');
+				FunkinSound.playOnce(style.getCountdown('three'));
 			case 1:
-				FunkinSound.playOnce('play/sounds/countdown/two');
-				playAnimation('ready');
+				FunkinSound.playOnce(style.getCountdown('two'));
+				popup('ready');
 			case 2:
-				FunkinSound.playOnce('play/sounds/countdown/one');
-				playAnimation('set');
+				FunkinSound.playOnce(style.getCountdown('one'));
+				popup('set');
 			case 3:
-				FunkinSound.playOnce('play/sounds/countdown/go');
-				playAnimation('go');
+				FunkinSound.playOnce(style.getCountdown('go'));
+				popup('go');
 		}
 	}
 
-	override public function playAnimation(name:String, force:Bool = false)
+	public function popup(id:String)
 	{
-		super.playAnimation(name, force);
+		loadSprite(style.getCountdown(id), style.scale);
+		screenCenter();
+
+		final baseScale:Float = scale.x;
+
+		scale.x = scale.y = baseScale * 2;
 
 		visible = true;
 		alpha = 1;
 
-		scale.x = scale.y = 4;
-
 		FlxTween.cancelTweensOf(this);
 		FlxTween.cancelTweensOf(scale);
 
-		FlxTween.tween(scale, {x: 2, y: 2}, 0.5, {
+		FlxTween.tween(scale, {x: baseScale, y: baseScale}, 0.5, {
 			ease: FlxEase.elasticOut,
 			onComplete: _ ->
 			{

@@ -94,8 +94,12 @@ class TitleGroup extends FlxTypedGroup<TitleText>
 	}
 
 	inline function get_title():TitleText
+	{
 		return members[selected];
+	}
 
 	inline function get_level():Level
+	{
 		return LevelRegistry.instance.fetch(levels[selected]);
+	}
 }

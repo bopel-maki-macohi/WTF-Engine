@@ -21,6 +21,8 @@ class HoldNoteSprite extends FlxStrip
 
 	public var data:SongNoteData;
 
+	public var isPlayer(get, never):Bool;
+
 	var holdHeight:Float;
 	var endHeight:Float;
 
@@ -30,8 +32,6 @@ class HoldNoteSprite extends FlxStrip
 	public function new()
 	{
 		super();
-
-		buildSprite();
 
 		active = false;
 
@@ -51,14 +51,14 @@ class HoldNoteSprite extends FlxStrip
 		indices[11] = 6;
 	}
 
-	public function buildSprite()
+	public function buildSprite(style:Style)
 	{
-		loadGraphic(Paths.image('play/ui/note/hold-notes'));
-		setGraphicSize(Std.int(width * Constants.ZOOM));
+		loadGraphic(Paths.image('${style.path}/hold-notes'));
+		setGraphicSize(Std.int(width * Constants.ZOOM * style.note.scale));
 		updateHitbox();
 
-		graphicWidth = graphic.width;
-		graphicHeight = graphic.height;
+		graphicWidth = graphic?.width;
+		graphicHeight = graphic?.height;
 	}
 
 	public function redraw()
@@ -114,7 +114,7 @@ class HoldNoteSprite extends FlxStrip
 		updateHitbox();
 	}
 
-	public override function updateHitbox()
+	override public function updateHitbox()
 	{
 		width = graphicWidth * scale.x / Constants.NOTE_COUNT;
 		height = holdHeight;
@@ -122,7 +122,7 @@ class HoldNoteSprite extends FlxStrip
 		origin.set();
 	}
 
-	public override function revive()
+	override public function revive()
 	{
 		super.revive();
 
@@ -187,5 +187,10 @@ class HoldNoteSprite extends FlxStrip
 		redraw();
 
 		return value;
+	}
+
+	inline function get_isPlayer():Bool
+	{
+		return data.d < Constants.NOTE_COUNT;
 	}
 }

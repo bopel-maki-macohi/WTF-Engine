@@ -1,0 +1,31 @@
+{
+    "name": "Spirit",
+    "width": 83,
+    "height": 97,
+    "scale": 3.5,
+    "globalOffset": [115, -335],
+    "cameraOffset": [100, -50],
+    "icon": {},
+    "animations": [
+        {
+            "name": "idle",
+            "frames": [0, 1, 2]
+        },
+        {
+            "name": "left",
+            "frames": [3, 4]
+        },
+        {
+            "name": "right",
+            "frames": [5, 6]
+        },
+        {
+            "name": "up",
+            "frames": [7, 8]
+        },
+        {
+            "name": "down",
+            "frames": [9, 10]
+        }
+    ]
+}

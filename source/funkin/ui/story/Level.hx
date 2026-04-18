@@ -74,7 +74,9 @@ class Level implements IPlayStateScriptedClass
 	}
 
 	public function hasSong(id:String):Bool
+	{
 		return getSongs().contains(id);
+	}
 
 	function get_name():String
 	{
@@ -85,19 +87,29 @@ class Level implements IPlayStateScriptedClass
 	}
 
 	function get_title():String
+	{
 		return meta.title ?? id;
+	}
 
 	function get_opponent():String
+	{
 		return meta.opponent;
+	}
 
 	function get_player():String
+	{
 		return meta.player;
+	}
 
 	function get_gf():String
+	{
 		return meta.gf;
+	}
 
 	function get_color():String
+	{
 		return meta.color;
+	}
 
 	public function onCreate(event:ScriptEvent) {}
 
@@ -140,5 +152,7 @@ class Level implements IPlayStateScriptedClass
 	public function onGameOver(event:ScriptEvent) {}
 
 	public function toString():String
+	{
 		return name;
+	}
 }

@@ -1,0 +1,20 @@
+{
+	"name": "Senpai",
+	"gf": "gf-pixel",
+	"difficulties": [
+		"easy",
+		"normal",
+		"hard"
+	],
+	"opponent": "senpai",
+	"player": "bf-pixel",
+	"stage": "school",
+	"bpm": 144,
+	"artist": "Kawai Sprite",
+	"style": "pixel",
+	"rating": {
+		"normal": 2,
+		"hard": 3,
+		"easy": 1
+	}
+}

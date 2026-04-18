@@ -32,7 +32,7 @@ class FunkinText extends FlxBitmapText
 		return super.set_text(value);
 	}
 
-	function set_size(value:Int):Int
+	inline function set_size(value:Int):Int
 	{
 		this.size = value;
 

@@ -1,7 +1,7 @@
 {
     "name": "Parents",
-    "frameWidth": 354,
-    "frameHeight": 315,
+    "width": 354,
+    "height": 315,
     "globalOffset": [-80, -430],
     "cameraOffset": [100, -80],
     "icon": {},

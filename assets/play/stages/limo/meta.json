@@ -24,8 +24,8 @@
         {
             "id": "henchman",
             "image": "henchman",
-            "frameWidth": 267,
-            "frameHeight": 272,
+            "width": 267,
+            "height": 272,
             "position": [50, -160],
             "scroll": [0.6, 0.6],
             "scale": 0.8,

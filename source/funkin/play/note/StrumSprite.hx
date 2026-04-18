@@ -15,8 +15,6 @@ class StrumSprite extends FunkinSprite
 		super();
 
 		this.direction = direction;
-
-		buildSprite();
 	}
 
 	override public function update(elapsed:Float)
@@ -26,9 +24,9 @@ class StrumSprite extends FunkinSprite
 		confirmTime = Math.max(0, confirmTime - elapsed * 10);
 	}
 
-	public function buildSprite()
+	public function buildSprite(style:Style)
 	{
-		loadSprite('play/ui/note/notes', 1, 84, 84);
+		loadSprite(style.getPath('notes'), style.note.scale, style.note.width, style.note.height);
 
 		addAnimation('static', [direction]);
 		addAnimation('press', [direction + Constants.NOTE_COUNT]);
@@ -38,10 +36,14 @@ class StrumSprite extends FunkinSprite
 	}
 
 	public function playStatic()
+	{
 		playAnimation('static');
+	}
 
 	public function playPress()
+	{
 		playAnimation('press');
+	}
 
 	public function playConfirm()
 	{

@@ -25,14 +25,14 @@ class HealthIcon extends FunkinSprite
 		this.meta = meta;
 		this.isPlayer = isPlayer;
 
-		var image:String = meta.image ?? id;
-		var path:String = 'play/characters/$image/icon';
-		var size:Int = 100;
+		final image:String = meta.id ?? id;
+		final path:String = 'play/characters/$image/icon';
+		final size:Int = 100;
 
 		// Death icon check
-		loadSprite(path, meta.scale);
+		loadSprite(path);
 
-		if (graphic?.width > size)
+		if (width > size)
 		{
 			loadSprite(path, meta.scale, size, size);
 

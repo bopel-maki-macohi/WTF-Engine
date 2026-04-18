@@ -1,0 +1,15 @@
+{
+	"name": "Test",
+	"gf": "gf",
+	"difficulties": [
+		"normal"
+	],
+	"opponent": "bf-pixel",
+	"player": "bf",
+	"stage": "stage",
+	"bpm": 150,
+	"artist": "KawaiSprite",
+	"rating": {
+		"normal": 4
+	}
+}

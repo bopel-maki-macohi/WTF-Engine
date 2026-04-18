@@ -1,7 +1,7 @@
 {
     "name": "Pico",
-    "frameWidth": 226,
-    "frameHeight": 225,
+    "width": 226,
+    "height": 225,
     "animations": [
         {
             "name": "idle",

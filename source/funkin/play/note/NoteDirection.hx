@@ -13,6 +13,8 @@ enum abstract NoteDirection(Int) to Int from Int
 	var RIGHT = 3;
 
 	public var name(get, never):String;
+	public var inverse(get, never):NoteDirection;
+	public var horizontal(get, never):Bool;
 
 	public var pressed(get, never):Bool;
 	public var justPressed(get, never):Bool;
@@ -39,6 +41,22 @@ enum abstract NoteDirection(Int) to Int from Int
 			case UP: 'up';
 			case RIGHT: 'right';
 		}
+	}
+
+	function get_inverse():NoteDirection
+	{
+		return switch (abstract)
+		{
+			case LEFT: RIGHT;
+			case RIGHT: LEFT;
+			case UP: DOWN;
+			case DOWN: UP;
+		}
+	}
+
+	function get_horizontal():Bool
+	{
+		return abstract == LEFT || abstract == RIGHT;
 	}
 
 	function get_pressed():Bool

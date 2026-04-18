@@ -8,8 +8,8 @@ import funkin.data.stage.StageData.PropAnimData;
 typedef StoryCharacterData =
 {
 	var name:String;
-	var frameWidth:Int;
-	var frameHeight:Int;
+	var width:Int;
+	var height:Int;
 	@:default(1)
 	var scale:Float;
 	var flipX:Bool;

@@ -133,11 +133,17 @@ class CapsuleGroup extends FlxTypedGroup<CapsuleSprite>
 	}
 
 	inline function get_capsule():CapsuleSprite
+	{
 		return members[selected];
+	}
 
 	function get_song():Song
+	{
 		return capsule?.song;
+	}
 
 	inline function get_size():Int
+	{
 		return countLiving();
+	}
 }

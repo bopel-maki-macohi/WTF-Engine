@@ -14,7 +14,7 @@ class FunkinSound
 	{
 		var sound:FlxSound = FlxG.sound.create(Paths.sound(id));
 
-		sound.setup(volume, 0, autoDestroy);
+		sound.setup(volume, -1, autoDestroy);
 		sound.looped = looped;
 
 		if (autoPlay)
@@ -24,7 +24,9 @@ class FunkinSound
 	}
 
 	public static inline function playOnce(id:String, volume:Float = 1):FlxSound
+	{
 		return FlxG.sound.play(Paths.sound(id), volume);
+	}
 
 	public static inline function playMusic(id:String, volume:Float = 1, looped:Bool = true, autoPlay:Bool = true, overrideMusic:Bool = true)
 	{
@@ -33,9 +35,6 @@ class FunkinSound
 
 		FlxG.sound.playMusic(Paths.sound(id), null, volume, looped);
 
-		// Forces the music to persist
-		// Music NEEDS to persist
-		// Removing this line will crash the game oh my god
 		music.persist = true;
 
 		if (!autoPlay)
@@ -53,5 +52,7 @@ class FunkinSound
 	}
 
 	static inline function get_music():FlxSound
+	{
 		return FlxG.sound.music;
+	}
 }

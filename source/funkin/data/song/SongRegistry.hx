@@ -6,6 +6,7 @@ import funkin.modding.ScriptBases.ScriptedSong;
 import funkin.play.song.Song;
 import funkin.ui.story.Level;
 import funkin.util.FileUtil;
+import funkin.util.SortUtil;
 import json2object.JsonParser;
 
 /**
@@ -164,13 +165,22 @@ class SongRegistry extends BaseRegistry<Song>
 
 		// List songs through the entries themselves
 		// Because not every song has a level
-		for (id => song in entries)
+		for (id in listSorted())
 		{
+			var song:Song = fetch(id);
+
 			if (list.contains(id) || !song.difficulties.contains(diff))
 				continue;
 			list.push(id);
 		}
 
+		return list;
+	}
+
+	public function listSorted():Array<String>
+	{
+		var list:Array<String> = list();
+		list.sort(SortUtil.defaultsAlphabetically.bind(Constants.DEFAULT_SONGS));
 		return list;
 	}
 }

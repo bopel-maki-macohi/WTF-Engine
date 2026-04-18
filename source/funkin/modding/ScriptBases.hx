@@ -18,6 +18,9 @@ class ScriptedStage extends funkin.play.stage.Stage implements HScriptedClass {}
 class ScriptedSongEvent extends funkin.play.song.SongEvent implements HScriptedClass {}
 
 @:hscriptClass
+class ScriptedStyle extends funkin.play.Style implements HScriptedClass {}
+
+@:hscriptClass
 class ScriptedStickerPack extends funkin.ui.sticker.StickerPack implements HScriptedClass {}
 
 @:hscriptClass

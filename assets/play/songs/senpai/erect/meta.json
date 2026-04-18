@@ -1,0 +1,18 @@
+{
+	"name": "Senpai Erect",
+	"gf": "gf-pixel",
+	"difficulties": [
+		"erect",
+		"nightmare"
+	],
+	"opponent": "senpai",
+	"player": "bf-pixel",
+	"stage": "school",
+	"bpm": 158,
+	"artist": "Kawai Sprite",
+	"style": "pixel",
+	"rating": {
+		"nightmare": 7,
+		"erect": 6
+	}
+}

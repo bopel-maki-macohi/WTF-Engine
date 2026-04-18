@@ -13,7 +13,7 @@ import haxe.ds.StringMap;
 /**
  * A group containing stage props and characters.
  */
-class Stage extends FlxTypedGroup<StageProp> implements IPlayStateScriptedClass
+class Stage extends FlxGroup implements IPlayStateScriptedClass
 {
 	public var id:String;
 	public var meta:StageData;
@@ -56,7 +56,7 @@ class Stage extends FlxTypedGroup<StageProp> implements IPlayStateScriptedClass
 			{
 				sprite = new StageProp(prop.id);
 
-				sprite.loadSprite(image, prop.scale, prop.frameWidth, prop.frameHeight);
+				sprite.loadSprite(image, prop.scale, prop.width, prop.height);
 				sprite.loadAnimations(prop.animations);
 
 				sprite.scrollFactor.copyFrom(scroll);
@@ -85,7 +85,9 @@ class Stage extends FlxTypedGroup<StageProp> implements IPlayStateScriptedClass
 	}
 
 	public function getProp(id:String):StageProp
+	{
 		return props.get(id);
+	}
 
 	public function setPlayer(id:String)
 	{
@@ -154,10 +156,14 @@ class Stage extends FlxTypedGroup<StageProp> implements IPlayStateScriptedClass
 	}
 
 	function get_zoom():Float
+	{
 		return meta?.zoom ?? Constants.DEFAULT_CAMERA_ZOOM;
+	}
 
 	inline function get_path():String
+	{
 		return 'play/stages/$id';
+	}
 
 	public function onCreate(event:ScriptEvent) {}
 
@@ -181,7 +187,14 @@ class Stage extends FlxTypedGroup<StageProp> implements IPlayStateScriptedClass
 	{
 		// Bops each and every living prop
 		// I dunno maybe someone kills a prop
-		forEachAlive(prop -> prop.bop());
+		forEachAlive(prop ->
+		{
+			if (!Std.isOfType(prop, StageProp))
+				return;
+
+			var prop:StageProp = cast prop;
+			prop.bop();
+		});
 	}
 
 	public function onSectionHit(event:ConductorScriptEvent) {}

@@ -1,0 +1,20 @@
+{
+	"name": "Thorns",
+	"gf": "gf-pixel",
+	"difficulties": [
+		"easy",
+		"normal",
+		"hard"
+	],
+	"opponent": "spirit",
+	"player": "bf-pixel",
+	"stage": "school-evil",
+	"bpm": 190,
+	"artist": "Kawai Sprite",
+	"style": "pixel",
+	"rating": {
+		"normal": 3,
+		"hard": 4,
+		"easy": 2
+	}
+}

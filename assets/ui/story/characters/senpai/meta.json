@@ -1,0 +1,11 @@
+{
+    "width": 264,
+    "height": 277,
+    "scale": 0.9,
+    "animations": [
+        {
+            "name": "idle",
+            "frames": [0, 1, 2]
+        }
+    ]
+}
