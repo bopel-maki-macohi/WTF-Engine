@@ -15,13 +15,12 @@ class FunkinSprite extends FlxSprite
 
 	public function loadSprite(id:String, scale:Float = 1, width:Int = 0, height:Int = 0):FunkinSprite
 	{
-		final path:String = Paths.image(id);
-		final graphic:FlxGraphic = FlxGraphic.fromAssetKey(path);
+		var graphic:FlxGraphic = FlxGraphic.fromAssetKey(Paths.image(id));
 
 		// Validates the width and height
 		// Hooray no more crashy!!!
-		width = Std.int(FlxMath.bound(width, 0, graphic.width));
-		height = Std.int(FlxMath.bound(height, 0, graphic.height));
+		width = Std.int(FlxMath.bound(width, 0, graphic?.width));
+		height = Std.int(FlxMath.bound(height, 0, graphic?.height));
 
 		// Properly loads the graphic
 		loadGraphic(graphic, width > 0 || height > 0, width, height);
