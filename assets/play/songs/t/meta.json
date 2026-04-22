@@ -1,0 +1,20 @@
+{
+	"style": "funkin",
+	"name": "T",
+	"gf": "gf",
+	"difficulties": [
+		"easy",
+		"normal",
+		"hard"
+	],
+	"opponent": "tundrec",
+	"player": "bf",
+	"stage": "stage",
+	"bpm": 173,
+	"artist": "Kaivara",
+	"rating": {
+		"normal": 3,
+		"hard": 6,
+		"easy": 2
+	}
+}

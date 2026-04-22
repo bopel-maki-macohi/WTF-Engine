@@ -33,7 +33,7 @@ class Constants
 	/**
 	 * This is so that the engine's songs have higher priority over custom songs.
 	 */
-	public static final DEFAULT_SONGS:Array<String> = ['test'];
+	public static final DEFAULT_SONGS:Array<String> = ['test', 't'];
 
 	public static final DEFAULT_VARIATION:String = 'default';
 
