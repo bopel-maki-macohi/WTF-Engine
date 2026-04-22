@@ -5,32 +5,23 @@ package funkin.modding.event;
  */
 enum ScriptEventType
 {
-	//
-	// BASIC
-	//
+	// Basic
 	Create;
 	Update;
 	Destroy;
 
-	//
-	// NOTE
-	//
+	// Note
 	NoteHit;
 	NoteMiss;
 	HoldNoteHold;
 	HoldNoteDrop;
 	GhostMiss;
 
-	//
-	// CONDUCTOR
-	//
+	// Conductor
 	StepHit;
 	BeatHit;
-	SectionHit;
 
-	//
-	// PLAYSTATE
-	//
+	// PlayState
 	SongLoad;
 	SongStart;
 	SongEnd;
@@ -41,9 +32,7 @@ enum ScriptEventType
 	Pause;
 	GameOver;
 
-	//
-	// FREEPLAY
-	//
+	// Freeplay
 	FreeplayEnter;
 	FreeplayExit;
 	FreeplayIntro;

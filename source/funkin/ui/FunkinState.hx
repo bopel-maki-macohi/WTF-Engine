@@ -20,7 +20,6 @@ class FunkinState extends FlxState
 		// Adds conductor callbacks
 		conductor.stepHit.add(stepHit);
 		conductor.beatHit.add(beatHit);
-		conductor.sectionHit.add(sectionHit);
 	}
 
 	override public function update(elapsed:Float)
@@ -42,17 +41,12 @@ class FunkinState extends FlxState
 
 	function stepHit(step:Int)
 	{
-		dispatch(new ConductorScriptEvent(StepHit, step, conductor.beat, conductor.section));
+		dispatch(new ConductorScriptEvent(StepHit, step, conductor.beat));
 	}
 
 	function beatHit(beat:Int)
 	{
-		dispatch(new ConductorScriptEvent(BeatHit, conductor.step, beat, conductor.section));
-	}
-
-	function sectionHit(section:Int)
-	{
-		dispatch(new ConductorScriptEvent(SectionHit, conductor.step, conductor.beat, section));
+		dispatch(new ConductorScriptEvent(BeatHit, conductor.step, beat));
 	}
 
 	override public function destroy()
@@ -62,7 +56,6 @@ class FunkinState extends FlxState
 		// Removes conductor callbacks
 		conductor.stepHit.remove(stepHit);
 		conductor.beatHit.remove(beatHit);
-		conductor.sectionHit.remove(sectionHit);
 	}
 
 	inline function get_conductor():Conductor

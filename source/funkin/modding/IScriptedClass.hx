@@ -31,7 +31,6 @@ interface IConductorScriptedClass extends IScriptedClass
 {
 	public function onStepHit(event:ConductorScriptEvent):Void;
 	public function onBeatHit(event:ConductorScriptEvent):Void;
-	public function onSectionHit(event:ConductorScriptEvent):Void;
 }
 
 /**

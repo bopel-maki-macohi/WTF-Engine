@@ -116,8 +116,6 @@ class Character extends StageProp implements IPlayStateScriptedClass
 
 	public function onBeatHit(event:ConductorScriptEvent) {}
 
-	public function onSectionHit(event:ConductorScriptEvent) {}
-
 	public function onSongLoaded(event:SongLoadScriptEvent) {}
 
 	public function onSongStart(event:ScriptEvent) {}

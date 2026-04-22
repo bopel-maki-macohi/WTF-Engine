@@ -49,15 +49,13 @@ class ConductorScriptEvent extends ScriptEvent
 {
 	public var step(default, null):Int;
 	public var beat(default, null):Int;
-	public var section(default, null):Int;
 
-	public function new(type:ScriptEventType, step:Int, beat:Int, section:Int)
+	public function new(type:ScriptEventType, step:Int, beat:Int)
 	{
 		super(type);
 
 		this.step = step;
 		this.beat = beat;
-		this.section = section;
 	}
 }
 

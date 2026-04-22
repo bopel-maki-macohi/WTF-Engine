@@ -197,8 +197,6 @@ class Stage extends FlxGroup implements IPlayStateScriptedClass
 		});
 	}
 
-	public function onSectionHit(event:ConductorScriptEvent) {}
-
 	public function onSongLoaded(event:SongLoadScriptEvent) {}
 
 	public function onSongStart(event:ScriptEvent) {}

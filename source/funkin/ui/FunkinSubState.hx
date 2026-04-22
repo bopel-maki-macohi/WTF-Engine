@@ -19,7 +19,6 @@ class FunkinSubState extends FlxSubState
 		// Adds conductor callbacks
 		conductor.stepHit.add(stepHit);
 		conductor.beatHit.add(beatHit);
-		conductor.sectionHit.add(sectionHit);
 	}
 
 	override public function destroy()
@@ -29,7 +28,6 @@ class FunkinSubState extends FlxSubState
 		// Removes conductor callbacks
 		conductor.stepHit.remove(stepHit);
 		conductor.beatHit.remove(beatHit);
-		conductor.sectionHit.remove(sectionHit);
 	}
 
 	public function dispatch(event:ScriptEvent)
@@ -47,8 +45,6 @@ class FunkinSubState extends FlxSubState
 	function stepHit(step:Int) {}
 
 	function beatHit(beat:Int) {}
-
-	function sectionHit(section:Int) {}
 
 	inline function get_conductor():Conductor
 	{

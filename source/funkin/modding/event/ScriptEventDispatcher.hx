@@ -69,8 +69,6 @@ class ScriptEventDispatcher
 					target.onStepHit(cast event);
 				case BeatHit:
 					target.onBeatHit(cast event);
-				case SectionHit:
-					target.onSectionHit(cast event);
 				default:
 					// Does literally nothing
 			}

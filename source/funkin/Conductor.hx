@@ -14,14 +14,12 @@ class Conductor
 
 	public var step:Int;
 	public var beat:Int;
-	public var section:Int;
 
 	public var crotchet(get, never):Float;
 	public var quaver(get, never):Float;
 
 	public var stepHit(default, null) = new FlxTypedSignal<Int->Void>();
 	public var beatHit(default, null) = new FlxTypedSignal<Int->Void>();
-	public var sectionHit(default, null) = new FlxTypedSignal<Int->Void>();
 
 	var changeStep:Int = 0;
 	var changeTimestamp:Float = 0;
@@ -32,25 +30,20 @@ class Conductor
 	{
 		final lastStep:Int = step;
 		final lastBeat:Int = beat;
-		final lastSection:Int = section;
 
 		step = changeStep + Math.floor((time - changeTimestamp) / quaver);
 		beat = Math.floor(step / Constants.STEPS_PER_BEAT);
-		section = Math.floor(step / Constants.STEPS_PER_SECTION);
 
 		if (lastStep != step)
 			stepHit.dispatch(step);
 		if (lastBeat != beat)
 			beatHit.dispatch(beat);
-		if (lastSection != section)
-			sectionHit.dispatch(section);
 
 		// Debug watching (for debugging purposes)
 		FlxG.watch.addQuick('time', time);
 		FlxG.watch.addQuick('bpm', bpm);
 		FlxG.watch.addQuick('step', step);
 		FlxG.watch.addQuick('beat', beat);
-		FlxG.watch.addQuick('section', section);
 	}
 
 	/**
@@ -62,10 +55,8 @@ class Conductor
 		this.bpm = bpm;
 
 		time = 0;
-
 		step = 0;
 		beat = 0;
-		section = 0;
 
 		changeStep = 0;
 		changeTimestamp = 0;
