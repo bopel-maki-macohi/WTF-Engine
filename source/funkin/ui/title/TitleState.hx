@@ -1,6 +1,7 @@
 package funkin.ui.title;
 
 import flixel.effects.FlxFlicker;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import funkin.audio.FunkinSound;
 import funkin.graphics.FunkinSprite;
@@ -123,14 +124,17 @@ class TitleState extends FunkinState
 	function start()
 	{
 		if (started)
-			return;
+			return exitToMenu();
+
 		started = true;
 
 		FunkinSound.playOnce('ui/sounds/confirm');
-		FlxFlicker.flicker(startText, 1, 0.04, true, true, _ ->
-		{
-			FlxG.switchState(() -> new MainMenuState());
-		});
+		FlxFlicker.flicker(startText, 1, 0.04, true, true, _ -> exitToMenu());
+	}
+
+	function exitToMenu()
+	{
+		FlxG.switchState(() -> new MainMenuState());
 	}
 
 	override public function update(elapsed:Float)
